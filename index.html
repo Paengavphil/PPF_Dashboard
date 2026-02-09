@@ -1,0 +1,28 @@
+<script>
+    const scriptURL = 'YOUR_APPS_SCRIPT_URL';
+
+    async function loadData() {
+        try {
+            const response = await fetch(scriptURL);
+            const data = await response.json();
+            
+            let html = '';
+            data.forEach(item => {
+                html += `
+                    <div class="card">
+                        <h3>${item.ProjectName}</h3>
+                        <p>Status: <span class="status-${item.Status.toLowerCase()}">${item.Status}</span></p>
+                        <p>Contractor: ${item.Contractor}</p>
+                        <p>Completion: ${item.Progress}%</p>
+                    </div>
+                `;
+            });
+            document.getElementById('dashboard-content').innerHTML = html;
+        } catch (error) {
+            document.getElementById('dashboard-content').innerHTML = "Error loading data.";
+            console.error(error);
+        }
+    }
+
+    loadData();
+</script>
