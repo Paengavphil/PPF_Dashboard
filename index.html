@@ -1,73 +1,62 @@
-<component name="canvas" id="v10-final-fix-dashboard" type="code" title="Modern Infrastructure Command Center" language="html" version="10">
+<component name="canvas" id="v7-flexible-doc-dashboard" type="code" title="Professional Dashboard v7 - Flexible Labels" language="html" version="7">
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PSHS-WVCIC | Infrastructure Command</title>
+<title>Infrastructure Progress Dashboard | PSHS-WVCIC</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-body { font-family: 'Plus Jakarta Sans', sans-serif; letter-spacing: -0.02em; }
+body { font-family: 'Inter', sans-serif; letter-spacing: -0.011em; }
+.status-badge { @apply px-2.5 py-1 rounded-md text-[10px] font-bold tracking-wider uppercase border; }
+.completed { @apply bg-emerald-50 text-emerald-700 border-emerald-100; }
+.ongoing { @apply bg-amber-50 text-amber-700 border-amber-100; }
+.revision { @apply bg-rose-50 text-rose-700 border-rose-100; }
+.reviewing { @apply bg-blue-50 text-blue-700 border-blue-100; }
+.proposed { @apply bg-slate-100 text-slate-600 border-slate-200; }
 
-    /* Professional Segmented Control */
-    .filter-container { @apply bg-white/80 backdrop-blur-md p-1.5 rounded-2xl border border-slate-200 inline-flex gap-1 shadow-sm; }
-    .filter-btn { @apply px-5 py-2.5 rounded-xl text-[11px] font-bold uppercase tracking-wider transition-all duration-300 flex items-center gap-3 cursor-pointer text-slate-500 hover:bg-slate-50; }
-    .filter-btn.active { @apply bg-slate-900 text-white shadow-xl shadow-slate-200 hover:bg-slate-800; }
-    .count-badge { @apply px-2 py-0.5 rounded-md text-[9px] bg-slate-100 text-slate-500; }
-    .filter-btn.active .count-badge { @apply bg-white/20 text-white; }
+    .custom-card { @apply bg-white border border-slate-200 transition-all duration-300; }
+    .custom-card:hover { @apply border-indigo-300 -translate-y-1 shadow-xl; }
     
-    .dot { @apply w-2 h-2 rounded-full; }
-    .dot-all { @apply bg-indigo-500; }
-    .dot-completed { @apply bg-emerald-500; }
-    .dot-ongoing { @apply bg-amber-500; }
-    .dot-proposed { @apply bg-slate-400; }
-
-    .custom-card { @apply bg-white border border-slate-200 transition-all duration-500; border-radius: 2rem; }
-    .custom-card:hover { @apply border-indigo-400 -translate-y-2 shadow-2xl shadow-indigo-100; }
-    .status-pill { @apply px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest border; }
+    .filter-chip { @apply px-4 py-2 rounded-full text-xs font-bold border border-slate-200 transition-all cursor-pointer bg-white text-slate-500 hover:border-indigo-500; }
+    .filter-chip.active { @apply bg-indigo-600 text-white border-indigo-600 shadow-lg shadow-indigo-100; }
 </style>
 </head>
-<body class="bg-[#fcfdfe] text-slate-900 min-h-screen">
+<body class="bg-[#f8fafc] text-slate-900 min-h-screen">
 
-<nav class="bg-white/70 backdrop-blur-xl border-b border-slate-200 sticky top-0 z-50 px-6 lg:px-12 py-5">
+<nav class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm px-6 lg:px-12 py-4">
     <div class="max-w-7xl mx-auto flex justify-between items-center">
-        <div class="flex items-center gap-5">
-            <div class="bg-slate-900 w-11 h-11 rounded-2xl flex items-center justify-center shadow-lg shadow-slate-200">
-                <i class="fas fa-compass-drafting text-white text-xl"></i>
-            </div>
+        <div class="flex items-center gap-4">
+            <div class="bg-slate-900 w-10 h-10 rounded-xl flex items-center justify-center shadow-lg"><i class="fas fa-landmark text-white"></i></div>
             <div>
-                <h1 class="text-xl font-extrabold tracking-tighter uppercase leading-none">Command Center</h1>
-                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-[0.3em] mt-1.5">PSHS-WVCIC Infrastructure</p>
+                <h1 class="text-lg font-black tracking-tighter uppercase leading-none">PSHS-WVCIC</h1>
+                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-1">Infrastructure Oversight Dashboard</p>
             </div>
         </div>
-        <div id="syncIndicator" class="flex items-center gap-3 bg-slate-50 px-4 py-2 rounded-full border border-slate-100">
-            <span class="relative flex h-2 w-2">
-                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-            </span>
-            <span class="text-[10px] font-black text-slate-500 uppercase tracking-widest">Live Sync Enabled</span>
+        <div class="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Cloud Sync Active
         </div>
     </div>
 </nav>
 
-<main class="max-w-7xl mx-auto px-6 lg:px-12 py-12">
+<main class="max-w-7xl mx-auto px-6 lg:px-12 py-10">
     
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-16">
-        <div class="bg-white p-7 rounded-[2rem] border border-slate-100 shadow-sm">
-            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4">Total Portfolio</p>
-            <h2 id="kpi-total" class="text-4xl font-extrabold italic">--</h2>
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
+        <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
+            <p class="text-[10px] font-black text-slate-400 uppercase mb-2">Total Portfolio</p>
+            <h2 id="kpi-total" class="text-3xl font-black italic">--</h2>
         </div>
-        <div class="bg-white p-7 rounded-[2rem] border border-slate-100 shadow-sm">
-            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4">Global Progress</p>
-            <h2 id="kpi-avg" class="text-4xl font-extrabold text-indigo-600 italic">--%</h2>
+        <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
+            <p class="text-[10px] font-black text-slate-400 uppercase mb-2">Completion Avg</p>
+            <h2 id="kpi-avg" class="text-3xl font-black text-indigo-600 italic">--%</h2>
         </div>
-        <div class="md:col-span-2 flex justify-between items-center bg-slate-900 p-7 rounded-[2rem] shadow-xl shadow-slate-200">
+        <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm md:col-span-2 flex justify-between items-center">
             <div>
-                <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-4">Asset Value Total</p>
-                <h2 id="kpi-budget" class="text-3xl font-extrabold text-white italic">₱0.00</h2>
+                <p class="text-[10px] font-black text-slate-400 uppercase mb-2">Total Asset Value</p>
+                <h2 id="kpi-budget" class="text-3xl font-black italic">₱0.00</h2>
             </div>
             <div class="w-24 h-24">
                 <canvas id="statusChart"></canvas>
@@ -75,30 +64,20 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; letter-spacing: -0.02em; }
         </div>
     </div>
 
-    <div class="flex flex-col lg:flex-row gap-8 mb-12 items-center justify-between">
-        <div class="relative w-full lg:w-[450px]">
-            <i class="fas fa-search absolute left-5 top-1/2 -translate-y-1/2 text-slate-300"></i>
-            <input type="text" id="searchInput" placeholder="Search by project or contractor..." 
-                class="w-full pl-14 pr-6 py-4 rounded-2xl border border-slate-200 bg-white focus:outline-none focus:ring-4 focus:ring-slate-100 transition-all text-sm font-semibold placeholder:text-slate-300">
+    <div class="flex flex-col md:flex-row gap-6 mb-10 items-center justify-between">
+        <div class="relative w-full md:w-96">
+            <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+            <input type="text" id="searchInput" placeholder="Search project or contractor..." class="w-full pl-12 pr-4 py-3 rounded-2xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all text-sm font-medium">
         </div>
-        
-        <div class="filter-container">
-            <div class="filter-btn active" onclick="filterByStatus('All')" data-status="All">
-                <span class="dot dot-all"></span> All <span class="count-badge" id="count-all">0</span>
-            </div>
-            <div class="filter-btn" onclick="filterByStatus('Completed')" data-status="Completed">
-                <span class="dot dot-completed"></span> Completed <span class="count-badge" id="count-completed">0</span>
-            </div>
-            <div class="filter-btn" onclick="filterByStatus('In Progress')" data-status="In Progress">
-                <span class="dot dot-ongoing"></span> Ongoing <span class="count-badge" id="count-ongoing">0</span>
-            </div>
-            <div class="filter-btn" onclick="filterByStatus('Proposed')" data-status="Proposed">
-                <span class="dot dot-proposed"></span> Proposed <span class="count-badge" id="count-proposed">0</span>
-            </div>
+        <div class="flex gap-2 overflow-x-auto pb-2 w-full md:w-auto">
+            <div class="filter-chip active" onclick="filterByStatus('All')">All</div>
+            <div class="filter-chip" onclick="filterByStatus('Completed')">Completed</div>
+            <div class="filter-chip" onclick="filterByStatus('In Progress')">Ongoing</div>
+            <div class="filter-chip" onclick="filterByStatus('Proposed')">Proposed</div>
         </div>
     </div>
 
-    <div id="project-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+    <div id="project-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         </div>
 </main>
 
@@ -113,26 +92,15 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; letter-spacing: -0.02em; }
             const response = await fetch(scriptURL);
             allProjects = await response.json();
             renderUI();
-            updateFilterCounts();
         } catch (error) {
-            console.error("Connection error:", error);
-            document.getElementById('project-container').innerHTML = `<p class="col-span-full text-center text-rose-500 font-bold uppercase text-[10px] tracking-widest">Connection Error: Verify Script Permissions</p>`;
+            console.error("Sync Error:", error);
         }
-    }
-
-    function updateFilterCounts() {
-        document.getElementById('count-all').textContent = allProjects.length;
-        document.getElementById('count-completed').textContent = allProjects.filter(p => p.Status === 'Completed').length;
-        document.getElementById('count-ongoing').textContent = allProjects.filter(p => p.Status === 'In Progress').length;
-        document.getElementById('count-proposed').textContent = allProjects.filter(p => p.Status === 'Proposed').length;
     }
 
     function renderUI() {
         const searchTerm = document.getElementById('searchInput').value.toLowerCase();
         const filtered = allProjects.filter(p => {
-            const name = p.ProjectName ? p.ProjectName.toLowerCase() : "";
-            const contractor = p.Contractor ? p.Contractor.toLowerCase() : "";
-            const matchesSearch = name.includes(searchTerm) || contractor.includes(searchTerm);
+            const matchesSearch = p.ProjectName.toLowerCase().includes(searchTerm) || p.Contractor.toLowerCase().includes(searchTerm);
             const matchesFilter = activeFilter === 'All' || p.Status === activeFilter;
             return matchesSearch && matchesFilter;
         });
@@ -144,45 +112,66 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; letter-spacing: -0.02em; }
 
     function renderCards(projects) {
         const container = document.getElementById('project-container');
-        container.innerHTML = projects.length ? '' : `<div class="col-span-full py-20 flex flex-col items-center opacity-30"><i class="fas fa-folder-open text-6xl mb-4"></i><p class="font-black uppercase tracking-widest text-xs">No project records found</p></div>`;
+        container.innerHTML = projects.length ? '' : '<div class="col-span-full text-center py-20 text-slate-400 font-bold uppercase tracking-widest">No matching records</div>';
 
         projects.forEach(project => {
+            // Status and Base Config
             const statusMap = {
-                'Completed': { bg: 'bg-emerald-50', text: 'text-emerald-700', border: 'border-emerald-100', label: 'Inspection Report', icon: 'fa-clipboard-check' },
-                'In Progress': { bg: 'bg-amber-50', text: 'text-amber-700', border: 'border-amber-100', label: 'Approved Docs', icon: 'fa-file-signature' },
-                'Proposed': { bg: 'bg-slate-100', text: 'text-slate-600', border: 'border-slate-200', label: 'Estimate/TOR', icon: 'fa-file-contract' }
+                'Completed': { class: 'completed', label: 'Final Inspection Report', icon: 'fa-clipboard-check' },
+                'In Progress': { class: 'ongoing', label: 'Approved Document', icon: 'fa-file-signature' },
+                'Financial Revision': { class: 'revision', label: 'Detailed Estimate', icon: 'fa-calculator' },
+                'Review Stage': { class: 'reviewing', label: 'Project Document', icon: 'fa-file-alt' },
+                'Proposed': { class: 'proposed', label: 'Detailed Estimate', icon: 'fa-calculator' }
             };
             
-            const ui = statusMap[project.Status] || statusMap['Proposed'];
-            const cost = project.Cost ? '₱' + Number(project.Cost).toLocaleString('en-PH', {minimumFractionDigits: 2}) : 'TBD';
+            let ui = statusMap[project.Status] || { class: 'proposed', label: 'Document', icon: 'fa-file' };
 
+            // --- DYNAMIC LABEL LOGIC ---
+            // If the sheet has a specific DocLabel, use it. 
+            // Otherwise, check if it's "Consultancy" to use "Terms of Reference".
             let finalLabel = project.DocLabel || ui.label;
-            if (!project.DocLabel && project.ProjectName && project.ProjectName.toLowerCase().includes('consultancy') && project.Status !== 'Completed') {
-                finalLabel = 'Terms of Reference';
+            let finalIcon = ui.icon;
+
+            if (!project.DocLabel && project.ProjectName.toLowerCase().includes('consultancy')) {
+                if (project.Status !== 'Completed') {
+                    finalLabel = 'Terms of Reference';
+                    finalIcon = 'fa-file-contract';
+                }
             }
 
+            const cost = project.Cost ? '₱' + Number(project.Cost).toLocaleString('en-PH', {minimumFractionDigits: 2}) : '---';
+
             container.innerHTML += `
-                <div class="custom-card p-10 flex flex-col">
-                    <div class="flex justify-between items-start mb-8">
-                        <span class="status-pill ${ui.bg} ${ui.text} ${ui.border}">${project.Status}</span>
-                        <span class="text-[10px] font-black text-slate-300 tabular-nums uppercase tracking-tighter">${cost}</span>
+                <div class="custom-card rounded-[2.5rem] p-8 flex flex-col">
+                    <div class="flex justify-between items-center mb-6">
+                        <span class="status-badge ${ui.class}">${project.Status}</span>
+                        <span class="text-[11px] font-black tabular-nums text-slate-400">${cost}</span>
                     </div>
-                    <h3 class="text-xl font-black leading-snug uppercase mb-8 min-h-[5rem] flex items-center text-slate-800">${project.ProjectName}</h3>
-                    <div class="bg-slate-50 rounded-2xl p-6 mb-10 flex-grow">
-                        <p class="text-[11px] font-bold text-slate-500 italic leading-relaxed">"${project.Notes || 'Record active in log.'}"</p>
+                    <h3 class="text-lg font-black leading-tight uppercase mb-6 min-h-[4rem]">${project.ProjectName}</h3>
+                    
+                    <div class="bg-slate-50 rounded-2xl p-5 mb-8 flex-grow">
+                        <p class="text-[11px] font-medium text-slate-500 italic">"${project.Notes || 'Administrative monitoring active.'}"</p>
                     </div>
-                    <div class="space-y-8 pt-8 border-t border-slate-100 mt-auto">
+
+                    <div class="space-y-6 pt-6 border-t border-slate-100 mt-auto">
                         ${project.AttachmentURL ? `
-                            <a href="${project.AttachmentURL}" target="_blank" class="w-full py-5 bg-slate-900 text-white rounded-2xl text-[10px] font-black uppercase tracking-[0.25em] flex items-center justify-center gap-4 hover:bg-indigo-600 transition shadow-lg shadow-slate-100">
-                                <i class="fas ${ui.icon} text-sm"></i> ${finalLabel}
+                            <a href="${project.AttachmentURL}" target="_blank" class="w-full py-4 bg-slate-900 text-white rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] flex items-center justify-center gap-3 hover:bg-indigo-600 transition">
+                                <i class="fas ${finalIcon}"></i> ${finalLabel}
                             </a>
-                        ` : `<div class="w-full py-5 bg-slate-100 text-slate-400 rounded-2xl text-[10px] font-black uppercase text-center tracking-widest">Document In Review</div>`}
+                        ` : `<div class="w-full py-4 bg-slate-100 text-slate-400 rounded-2xl text-[10px] font-black uppercase text-center tracking-widest">Awaiting Upload</div>`}
+                        
                         <div>
-                            <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden mb-5"><div class="bg-indigo-600 h-full rounded-full transition-all duration-1000" style="width: ${project.Progress || 0}%"></div></div>
-                            <div class="flex justify-between items-center text-[10px] font-black text-slate-400 uppercase tracking-widest"><span>${project.Contractor || 'PSHS-WVCIC'}</span><span class="text-slate-900">${project.Progress || 0}%</span></div>
+                            <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden mb-4">
+                                <div class="bg-indigo-600 h-full rounded-full" style="width: ${project.Progress || 0}%"></div>
+                            </div>
+                            <div class="flex justify-between items-center text-[9px] font-bold text-slate-400 uppercase tracking-widest">
+                                <span>${project.Contractor || 'Internal'}</span>
+                                <span>${project.Progress || 0}% Complete</span>
+                            </div>
                         </div>
                     </div>
-                </div>`;
+                </div>
+            `;
         });
     }
 
@@ -195,20 +184,30 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; letter-spacing: -0.02em; }
     }
 
     function updateChart(data) {
-        const counts = { 'Completed': 0, 'In Progress': 0, 'Proposed': 0 };
-        data.forEach(p => { if (counts[p.Status] !== undefined) counts[p.Status]++; });
+        const counts = { 'Completed': 0, 'In Progress': 0, 'Proposed': 0, 'Other': 0 };
+        data.forEach(p => {
+            if (counts[p.Status] !== undefined) counts[p.Status]++;
+            else counts['Other']++;
+        });
+        
         if (chartInstance) chartInstance.destroy();
         const ctx = document.getElementById('statusChart').getContext('2d');
         chartInstance = new Chart(ctx, {
             type: 'doughnut',
-            data: { datasets: [{ data: Object.values(counts), backgroundColor: ['#10b981', '#f59e0b', '#64748b'], borderWidth: 0, hoverOffset: 4 }] },
-            options: { cutout: '80%', plugins: { legend: { display: false } }, responsive: true, maintainAspectRatio: false }
+            data: {
+                datasets: [{
+                    data: Object.values(counts),
+                    backgroundColor: ['#10b981', '#f59e0b', '#64748b', '#3b82f6'],
+                    borderWidth: 0
+                }]
+            },
+            options: { cutout: '75%', plugins: { legend: { display: false } }, responsive: true, maintainAspectRatio: false }
         });
     }
 
     function filterByStatus(status) {
         activeFilter = status;
-        document.querySelectorAll('.filter-btn').forEach(btn => { btn.classList.toggle('active', btn.getAttribute('data-status') === status); });
+        document.querySelectorAll('.filter-chip').forEach(c => c.classList.toggle('active', c.textContent.includes(status)));
         renderUI();
     }
 
