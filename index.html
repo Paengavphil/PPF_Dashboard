@@ -1,4 +1,4 @@
-<component name="canvas" id="final-pshs-dashboard-clean" type="code" title="Clean Production Dashboard Code" language="html" version="1">
+<component name="canvas" id="final-production-ready-dashboard" type="code" title="Final Production Dashboard Code" language="html" version="5">
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -49,7 +49,16 @@ body { font-family: 'Inter', sans-serif; letter-spacing: -0.011em; overflow-x: h
     <div class="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div class="max-w-2xl">
             <h2 class="text-4xl font-black text-black tracking-tighter mb-3 uppercase leading-tight">Project Portfolio</h2>
-            <p class="text-slate-500 text-lg leading-relaxed font-medium">Automatic tracking of campus facilities maintenance and development.</p>
+            <div class="flex flex-wrap gap-4 mt-4">
+                <div class="bg-white px-4 py-2 rounded-lg border border-slate-100 shadow-sm">
+                    <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Total Projects</p>
+                    <p id="totalProjects" class="text-lg font-black text-black">--</p>
+                </div>
+                <div class="bg-white px-4 py-2 rounded-lg border border-slate-100 shadow-sm">
+                    <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Active Budget</p>
+                    <p id="totalBudget" class="text-lg font-black text-indigo-600">₱0.00</p>
+                </div>
+            </div>
         </div>
         <div class="flex items-center gap-4 bg-white p-3 rounded-xl border border-slate-100 shadow-sm">
             <div class="w-10 h-10 bg-indigo-50 rounded-lg flex items-center justify-center text-indigo-500"><i class="far fa-calendar-check text-lg"></i></div>
@@ -61,24 +70,30 @@ body { font-family: 'Inter', sans-serif; letter-spacing: -0.011em; overflow-x: h
     </div>
 
     <div id="project-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-16">
-         <p class="text-slate-400 animate-pulse font-bold uppercase tracking-widest text-xs p-8">Establishing data link...</p>
+         <p class="text-slate-400 animate-pulse font-bold uppercase tracking-widest text-xs p-8">Fetching records from Google Systems...</p>
     </div>
 </main>
 
 <script>
-    // 1. UPDATE THIS URL WITH YOUR GOOGLE APPS SCRIPT WEB APP URL
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbz-9wukcFnCwKNhcmTrTRQaY9fc_vOJA8O6yqNA71XKrJmiAj-b5f6uYzSG07JUjAcR/exec';
+    const scriptURL = '[https://script.google.com/macros/s/AKfycbz-9wukcFnCwKNhcmTrTRQaY9fc_vOJA8O6yqNA71XKrJmiAj-b5f6uYzSG07JUjAcR/exec](https://script.google.com/macros/s/AKfycbz-9wukcFnCwKNhcmTrTRQaY9fc_vOJA8O6yqNA71XKrJmiAj-b5f6uYzSG07JUjAcR/exec)';
 
     async function fetchDashboardData() {
         try {
             const response = await fetch(scriptURL);
             const projects = await response.json();
             renderCards(projects);
+            updateStats(projects);
             document.getElementById('lastSyncTime').textContent = new Date().toLocaleTimeString();
         } catch (error) {
             console.error("Sync Error:", error);
-            document.getElementById('project-container').innerHTML = `<p class="text-rose-500 font-bold p-8 text-xs uppercase">Error: Check Script URL or Tab Name.</p>`;
+            document.getElementById('project-container').innerHTML = `<p class="text-rose-500 font-bold p-8 text-xs uppercase text-center">Connection Error: Check Sheet Permissions.</p>`;
         }
+    }
+
+    function updateStats(projects) {
+        document.getElementById('totalProjects').textContent = projects.length;
+        const total = projects.reduce((sum, p) => sum + (Number(p.Cost) || 0), 0);
+        document.getElementById('totalBudget').textContent = '₱' + total.toLocaleString('en-PH', {minimumFractionDigits: 2});
     }
 
     function renderCards(projects) {
@@ -86,7 +101,6 @@ body { font-family: 'Inter', sans-serif; letter-spacing: -0.011em; overflow-x: h
         container.innerHTML = '';
 
         projects.forEach(project => {
-            // UI Map for Status and Buttons
             const statusMap = {
                 'Completed': { class: 'completed', label: 'Final Inspection Report', icon: 'fa-clipboard-check' },
                 'In Progress': { class: 'ongoing', label: 'Approved Document', icon: 'fa-file-signature' },
@@ -97,6 +111,11 @@ body { font-family: 'Inter', sans-serif; letter-spacing: -0.011em; overflow-x: h
             
             const ui = statusMap[project.Status] || { class: 'proposed', label: 'View Document', icon: 'fa-file' };
 
+            // Peso Formatting
+            const formattedCost = project.Cost ? 
+                '₱' + Number(project.Cost).toLocaleString('en-PH', {minimumFractionDigits: 2}) : 
+                '---';
+
             // Scope List Parser
             const scopeHtml = project.Scope ? project.Scope.split(',').map((item, i) => 
                 `<li class="flex gap-3"><span class="text-indigo-400 font-black">${(i+1).toString().padStart(2, '0')}</span> ${item.trim()}</li>`
@@ -106,9 +125,10 @@ body { font-family: 'Inter', sans-serif; letter-spacing: -0.011em; overflow-x: h
                 <div class="custom-card rounded-[2rem] p-8">
                     <div class="flex justify-between items-center mb-6">
                         <span class="status-badge ${ui.class}">${project.Status}</span>
-                        <span class="text-xs font-black text-black tabular-nums">${project.Cost || '---'}</span>
+                        <span class="text-xs font-black text-black tabular-nums">${formattedCost}</span>
                     </div>
-                    <h3 class="text-xl font-black text-black mb-5 leading-tight uppercase h-14 overflow-hidden">${project.ProjectName}</h3>
+                    
+                    <h3 class="text-lg font-black text-black mb-5 leading-tight uppercase min-h-[4rem] flex items-center">${project.ProjectName}</h3>
                     
                     <details class="group mb-6">
                         <summary class="flex items-center justify-between cursor-pointer list-none bg-slate-50/70 p-4 rounded-xl border border-slate-100 hover:border-indigo-300 transition-all">
@@ -123,7 +143,7 @@ body { font-family: 'Inter', sans-serif; letter-spacing: -0.011em; overflow-x: h
                     </details>
 
                     <div class="bg-indigo-50/40 border border-indigo-100/50 rounded-xl p-5 mb-8 flex-grow">
-                        <p class="text-xs text-slate-600 italic leading-relaxed font-medium">"${project.Notes || 'Pending update...'}"</p>
+                        <p class="text-xs text-slate-600 italic leading-relaxed font-medium">"${project.Notes || 'Pending updates...'}"</p>
                     </div>
 
                     <div class="space-y-6 pt-6 border-t border-slate-100">
@@ -133,7 +153,7 @@ body { font-family: 'Inter', sans-serif; letter-spacing: -0.011em; overflow-x: h
                             </a>
                         ` : `
                             <div class="w-full py-4 bg-slate-100 text-slate-400 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] flex items-center justify-center gap-3">
-                                <i class="fas fa-lock text-xs"></i> Document Restricted
+                                <i class="fas fa-lock text-xs"></i> Document Pending
                             </div>
                         `}
 
@@ -154,7 +174,7 @@ body { font-family: 'Inter', sans-serif; letter-spacing: -0.011em; overflow-x: h
     }
 
     fetchDashboardData();
-    setInterval(fetchDashboardData, 300000); // Refreshes every 5 mins
+    setInterval(fetchDashboardData, 300000); // 5-minute sync
 </script>
 </body>
 </html>
