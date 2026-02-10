@@ -1,4 +1,4 @@
-<component name="canvas" id="v13-pshs-final-production" type="code" title="Final Production Dashboard Code" language="html" version="13">
+<component name="canvas" id="v14-final-segmented-dashboard" type="code" title="Final Professional Command Center" language="html" version="14">
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,28 +12,29 @@
 <style>
 body { font-family: 'Plus Jakarta Sans', sans-serif; letter-spacing: -0.02em; }
 
-    /* Modern Segmented Control Aesthetic */
-    .filter-container { @apply bg-slate-100 p-1.5 rounded-2xl flex gap-1 items-center shadow-inner; }
-    .filter-btn { 
-        @apply px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-[0.15em] transition-all flex items-center gap-3 cursor-pointer text-slate-500 hover:text-slate-900; 
+    /* The Professional Segmented Control (The buttons you wanted) */
+    .segmented-control { @apply bg-slate-100 p-1 rounded-2xl flex gap-1 items-center shadow-inner; }
+    .segment-btn { 
+        @apply px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-[0.15em] transition-all flex items-center gap-3 cursor-pointer text-slate-400 hover:text-slate-600; 
     }
-    .filter-btn.active { @apply bg-white text-slate-900 shadow-sm; }
+    .segment-btn.active { @apply bg-white text-slate-900 shadow-sm border border-slate-200/50; }
     
+    /* Status Indicator Dots */
     .status-dot { @apply w-1.5 h-1.5 rounded-full; }
     .dot-all { @apply bg-slate-400; }
     .dot-completed { @apply bg-emerald-500; }
     .dot-ongoing { @apply bg-amber-500; }
     .dot-proposed { @apply bg-rose-500; }
 
-    /* Input Styling */
-    .modern-input { @apply w-full pl-12 pr-6 py-4 rounded-2xl border border-slate-200 bg-white focus:ring-4 focus:ring-slate-100 focus:border-slate-900 transition-all text-xs font-bold outline-none; }
+    /* Modern Input Group */
+    .modern-input { @apply w-full pl-12 pr-6 py-4 rounded-2xl border border-slate-200 bg-white focus:ring-4 focus:ring-slate-100 focus:border-slate-900 transition-all text-xs font-bold outline-none shadow-sm; }
     .fy-select { 
-        @apply appearance-none bg-white border border-slate-200 px-6 py-4 rounded-2xl text-xs font-black uppercase tracking-widest cursor-pointer transition-all outline-none;
+        @apply appearance-none bg-white border border-slate-200 px-6 py-4 rounded-2xl text-xs font-black uppercase tracking-widest cursor-pointer transition-all outline-none shadow-sm;
         background-image: url("data:image/svg+xml,%3Csvg xmlns='[http://www.w3.org/2000/svg](http://www.w3.org/2000/svg)' fill='none' viewBox='0 0 24 24' stroke='%2394a3b8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
         background-repeat: no-repeat;
         background-position: right 1.25rem center;
         background-size: 1rem;
-        padding-right: 3rem;
+        padding-right: 3.5rem;
     }
 
     /* Card Professionalism */
@@ -47,17 +48,17 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; letter-spacing: -0.02em; }
 </head>
 <body class="bg-[#fcfdfe] text-slate-900 min-h-screen">
 
-<nav class="bg-white border-b border-slate-200 sticky top-0 z-50 px-6 lg:px-12 py-5">
+<nav class="bg-white/80 backdrop-blur-md border-b border-slate-200 sticky top-0 z-50 px-6 lg:px-12 py-5">
     <div class="max-w-7xl mx-auto flex justify-between items-center">
         <div class="flex items-center gap-4">
-            <div class="bg-slate-900 w-10 h-10 rounded-xl flex items-center justify-center shadow-lg shadow-slate-200"><i class="fas fa-landmark text-white"></i></div>
+            <div class="bg-slate-900 w-10 h-10 rounded-xl flex items-center justify-center shadow-lg"><i class="fas fa-landmark text-white text-sm"></i></div>
             <div>
-                <h1 class="text-lg font-black tracking-tighter uppercase leading-none">PSHS-WVCIC</h1>
-                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-1">Infrastructure Oversight Command</p>
+                <h1 class="text-base font-black tracking-tighter uppercase leading-none">PSHS-WVCIC</h1>
+                <p class="text-[8px] font-bold text-slate-400 uppercase tracking-widest mt-1">Infrastructure Command Dashboard</p>
             </div>
         </div>
-        <div class="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-3 bg-slate-50 px-4 py-2 rounded-full border border-slate-100">
-            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Cloud Link Active
+        <div class="text-[9px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-3 bg-slate-50 px-4 py-2 rounded-full border border-slate-100">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> Data Sync Active
         </div>
     </div>
 </nav>
@@ -65,30 +66,30 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; letter-spacing: -0.02em; }
 <main class="max-w-7xl mx-auto px-6 lg:px-12 py-10">
     
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-        <div class="bg-white p-8 rounded-[2rem] border border-slate-200 shadow-sm flex flex-col justify-center">
-            <p class="text-[10px] font-black text-slate-400 uppercase mb-3 tracking-widest">Active Portfolio</p>
+        <div class="bg-white p-8 rounded-[2.5rem] border border-slate-200 shadow-sm flex flex-col justify-center transition-transform hover:scale-[1.02]">
+            <p class="text-[9px] font-black text-slate-400 uppercase mb-3 tracking-widest">Active Portfolio</p>
             <h2 id="kpi-total" class="text-4xl font-black italic">--</h2>
         </div>
-        <div class="bg-white p-8 rounded-[2rem] border border-slate-200 shadow-sm flex flex-col justify-center">
-            <p class="text-[10px] font-black text-slate-400 uppercase mb-3 tracking-widest">Global Completion</p>
+        <div class="bg-white p-8 rounded-[2.5rem] border border-slate-200 shadow-sm flex flex-col justify-center transition-transform hover:scale-[1.02]">
+            <p class="text-[9px] font-black text-slate-400 uppercase mb-3 tracking-widest">Global Completion</p>
             <h2 id="kpi-avg" class="text-4xl font-black italic text-indigo-600">--%</h2>
         </div>
-        <div class="bg-slate-900 p-8 rounded-[2rem] shadow-xl shadow-slate-200 flex justify-between items-center text-white">
+        <div class="bg-slate-900 p-8 rounded-[2.5rem] shadow-xl shadow-slate-200 flex justify-between items-center text-white transition-transform hover:scale-[1.02]">
             <div>
-                <p class="text-[10px] font-black text-slate-500 uppercase mb-3 tracking-widest">Budget Valuation</p>
+                <p class="text-[9px] font-black text-slate-500 uppercase mb-3 tracking-widest">Budget Valuation</p>
                 <h2 id="kpi-budget" class="text-2xl font-black italic mb-1">₱0.00</h2>
-                <p class="text-[9px] font-bold text-slate-500 uppercase">Total Allocated Funds</p>
+                <p class="text-[8px] font-bold text-slate-500 uppercase tracking-tighter">Total Committed Funds</p>
             </div>
-            <div class="w-20 h-20">
+            <div class="w-16 h-16">
                 <canvas id="statusChart"></canvas>
             </div>
         </div>
     </div>
 
-    <div class="flex flex-col xl:flex-row gap-8 mb-16 items-center justify-between">
+    <div class="flex flex-col xl:flex-row gap-6 mb-16 items-center justify-between">
         <div class="flex flex-col md:flex-row gap-4 w-full xl:w-auto">
             <div class="relative w-full md:w-80">
-                <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                <i class="fas fa-search absolute left-5 top-1/2 -translate-y-1/2 text-slate-300"></i>
                 <input type="text" id="searchInput" placeholder="Search project or contractor..." class="modern-input">
             </div>
             <select id="fyFilter" onchange="renderUI()" class="fy-select">
@@ -96,17 +97,17 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; letter-spacing: -0.02em; }
             </select>
         </div>
         
-        <div class="filter-container">
-            <div class="filter-btn active" onclick="filterByStatus('All')" data-filter="All">
+        <div class="segmented-control">
+            <div class="segment-btn active" onclick="filterByStatus('All')" data-status="All">
                 <span class="status-dot dot-all"></span> All
             </div>
-            <div class="filter-btn" onclick="filterByStatus('Completed')" data-filter="Completed">
+            <div class="segment-btn" onclick="filterByStatus('Completed')" data-status="Completed">
                 <span class="status-dot dot-completed"></span> Completed
             </div>
-            <div class="filter-btn" onclick="filterByStatus('In Progress')" data-filter="In Progress">
+            <div class="segment-btn" onclick="filterByStatus('In Progress')" data-status="In Progress">
                 <span class="status-dot dot-ongoing"></span> Ongoing
             </div>
-            <div class="filter-btn" onclick="filterByStatus('Proposed')" data-filter="Proposed">
+            <div class="segment-btn" onclick="filterByStatus('Proposed')" data-status="Proposed">
                 <span class="status-dot dot-proposed"></span> Proposed
             </div>
         </div>
@@ -130,7 +131,7 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; letter-spacing: -0.02em; }
             renderUI();
         } catch (error) {
             console.error("Sync Error:", error);
-            document.getElementById('project-container').innerHTML = `<p class="col-span-full text-center text-rose-500 font-bold uppercase text-[10px] tracking-widest">Handshake Error: Verify Permissions</p>`;
+            document.getElementById('project-container').innerHTML = `<p class="col-span-full text-center text-rose-500 font-bold uppercase text-[10px] tracking-widest py-20">Connection Blocked: Verify Script Permissions</p>`;
         }
     }
 
@@ -169,19 +170,19 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; letter-spacing: -0.02em; }
 
         projects.forEach(project => {
             const statusMap = {
-                'Completed': { class: 'completed', label: 'Final Inspection Report', icon: 'fa-clipboard-check' },
-                'In Progress': { class: 'ongoing', label: 'Approved Document', icon: 'fa-file-signature' },
-                'Proposed': { class: 'proposed', label: 'Detailed Estimate', icon: 'fa-file-contract' }
+                'Completed': { class: 'completed', label: 'Inspection Report', icon: 'fa-clipboard-check' },
+                'In Progress': { class: 'ongoing', label: 'Approved Docs', icon: 'fa-file-signature' },
+                'Proposed': { class: 'proposed', label: 'Estimate/TOR', icon: 'fa-file-contract' }
             };
             
             const ui = statusMap[project.Status] || statusMap['Proposed'];
             let finalLabel = project.DocLabel || ui.label;
             let finalIcon = ui.icon;
 
-            // Smart Consultancy Check
-            if (!project.DocLabel && project.ProjectName.toLowerCase().includes('consultancy') && project.Status !== 'Completed') {
+            // Consultancy Check
+            if (!project.DocLabel && project.ProjectName && project.ProjectName.toLowerCase().includes('consultancy') && project.Status !== 'Completed') {
                 finalLabel = 'Terms of Reference';
-                finalIcon = 'fa-file-signature';
+                finalIcon = 'fa-file-contract';
             }
 
             const cost = project.Cost ? '₱' + Number(project.Cost).toLocaleString('en-PH', {minimumFractionDigits: 2}) : '---';
@@ -195,33 +196,34 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; letter-spacing: -0.02em; }
                     <h3 class="text-xl font-black leading-tight uppercase mb-8 min-h-[5rem] flex items-center text-slate-800">${project.ProjectName}</h3>
                     
                     <div class="bg-slate-50 rounded-2xl p-6 mb-10 flex-grow">
-                        <p class="text-[11px] font-bold text-slate-500 italic leading-relaxed">"${project.Notes || 'Administrative monitoring active.'}"</p>
+                        <p class="text-[10px] font-bold text-slate-500 italic leading-relaxed">"${project.Notes || 'Record active in oversight log.'}"</p>
                     </div>
 
                     <div class="space-y-8 pt-8 border-t border-slate-100 mt-auto">
                         <div class="flex justify-between items-end">
                             <div>
-                                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Project Valuation</p>
-                                <p class="text-base font-black text-slate-900 italic">${cost}</p>
+                                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1">Contract Value</p>
+                                <p class="text-sm font-black text-slate-900 italic tracking-tighter">${cost}</p>
                             </div>
                             <div class="text-right">
-                                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Contractor</p>
+                                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1">Contractor</p>
                                 <p class="text-[10px] font-black text-slate-900">${project.Contractor || 'PSHS-WVCIC'}</p>
                             </div>
                         </div>
 
                         ${project.AttachmentURL ? `
                             <a href="${project.AttachmentURL}" target="_blank" class="w-full py-5 bg-slate-900 text-white rounded-2xl text-[10px] font-black uppercase tracking-[0.25em] flex items-center justify-center gap-4 hover:bg-indigo-600 transition shadow-lg shadow-slate-100">
-                                <i class="fas ${finalIcon}"></i> ${finalLabel}
+                                <i class="fas ${finalIcon} text-sm"></i> ${finalLabel}
                             </a>
-                        ` : `<div class="w-full py-5 bg-slate-100 text-slate-400 rounded-2xl text-[10px] font-black uppercase text-center tracking-widest">Awaiting Link</div>`}
+                        ` : `<div class="w-full py-5 bg-slate-50 text-slate-400 rounded-2xl text-[10px] font-black uppercase text-center tracking-widest">Document Pending</div>`}
                         
                         <div>
-                            <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden mb-5">
+                            <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden mb-5">
                                 <div class="bg-indigo-600 h-full rounded-full transition-all duration-700" style="width: ${project.Progress || 0}%"></div>
                             </div>
                             <div class="flex justify-between items-center text-[10px] font-black text-slate-400 uppercase tracking-widest">
-                                <span>Status: ${project.Progress || 0}% Complete</span>
+                                <span>Physical Completion</span>
+                                <span class="text-slate-900 italic font-black">${project.Progress || 0}%</span>
                             </div>
                         </div>
                     </div>
@@ -252,8 +254,8 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; letter-spacing: -0.02em; }
 
     function filterByStatus(status) {
         activeStatus = status;
-        document.querySelectorAll('.filter-btn').forEach(btn => {
-            btn.classList.toggle('active', btn.getAttribute('data-filter') === status);
+        document.querySelectorAll('.segment-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.getAttribute('data-status') === status);
         });
         renderUI();
     }
