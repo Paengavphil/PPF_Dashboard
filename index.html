@@ -1,10 +1,10 @@
-<component name="canvas" id="v19-pshs-refined-command" type="code" title="PSHS Command Center v19 - Refined Cards" language="html" version="19">
+<component name="canvas" id="v20-pshs-mancom-approved" type="code" title="PSHS Command Center v20 - ManCom Approved" language="html" version="20">
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PSHS-WVCIC | Infrastructure Command</title>
+<title>PSHS-WVCIC | Infrastructure & Repair Dashboard</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -12,13 +12,11 @@
 <style>
 body { font-family: 'Plus Jakarta Sans', sans-serif; letter-spacing: -0.02em; background-color: #f8fafc; }
 
-    /* Modern Segmented Toggle */
     .segmented-nav { background: #f1f5f9; padding: 6px; border-radius: 18px; display: inline-flex; gap: 4px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); }
     .nav-btn { padding: 10px 20px; border-radius: 14px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; cursor: pointer; transition: all 0.2s ease; color: #64748b; display: flex; align-items: center; gap: 8px; }
     .nav-btn:hover { color: #1e293b; background: rgba(255,255,255,0.5); }
     .nav-btn.active { background: white; color: #0f172a; box-shadow: 0 4px 12px -1px rgba(0,0,0,0.08); }
 
-    /* Sleek Search & Select */
     .control-group { @apply relative flex items-center w-full; }
     .search-icon { @apply absolute left-5 text-slate-300 transition-colors pointer-events-none; }
     .modern-control { @apply w-full pl-12 pr-6 py-4 rounded-2xl border border-slate-200 bg-white transition-all text-xs font-bold outline-none shadow-sm; }
@@ -31,20 +29,20 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; letter-spacing: -0.02em; ba
         background-repeat: no-repeat; background-position: right 1.25rem center; background-size: 1rem; padding-right: 3.5rem;
     }
 
-    /* REFINED CARD AESTHETIC */
+    /* OUTLINED CARD AESTHETIC */
     .project-card { 
         @apply bg-white border transition-all duration-500 overflow-hidden flex flex-col h-full;
         border-radius: 2.25rem;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.01);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
     }
     .project-card:hover { 
         @apply -translate-y-2 shadow-2xl shadow-slate-200;
     }
 
-    /* Status Accents */
-    .card-accent-completed { border-color: #10b981; border-top-width: 6px; }
-    .card-accent-ongoing { border-color: #f59e0b; border-top-width: 6px; }
-    .card-accent-proposed { border-color: #94a3b8; border-top-width: 6px; }
+    /* Status Accents (Borders) */
+    .card-accent-completed { border-color: #10b981; border-top-width: 8px; border-left-width: 1px; border-right-width: 1px; border-bottom-width: 1px; }
+    .card-accent-ongoing { border-color: #f59e0b; border-top-width: 8px; border-left-width: 1px; border-right-width: 1px; border-bottom-width: 1px; }
+    .card-accent-proposed { border-color: #94a3b8; border-top-width: 8px; border-left-width: 1px; border-right-width: 1px; border-bottom-width: 1px; }
 
     .badge { @apply px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest border; }
     
@@ -65,7 +63,7 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; letter-spacing: -0.02em; ba
         </div>
         <div class="text-[9px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-3 bg-white/50 px-4 py-2 rounded-full border border-slate-100 shadow-inner">
             <span class="relative flex h-2 w-2"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span></span>
-            Live Sync
+            Live Link
         </div>
     </div>
 </nav>
@@ -179,15 +177,14 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; letter-spacing: -0.02em; ba
             const accentStyle = accentStyles[project.Status] || accentStyles['Proposed'];
             const cost = project.Cost ? '₱' + Number(project.Cost).toLocaleString('en-PH', {minimumFractionDigits: 2}) : '---';
 
-            // Scope List Parser
-            const scopeHtml = project.Scope ? project.Scope.split(',').map((item, i) => 
+            // Scope & Remarks Parser (Splits by semicolon or newline)
+            const scopeHtml = project.Scope ? project.Scope.split(/[;\n]/).map((item, i) => 
                 `<li class="flex gap-3 mb-2"><span class="text-indigo-500 font-black tracking-tighter text-[9px]">${(i+1).toString().padStart(2, '0')}</span> ${item.trim()}</li>`
             ).join('') : '<li class="text-slate-400 italic">No scope details provided.</li>';
 
-            // NEW Remarks Parser (Splits by semicolon or newline)
             const remarksHtml = project.Notes ? project.Notes.split(/[;\n]/).map((item, i) => 
                 `<li class="flex gap-3 mb-2"><span class="text-slate-400 font-black tracking-tighter text-[9px]">${(i+1).toString().padStart(2, '0')}</span> ${item.trim()}</li>`
-            ).join('') : '<li class="text-slate-400 italic">No remarks recorded.</li>';
+            ).join('') : '<li class="text-slate-400 italic text-[10px]">No administrative remarks.</li>';
 
             const docLabels = { 'Completed': 'Inspection Report', 'In Progress': 'Approved Docs', 'Proposed': 'Detailed Estimate' };
             let finalLabel = project.DocLabel || docLabels[project.Status] || 'Document';
@@ -225,7 +222,7 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; letter-spacing: -0.02em; ba
                             <i class="fas fa-chevron-down text-[10px] text-indigo-300 group-open:rotate-180 transition-transform"></i>
                         </summary>
                         <div class="mt-4 px-2">
-                            <ul class="text-[11px] font-bold text-slate-600 leading-relaxed italic">
+                            <ul class="text-[11px] font-bold text-slate-500 leading-relaxed italic">
                                 ${remarksHtml}
                             </ul>
                         </div>
