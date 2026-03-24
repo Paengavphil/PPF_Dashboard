@@ -1,124 +1,158 @@
-<component name="canvas" id="v23-pshs-performance-final" type="code" title="PSHS Command Center v23 - Final Performance Edition" language="html" version="23">
+<component name="canvas" id="v25-pshs-executive-final" type="code" title="PSHS Executive Console v25 - PascalCase Integrated" language="html" version="25">
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PSHS-WVCIC | Infrastructure Performance Dashboard</title>
+<title>PSHS-WVCIC | Infrastructure & Repair Status Dashboard</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-body { font-family: 'Plus Jakarta Sans', sans-serif; letter-spacing: -0.02em; background-color: #f8fafc; color: #1e293b; }
-.dashboard-container { @apply max-w-[1600px] mx-auto px-6 lg:px-16 py-10; }
+body { font-family: 'Plus Jakarta Sans', sans-serif; letter-spacing: -0.02em; background-color: #f1f5f9; color: #1e293b; }
 
-    /* Metric Tiles */
-    .metric-card { @apply bg-white p-8 rounded-3xl border border-slate-200 shadow-sm transition-all hover:border-indigo-300; }
-    .metric-label { @apply text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-3; }
-    .metric-value { @apply text-3xl font-black text-slate-900 tabular-nums tracking-tighter; }
+    /* Sidebar Layout */
+    .sidebar { @apply fixed left-0 top-0 h-full w-72 bg-[#0f172a] text-white p-8 z-50 flex flex-col shadow-2xl; }
+    .main-content { margin-left: 18rem; @apply min-h-screen p-10; }
 
-    /* Wide Control Strip */
-    .control-strip { @apply flex flex-col xl:flex-row gap-6 items-center w-full mb-16; }
+    /* KPI Dashboard Row */
+    .metric-card { @apply bg-white p-7 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between transition-all hover:border-indigo-400; }
+    .metric-label { @apply text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5; }
+    .metric-value { @apply text-2xl font-extrabold text-slate-900 tabular-nums tracking-tighter; }
+    
+    /* Search & Filters Group */
+    .control-bar { @apply bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex flex-col xl:flex-row gap-5 items-center mb-12; }
     .search-wrapper { @apply relative flex-grow w-full; }
-    .modern-control { @apply w-full pl-6 pr-14 py-5 rounded-[1.5rem] border border-slate-200 bg-white transition-all text-sm font-bold outline-none shadow-sm; }
-    .modern-control:focus { @apply border-indigo-500 ring-8 ring-indigo-50; }
-    .search-icon { @apply absolute right-8 top-1/2 -translate-y-1/2 text-slate-300 text-lg pointer-events-none; }
+    .modern-input { @apply w-full pl-12 pr-6 py-4 rounded-xl border border-slate-100 bg-slate-50 transition-all text-xs font-bold outline-none; }
+    .modern-input:focus { @apply bg-white border-indigo-500 ring-4 ring-indigo-50; }
+    .search-icon { @apply absolute left-4 top-1/2 -translate-y-1/2 text-slate-300; }
 
-    .modern-select {
-        @apply appearance-none bg-white border border-slate-200 px-8 py-5 rounded-[1.5rem] text-xs font-black uppercase tracking-widest cursor-pointer outline-none shadow-sm min-w-[200px];
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='[http://www.w3.org/2000/svg](http://www.w3.org/2000/svg)' fill='none' viewBox='0 0 24 24' stroke='%2394a3b8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
-        background-repeat: no-repeat; background-position: right 1.5rem center; background-size: 1.25rem;
-    }
+    /* Cards and Badges */
+    .project-card { @apply bg-white border border-slate-200 transition-all duration-300 overflow-hidden flex flex-col h-full rounded-[2.5rem]; }
+    .project-card:hover { @apply -translate-y-1 shadow-2xl; }
+    .status-strip { @apply h-2.5 w-full; }
+    .badge { @apply px-2.5 py-1 rounded-md text-[9px] font-black uppercase tracking-tighter border; }
+    .loc-tag { @apply bg-slate-100 text-slate-500 px-2 py-0.5 rounded text-[8px] font-black uppercase tracking-tighter mr-1 mb-1; }
 
-    /* Project Cards */
-    .project-card { @apply bg-white border transition-all duration-500 overflow-hidden flex flex-col h-full rounded-[2.5rem] shadow-sm; }
-    .project-card:hover { @apply -translate-y-2 shadow-2xl shadow-slate-200; }
-    
-    .card-accent-completed { border-top: 10px solid #10b981; }
-    .card-accent-ongoing { border-top: 10px solid #f59e0b; }
-    .card-accent-proposed { border-top: 10px solid #94a3b8; }
-
-    .badge { @apply px-3 py-1 rounded-md text-[9px] font-black uppercase tracking-widest border flex items-center gap-2; }
-    .loc-tag { @apply bg-slate-100 text-slate-500 px-2 py-0.5 rounded text-[8px] font-bold uppercase tracking-tighter; }
-    
     details summary::-webkit-details-marker { display: none; }
     details > summary { list-style: none; }
 </style>
 </head>
 <body>
 
-<nav class="bg-white/90 backdrop-blur-md border-b border-slate-200 sticky top-0 z-50 px-8 lg:px-16 py-6">
-    <div class="max-w-[1600px] mx-auto flex justify-between items-center">
-        <div class="flex items-center gap-5">
-            <div class="bg-slate-900 w-12 h-12 rounded-2xl flex items-center justify-center shadow-lg"><i class="fas fa-microchip text-white text-lg"></i></div>
-            <div>
-                <h1 class="text-lg font-black tracking-tighter uppercase leading-none text-slate-900">PSHS-WVCIC</h1>
-                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-[0.2em] mt-2 italic">Infrastructure & Repair Status Dashboard</p>
-            </div>
+<aside class="sidebar">
+    <div class="flex items-center gap-4 mb-14">
+        <div class="bg-indigo-500 w-12 h-12 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/30">
+            <i class="fas fa-city text-white text-lg"></i>
         </div>
-        <div id="sync-status" class="flex items-center gap-3 bg-white px-5 py-2.5 rounded-full border border-slate-100 shadow-inner text-[10px] font-black text-slate-400 uppercase tracking-widest">
-            <span class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span> Terminal Connected
-        </div>
-    </div>
-</nav>
-
-<main class="dashboard-container">
-    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8 mb-16">
-        <div class="metric-card bg-indigo-50/30 border-indigo-100">
-            <p class="metric-label">Master Budget</p>
-            <h2 id="kpi-budget" class="metric-value text-indigo-700">₱0.00</h2>
-        </div>
-        <div class="metric-card">
-            <p class="metric-label">Actual Expenditure</p>
-            <h2 id="kpi-actual" class="metric-value">₱0.00</h2>
-        </div>
-        <div class="metric-card">
-            <p class="metric-label">Cost Variance</p>
-            <h2 id="kpi-variance" class="metric-value">₱0.00</h2>
-        </div>
-        <div class="metric-card bg-slate-900 text-white border-none flex-row items-center justify-between">
-            <div>
-                <p class="metric-label text-slate-500">Portfolio Progress</p>
-                <h2 id="kpi-avg" class="text-4xl font-black italic">--%</h2>
-            </div>
-            <div class="w-16 h-16"><canvas id="statusChart"></canvas></div>
+        <div>
+            <h2 class="text-base font-black tracking-tighter leading-none">PSHS-WVCIC</h2>
+            <p class="text-[9px] text-slate-500 font-bold uppercase mt-1.5 tracking-widest italic">PPF Command</p>
         </div>
     </div>
 
-    <div class="control-strip">
+    <nav class="space-y-3 flex-grow">
+        <div class="text-[9px] font-black text-slate-500 uppercase tracking-[0.2em] mb-4 px-4">Management</div>
+        <a href="#" class="flex items-center gap-4 px-5 py-4 rounded-2xl bg-indigo-600/10 text-indigo-400 text-xs font-black transition-all">
+            <i class="fas fa-grid-2"></i> Performance
+        </a>
+        <a href="#" class="flex items-center gap-4 px-5 py-4 rounded-2xl text-slate-400 text-xs font-bold hover:bg-white/5 transition-all">
+            <i class="fas fa-list-check"></i> Project Tracking
+        </a>
+        <a href="#" class="flex items-center gap-4 px-5 py-4 rounded-2xl text-slate-400 text-xs font-bold hover:bg-white/5 transition-all">
+            <i class="fas fa-file-invoice-dollar"></i> Procurement
+        </a>
+    </nav>
+
+    <div class="mt-auto pt-8 border-t border-slate-800/50">
+        <div class="flex items-center gap-3 bg-emerald-500/10 px-4 py-3 rounded-xl border border-emerald-500/20">
+            <span class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span>
+            <span class="text-[9px] font-black text-emerald-500 uppercase tracking-widest">Master Link Active</span>
+        </div>
+    </div>
+</aside>
+
+<main class="main-content">
+    
+    <header class="flex justify-between items-end mb-12">
+        <div>
+            <nav class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Institutional Overview</nav>
+            <h1 class="text-3xl font-black text-slate-900 tracking-tight">Infrastructure & Repair Status Dashboard</h1>
+        </div>
+        <div class="text-right">
+            <p id="sync-label" class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Syncing Masterlist...</p>
+        </div>
+    </header>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8 mb-10">
+        <div class="metric-card border-l-8 border-l-indigo-500">
+            <span class="metric-label">Master Budget</span>
+            <span id="kpi-budget" class="metric-value">₱0.00</span>
+        </div>
+        <div class="metric-card">
+            <span class="metric-label">Actual Expenditure</span>
+            <span id="kpi-actual" class="metric-value">₱0.00</span>
+        </div>
+        <div class="metric-card">
+            <span class="metric-label">Financial Variance</span>
+            <span id="kpi-variance" class="metric-value">₱0.00</span>
+        </div>
+        <div class="metric-card bg-slate-900 text-white border-none">
+            <span class="metric-label text-slate-500">Portfolio Execution</span>
+            <div class="flex items-center justify-between">
+                <span id="kpi-avg" class="text-3xl font-black italic">--%</span>
+                <div class="w-12 h-12"><canvas id="gaugeProgress"></canvas></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 xl:grid-cols-3 gap-8 mb-12">
+        <div class="xl:col-span-2 bg-white p-8 rounded-3xl border border-slate-200 shadow-sm h-80">
+            <span class="metric-label block mb-6">Financial Development (Cumulative)</span>
+            <canvas id="lineChart"></canvas>
+        </div>
+        <div class="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm h-80">
+            <span class="metric-label block mb-6">Repair Category Distribution</span>
+            <canvas id="categoryChart"></canvas>
+        </div>
+    </div>
+
+    <div class="control-bar">
         <div class="search-wrapper">
-            <input type="text" id="searchInput" placeholder="Search by project, contractor, building location, or PO number..." class="modern-control">
             <i class="fas fa-search search-icon"></i>
+            <input type="text" id="searchInput" placeholder="Search by Project, Contractor, Building, or Category..." class="modern-input">
         </div>
-        <div class="flex gap-4 w-full xl:w-auto">
-            <select id="fyFilter" onchange="renderUI()" class="modern-select">
+        <div class="flex gap-3">
+            <select id="fyFilter" onchange="renderUI()" class="modern-input w-auto min-w-[140px] border-none bg-slate-100">
                 <option value="All">All Fiscal Years</option>
             </select>
-            <div class="flex bg-slate-200 p-1 rounded-2xl">
-                <button class="px-6 py-3 rounded-xl text-[10px] font-black uppercase transition-all" id="btn-all" onclick="filterByStatus('All')">All</button>
-                <button class="px-6 py-3 rounded-xl text-[10px] font-black text-slate-500 uppercase transition-all" id="btn-active" onclick="filterByStatus('In Progress')">Active</button>
+            <div class="flex bg-slate-100 p-1 rounded-xl">
+                <button class="px-5 py-2.5 rounded-lg text-[10px] font-black bg-white shadow-sm uppercase transition-all" id="btn-all" onclick="filterByStatus('All')">All</button>
+                <button class="px-5 py-2.5 rounded-lg text-[10px] font-black text-slate-500 uppercase transition-all" id="btn-active" onclick="filterByStatus('In Progress')">Active</button>
             </div>
         </div>
     </div>
 
-    <div id="project-container" class="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-12 pb-32">
+    <div id="project-container" class="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-10 pb-32">
         </div>
 </main>
 
 <script>
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbz-9wukcFnCwKNhcmTrTRQaY9fc_vOJA8O6yqNA71XKrJmiAj-b5f6uYzSG07JUjAcR/exec';
+    const scriptURL = '[https://script.google.com/macros/s/AKfycbz-9wukcFnCwKNhcmTrTRQaY9fc_vOJA8O6yqNA71XKrJmiAj-b5f6uYzSG07JUjAcR/exec](https://script.google.com/macros/s/AKfycbz-9wukcFnCwKNhcmTrTRQaY9fc_vOJA8O6yqNA71XKrJmiAj-b5f6uYzSG07JUjAcR/exec)';
     let allProjects = [];
     let activeStatus = 'All';
-    let chartInstance = null;
+    let charts = {};
 
     async function init() {
         try {
             const response = await fetch(scriptURL);
             allProjects = await response.json();
+            document.getElementById('sync-label').textContent = `Last Sync: ${new Date().toLocaleTimeString()}`;
             populateFYFilter();
+            initCharts();
             renderUI();
-        } catch (e) { console.error(e); }
+        } catch (e) { console.error("Handshake Error:", e); }
     }
 
     function populateFYFilter() {
@@ -128,66 +162,67 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; letter-spacing: -0.02em; ba
     }
 
     function renderUI() {
-        const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-        const selectedFY = document.getElementById('fyFilter').value;
+        const term = document.getElementById('searchInput').value.toLowerCase();
+        const fy = document.getElementById('fyFilter').value;
         const filtered = allProjects.filter(p => {
-            const pool = `${p.ProjectName} ${p.Contractor} ${p.Location} ${p.PO_Number}`.toLowerCase();
-            return pool.includes(searchTerm) && (activeStatus === 'All' || p.Status === activeStatus) && (selectedFY === 'All' || p.FiscalYear === selectedFY);
+            const searchPool = `${p.ProjectName} ${p.Contractor} ${p.Location} ${p.Category} ${p.PO_Number}`.toLowerCase();
+            return searchPool.includes(term) && (activeStatus === 'All' || p.Status === activeStatus) && (fy === 'All' || p.FiscalYear === fy);
         });
         renderCards(filtered);
         updateKPIs(filtered);
-        updateChart(allProjects);
+        updateCharts(filtered);
     }
 
     function renderCards(projects) {
         const container = document.getElementById('project-container');
-        container.innerHTML = projects.length ? '' : '<div class="col-span-full py-40 text-center text-slate-300 font-bold uppercase tracking-[0.5em]">System ID: No Records Found</div>';
+        container.innerHTML = projects.length ? '' : '<div class="col-span-full py-40 text-center opacity-20 font-black uppercase tracking-[0.4em]">No Strategic Records Found</div>';
 
         projects.forEach(project => {
-            const statusStyles = { 'Completed': 'bg-emerald-50 text-emerald-700 border-emerald-100', 'In Progress': 'bg-amber-50 text-amber-700 border-amber-100', 'Proposed': 'bg-slate-100 text-slate-600 border-slate-200' };
-            const accentStyles = { 'Completed': 'card-accent-completed', 'In Progress': 'card-accent-ongoing', 'Proposed': 'card-accent-proposed' };
-            const prioStyles = { 'Urgent': 'bg-rose-50 text-rose-600 border-rose-100', 'Medium': 'bg-blue-50 text-blue-600 border-blue-100', 'Routine': 'bg-slate-50 text-slate-400 border-slate-200' };
+            const statusMap = { 'Completed': 'bg-emerald-500', 'In Progress': 'bg-amber-500', 'Proposed': 'bg-slate-300' };
+            const badgeMap = { 'Completed': 'bg-emerald-50 text-emerald-700 border-emerald-100', 'In Progress': 'bg-amber-50 text-amber-700 border-amber-100', 'Proposed': 'bg-slate-100 text-slate-500 border-slate-200' };
+            const prioMap = { 'Urgent': 'bg-rose-50 text-rose-600 border-rose-100', 'Medium': 'bg-indigo-50 text-indigo-600 border-indigo-100', 'Routine': 'bg-slate-50 text-slate-400 border-slate-100' };
 
-            const cleanNum = (v) => v ? Number(v.toString().replace(/,/g, '')) : 0;
-            const cost = '₱' + cleanNum(project.Cost).toLocaleString('en-PH', {minimumFractionDigits: 2});
+            const cleanPrice = (v) => v ? Number(v.toString().replace(/,/g, '')) : 0;
+            const cost = '₱' + cleanPrice(project.Cost).toLocaleString('en-PH', {minimumFractionDigits: 2});
             
-            // Parser for lists (Scope, Notes, Location)
             const listParser = (str, color) => str ? str.split(/[;\n]/).filter(x => x.trim()).map((item, i) => `<li class="flex gap-4 mb-2.5 items-start"><span class="${color} text-white rounded px-1.5 py-0.5 text-[7px] font-black mt-1">${i+1}</span> <span class="flex-grow">${item.trim()}</span></li>`).join('') : '---';
-            const locTags = project.Location ? project.Location.split(/[;\n]/).map(l => `<span class="loc-tag">${l.trim()}</span>`).join('') : '<span class="loc-tag">General Site</span>';
+            const locParser = (str) => str ? str.split(/[;\n]/).map(l => `<span class="loc-tag">${l.trim()}</span>`).join('') : '<span class="loc-tag">General Site</span>';
 
             container.innerHTML += `
-                <div class="project-card ${accentStyles[project.Status] || 'card-accent-proposed'} p-12 flex flex-col h-full shadow-sm">
-                    <div class="flex justify-between items-center mb-8">
-                        <div class="flex gap-3">
-                            <span class="badge ${statusStyles[project.Status] || ''}">${project.Status}</span>
-                            <span class="badge ${prioStyles[project.Priority] || prioStyles['Routine']}"><i class="fas fa-bolt text-[7px]"></i> ${project.Priority || 'Routine'}</span>
+                <div class="project-card flex flex-col h-full shadow-sm">
+                    <div class="status-strip ${statusMap[project.Status] || 'bg-slate-300'}"></div>
+                    <div class="p-10 flex flex-col h-full">
+                        <div class="flex justify-between items-center mb-8">
+                            <div class="flex gap-2">
+                                <span class="badge ${badgeMap[project.Status]}">${project.Status}</span>
+                                <span class="badge ${prioMap[project.Priority] || prioMap['Routine']}"><i class="fas fa-bolt text-[7px]"></i> ${project.Priority || 'Routine'}</span>
+                            </div>
+                            <span class="text-[10px] font-black text-slate-300 uppercase tracking-widest">${project.FiscalYear || 'FY --'}</span>
                         </div>
-                        <span class="text-[11px] font-black text-slate-300 uppercase tracking-widest">${project.FiscalYear || 'FY --'}</span>
-                    </div>
 
-                    <div class="flex flex-wrap gap-2 mb-6">${locTags}</div>
+                        <div class="flex flex-wrap mb-6">${locParser(project.Location)}</div>
+                        <h3 class="text-xl font-black leading-tight uppercase mb-8 min-h-[5rem] text-slate-800">${project.ProjectName}</h3>
+                        
+                        <details class="group mb-4">
+                            <summary class="flex items-center justify-between cursor-pointer bg-slate-50 p-5 rounded-2xl border border-slate-100 hover:border-indigo-300 transition-all"><span class="text-[10px] font-black text-slate-500 uppercase tracking-widest flex items-center gap-3"><i class="fas fa-list-check text-indigo-500 text-sm"></i> Scope of Works</span><i class="fas fa-plus text-[9px] group-open:hidden"></i><i class="fas fa-minus text-[9px] hidden group-open:block"></i></summary>
+                            <div class="mt-5 px-3"><ul class="text-[11px] font-bold text-slate-600 leading-relaxed">${listParser(project.Scope, 'bg-indigo-600')}</ul></div>
+                        </details>
 
-                    <h3 class="text-xl font-black leading-tight uppercase mb-10 min-h-[4rem] text-slate-800">${project.ProjectName}</h3>
-                    
-                    <details class="group mb-5">
-                        <summary class="flex items-center justify-between cursor-pointer bg-slate-50 p-5 rounded-2xl border border-slate-100 hover:border-indigo-300 transition-all"><span class="text-[10px] font-black text-slate-500 uppercase tracking-widest flex items-center gap-3"><i class="fas fa-layer-group text-indigo-500"></i> Scope of Works</span><i class="fas fa-plus text-[9px] group-open:hidden"></i><i class="fas fa-minus text-[9px] hidden group-open:block"></i></summary>
-                        <div class="mt-5 px-3"><ul class="text-[11px] font-bold text-slate-600 leading-relaxed">${listParser(project.Scope, 'bg-indigo-600')}</ul></div>
-                    </details>
+                        <details class="group mb-12">
+                            <summary class="flex items-center justify-between cursor-pointer bg-indigo-50/20 p-5 rounded-2xl border border-indigo-100/30 hover:border-indigo-400 transition-all"><span class="text-[10px] font-black text-indigo-900/40 uppercase tracking-widest flex items-center gap-3"><i class="fas fa-comment-dots text-indigo-400 text-sm"></i> Admin Remarks</span><i class="fas fa-plus text-[9px] group-open:hidden"></i><i class="fas fa-minus text-[9px] hidden group-open:block"></i></summary>
+                            <div class="mt-5 px-3"><ul class="text-[11px] font-bold text-slate-500 leading-relaxed italic">${listParser(project.Notes, 'bg-slate-400')}</ul></div>
+                        </details>
 
-                    <details class="group mb-12">
-                        <summary class="flex items-center justify-between cursor-pointer bg-indigo-50/20 p-5 rounded-2xl border border-indigo-100/30 hover:border-indigo-400 transition-all"><span class="text-[10px] font-black text-indigo-900/40 uppercase tracking-widest flex items-center gap-3"><i class="fas fa-comment-dots text-indigo-400"></i> Admin Remarks</span><i class="fas fa-plus text-[9px] group-open:hidden"></i><i class="fas fa-minus text-[9px] hidden group-open:block"></i></summary>
-                        <div class="mt-5 px-3"><ul class="text-[11px] font-bold text-slate-500 leading-relaxed italic">${listParser(project.Notes, 'bg-slate-400')}</ul></div>
-                    </details>
-
-                    <div class="space-y-10 pt-10 border-t border-slate-100 mt-auto">
-                        <div class="grid grid-cols-2 gap-6">
-                            <div><p class="text-[10px] font-black text-slate-400 uppercase mb-2">Contract Value</p><p class="text-lg font-black text-slate-900">${cost}</p></div>
-                            <div class="text-right"><p class="text-[10px] font-black text-slate-400 uppercase mb-2">Target Date</p><p class="text-xs font-black text-slate-600 uppercase tabular-nums">${project.TargetDate || 'Awaiting NTP'}</p></div>
-                        </div>
-                        ${project.AttachmentURL ? `<a href="${project.AttachmentURL}" target="_blank" class="w-full py-6 bg-slate-900 text-white rounded-2xl text-[11px] font-black uppercase tracking-[0.3em] flex items-center justify-center gap-5 hover:bg-indigo-600 transition shadow-xl"><i class="fas fa-file-contract"></i> View Documents</a>` : `<div class="w-full py-6 bg-slate-100 text-slate-400 rounded-2xl text-[11px] font-black uppercase text-center tracking-widest">Awaiting Link</div>`}
-                        <div>
-                            <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden mb-5"><div class="bg-indigo-600 h-full transition-all duration-1000" style="width: ${project.Progress || 0}%"></div></div>
-                            <div class="flex justify-between items-center text-[11px] font-black text-slate-400 uppercase tracking-widest"><span>Execution Progress</span><span class="text-slate-900 text-sm font-black italic">${project.Progress || 0}%</span></div>
+                        <div class="space-y-10 pt-10 border-t border-slate-100 mt-auto">
+                            <div class="grid grid-cols-2 gap-6">
+                                <div><p class="text-[10px] font-black text-slate-400 uppercase mb-2">Budgeted Cost</p><p class="text-base font-black text-slate-900 italic tracking-tighter">${cost}</p></div>
+                                <div class="text-right"><p class="text-[10px] font-black text-slate-400 uppercase mb-2">Target Date</p><p class="text-xs font-black text-slate-700 uppercase tabular-nums">${project.TargetDate || 'TBD'}</p></div>
+                            </div>
+                            ${project.AttachmentURL ? `<a href="${project.AttachmentURL}" target="_blank" class="w-full py-5 bg-slate-900 text-white rounded-2xl text-[10px] font-black uppercase tracking-[0.3em] flex items-center justify-center gap-4 hover:bg-indigo-600 transition shadow-xl"><i class="fas fa-file-contract text-sm"></i> ${project.DocLabel || 'View Record'}</a>` : `<div class="w-full py-5 bg-slate-50 text-slate-400 rounded-2xl text-[10px] font-black uppercase text-center tracking-widest">Awaiting File Submission</div>`}
+                            <div>
+                                <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden mb-5"><div class="bg-indigo-600 h-full transition-all duration-1000" style="width: ${project.Progress || 0}%"></div></div>
+                                <div class="flex justify-between items-center text-[11px] font-black text-slate-400 uppercase tracking-widest"><span>Execution Status</span><span class="text-slate-900 font-black italic">${project.Progress || 0}%</span></div>
+                            </div>
                         </div>
                     </div>
                 </div>`;
@@ -195,33 +230,55 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; letter-spacing: -0.02em; ba
     }
 
     function updateKPIs(data) {
-        const cleanNum = (v) => v ? Number(v.toString().replace(/,/g, '')) : 0;
-        const total = data.reduce((sum, p) => sum + cleanNum(p.Cost), 0);
-        const actual = data.reduce((sum, p) => sum + cleanNum(p.ActualCost), 0);
+        const clean = (v) => v ? Number(v.toString().replace(/,/g, '')) : 0;
+        const budget = data.reduce((sum, p) => sum + clean(p.Cost), 0);
+        const actual = data.reduce((sum, p) => sum + clean(p.ActualCost), 0);
         const avg = data.length ? data.reduce((sum, p) => sum + (Number(p.Progress) || 0), 0) / data.length : 0;
 
-        document.getElementById('kpi-budget').textContent = '₱' + total.toLocaleString('en-PH', {minimumFractionDigits: 2});
+        document.getElementById('kpi-budget').textContent = '₱' + budget.toLocaleString('en-PH', {minimumFractionDigits: 2});
         document.getElementById('kpi-actual').textContent = '₱' + actual.toLocaleString('en-PH', {minimumFractionDigits: 2});
-        document.getElementById('kpi-variance').textContent = (total - actual >= 0 ? '+' : '-') + '₱' + Math.abs(total - actual).toLocaleString('en-PH', {minimumFractionDigits: 2});
+        document.getElementById('kpi-variance').textContent = (budget - actual >= 0 ? '+' : '-') + '₱' + Math.abs(budget - actual).toLocaleString('en-PH', {minimumFractionDigits: 2});
         document.getElementById('kpi-avg').textContent = Math.round(avg) + '%';
     }
 
-    function updateChart(data) {
-        const counts = { 'Completed': 0, 'In Progress': 0, 'Proposed': 0 };
-        data.forEach(p => { if (counts[p.Status] !== undefined) counts[p.Status]++; });
-        if (chartInstance) chartInstance.destroy();
-        const ctx = document.getElementById('statusChart').getContext('2d');
-        chartInstance = new Chart(ctx, {
-            type: 'doughnut',
-            data: { datasets: [{ data: Object.values(counts), backgroundColor: ['#10b981', '#f59e0b', '#cbd5e1'], borderWidth: 0 }] },
-            options: { cutout: '70%', plugins: { legend: { display: false } }, responsive: true, maintainAspectRatio: false }
+    function initCharts() {
+        charts.line = new Chart(document.getElementById('lineChart'), {
+            type: 'line',
+            data: { labels: [], datasets: [{ label: 'Budget Trend', data: [], borderColor: '#6366f1', tension: 0.4, fill: true, backgroundColor: 'rgba(99, 102, 241, 0.05)' }] },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { display: false }, x: { grid: { display: false }, ticks: { font: { size: 9, weight: 'bold' } } } } }
         });
+        charts.cat = new Chart(document.getElementById('categoryChart'), {
+            type: 'doughnut',
+            data: { labels: [], datasets: [{ data: [], backgroundColor: ['#6366f1', '#10b981', '#f59e0b', '#f43f5e', '#64748b'] }] },
+            options: { cutout: '80%', responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 9, weight: 'bold' } } } } }
+        });
+        charts.gauge = new Chart(document.getElementById('gaugeProgress'), {
+            type: 'doughnut',
+            data: { datasets: [{ data: [0, 100], backgroundColor: ['#ffffff', 'rgba(255,255,255,0.1)'], borderWidth: 0 }] },
+            options: { cutout: '80%', circumfrence: 180, rotation: 270, plugins: { legend: { display: false } } }
+        });
+    }
+
+    function updateCharts(data) {
+        const cats = data.reduce((acc, p) => { const c = p.Category || 'Other'; acc[c] = (acc[c] || 0) + 1; return acc; }, {});
+        charts.cat.data.labels = Object.keys(cats);
+        charts.cat.data.datasets[0].data = Object.values(cats);
+        charts.cat.update();
+
+        const avg = data.length ? data.reduce((sum, p) => sum + (Number(p.Progress) || 0), 0) / data.length : 0;
+        charts.gauge.data.datasets[0].data = [avg, 100 - avg];
+        charts.gauge.update();
+        
+        const trend = data.reduce((acc, p) => { acc[p.FiscalYear] = (acc[p.FiscalYear] || 0) + Number(p.ActualCost || 0); return acc; }, {});
+        charts.line.data.labels = Object.keys(trend).sort();
+        charts.line.data.datasets[0].data = Object.values(trend);
+        charts.line.update();
     }
 
     function filterByStatus(status) {
         activeStatus = status;
-        document.getElementById('btn-all').className = status === 'All' ? 'px-6 py-3 rounded-xl text-[10px] font-black bg-white shadow-sm uppercase transition-all' : 'px-6 py-3 rounded-xl text-[10px] font-black text-slate-500 uppercase transition-all';
-        document.getElementById('btn-active').className = status === 'In Progress' ? 'px-6 py-3 rounded-xl text-[10px] font-black bg-white shadow-sm uppercase transition-all' : 'px-6 py-3 rounded-xl text-[10px] font-black text-slate-500 uppercase transition-all';
+        document.getElementById('btn-all').className = status === 'All' ? 'px-5 py-2.5 rounded-lg text-[10px] font-black bg-white shadow-sm uppercase transition-all' : 'px-5 py-2.5 rounded-lg text-[10px] font-black text-slate-500 uppercase transition-all';
+        document.getElementById('btn-active').className = status === 'In Progress' ? 'px-5 py-2.5 rounded-lg text-[10px] font-black bg-white shadow-sm uppercase transition-all' : 'px-5 py-2.5 rounded-lg text-[10px] font-black text-slate-500 uppercase transition-all';
         renderUI();
     }
 
