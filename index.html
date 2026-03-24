@@ -1,123 +1,108 @@
-<component name="canvas" id="v20-pshs-mancom-approved" type="code" title="PSHS Command Center v20 - ManCom Approved" language="html" version="20">
+<component name="canvas" id="v23-pshs-performance-final" type="code" title="PSHS Command Center v23 - Final Performance Edition" language="html" version="23">
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PSHS-WVCIC | Infrastructure & Repair Dashboard</title>
+<title>PSHS-WVCIC | Infrastructure Performance Dashboard</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-body { font-family: 'Plus Jakarta Sans', sans-serif; letter-spacing: -0.02em; background-color: #f8fafc; }
+body { font-family: 'Plus Jakarta Sans', sans-serif; letter-spacing: -0.02em; background-color: #f8fafc; color: #1e293b; }
+.dashboard-container { @apply max-w-[1600px] mx-auto px-6 lg:px-16 py-10; }
 
-    .segmented-nav { background: #f1f5f9; padding: 6px; border-radius: 18px; display: inline-flex; gap: 4px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); }
-    .nav-btn { padding: 10px 20px; border-radius: 14px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; cursor: pointer; transition: all 0.2s ease; color: #64748b; display: flex; align-items: center; gap: 8px; }
-    .nav-btn:hover { color: #1e293b; background: rgba(255,255,255,0.5); }
-    .nav-btn.active { background: white; color: #0f172a; box-shadow: 0 4px 12px -1px rgba(0,0,0,0.08); }
+    /* Metric Tiles */
+    .metric-card { @apply bg-white p-8 rounded-3xl border border-slate-200 shadow-sm transition-all hover:border-indigo-300; }
+    .metric-label { @apply text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-3; }
+    .metric-value { @apply text-3xl font-black text-slate-900 tabular-nums tracking-tighter; }
 
-    .control-group { @apply relative flex items-center w-full; }
-    .search-icon { @apply absolute left-5 text-slate-300 transition-colors pointer-events-none; }
-    .modern-control { @apply w-full pl-12 pr-6 py-4 rounded-2xl border border-slate-200 bg-white transition-all text-xs font-bold outline-none shadow-sm; }
-    .modern-control:focus { @apply border-indigo-500 ring-4 ring-indigo-50; }
-    .modern-control:focus + .search-icon { @apply text-indigo-500; }
+    /* Wide Control Strip */
+    .control-strip { @apply flex flex-col xl:flex-row gap-6 items-center w-full mb-16; }
+    .search-wrapper { @apply relative flex-grow w-full; }
+    .modern-control { @apply w-full pl-6 pr-14 py-5 rounded-[1.5rem] border border-slate-200 bg-white transition-all text-sm font-bold outline-none shadow-sm; }
+    .modern-control:focus { @apply border-indigo-500 ring-8 ring-indigo-50; }
+    .search-icon { @apply absolute right-8 top-1/2 -translate-y-1/2 text-slate-300 text-lg pointer-events-none; }
 
     .modern-select {
-        @apply appearance-none bg-white border border-slate-200 px-6 py-4 rounded-2xl text-xs font-black uppercase tracking-widest cursor-pointer outline-none shadow-sm;
+        @apply appearance-none bg-white border border-slate-200 px-8 py-5 rounded-[1.5rem] text-xs font-black uppercase tracking-widest cursor-pointer outline-none shadow-sm min-w-[200px];
         background-image: url("data:image/svg+xml,%3Csvg xmlns='[http://www.w3.org/2000/svg](http://www.w3.org/2000/svg)' fill='none' viewBox='0 0 24 24' stroke='%2394a3b8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
-        background-repeat: no-repeat; background-position: right 1.25rem center; background-size: 1rem; padding-right: 3.5rem;
+        background-repeat: no-repeat; background-position: right 1.5rem center; background-size: 1.25rem;
     }
 
-    /* OUTLINED CARD AESTHETIC */
-    .project-card { 
-        @apply bg-white border transition-all duration-500 overflow-hidden flex flex-col h-full;
-        border-radius: 2.25rem;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
-    }
-    .project-card:hover { 
-        @apply -translate-y-2 shadow-2xl shadow-slate-200;
-    }
+    /* Project Cards */
+    .project-card { @apply bg-white border transition-all duration-500 overflow-hidden flex flex-col h-full rounded-[2.5rem] shadow-sm; }
+    .project-card:hover { @apply -translate-y-2 shadow-2xl shadow-slate-200; }
+    
+    .card-accent-completed { border-top: 10px solid #10b981; }
+    .card-accent-ongoing { border-top: 10px solid #f59e0b; }
+    .card-accent-proposed { border-top: 10px solid #94a3b8; }
 
-    /* Status Accents (Borders) */
-    .card-accent-completed { border-color: #10b981; border-top-width: 8px; border-left-width: 1px; border-right-width: 1px; border-bottom-width: 1px; }
-    .card-accent-ongoing { border-color: #f59e0b; border-top-width: 8px; border-left-width: 1px; border-right-width: 1px; border-bottom-width: 1px; }
-    .card-accent-proposed { border-color: #94a3b8; border-top-width: 8px; border-left-width: 1px; border-right-width: 1px; border-bottom-width: 1px; }
-
-    .badge { @apply px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest border; }
+    .badge { @apply px-3 py-1 rounded-md text-[9px] font-black uppercase tracking-widest border flex items-center gap-2; }
+    .loc-tag { @apply bg-slate-100 text-slate-500 px-2 py-0.5 rounded text-[8px] font-bold uppercase tracking-tighter; }
     
     details summary::-webkit-details-marker { display: none; }
     details > summary { list-style: none; }
 </style>
 </head>
-<body class="min-h-screen">
+<body>
 
-<nav class="bg-white/80 backdrop-blur-md border-b border-slate-200 sticky top-0 z-50 px-6 lg:px-12 py-5">
-    <div class="max-w-7xl mx-auto flex justify-between items-center">
-        <div class="flex items-center gap-4">
-            <div class="bg-slate-900 w-10 h-10 rounded-xl flex items-center justify-center shadow-lg"><i class="fas fa-landmark text-white text-sm"></i></div>
+<nav class="bg-white/90 backdrop-blur-md border-b border-slate-200 sticky top-0 z-50 px-8 lg:px-16 py-6">
+    <div class="max-w-[1600px] mx-auto flex justify-between items-center">
+        <div class="flex items-center gap-5">
+            <div class="bg-slate-900 w-12 h-12 rounded-2xl flex items-center justify-center shadow-lg"><i class="fas fa-microchip text-white text-lg"></i></div>
             <div>
-                <h1 class="text-base font-black tracking-tighter uppercase leading-none">PSHS-WVCIC</h1>
-                <p class="text-[8px] font-bold text-slate-400 uppercase tracking-widest mt-1">Infrastructure & Repair Status Dashboard</p>
+                <h1 class="text-lg font-black tracking-tighter uppercase leading-none text-slate-900">PSHS-WVCIC</h1>
+                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-[0.2em] mt-2 italic">Infrastructure & Repair Status Dashboard</p>
             </div>
         </div>
-        <div class="text-[9px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-3 bg-white/50 px-4 py-2 rounded-full border border-slate-100 shadow-inner">
-            <span class="relative flex h-2 w-2"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span></span>
-            Live Link
+        <div id="sync-status" class="flex items-center gap-3 bg-white px-5 py-2.5 rounded-full border border-slate-100 shadow-inner text-[10px] font-black text-slate-400 uppercase tracking-widest">
+            <span class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span> Terminal Connected
         </div>
     </div>
 </nav>
 
-<main class="max-w-7xl mx-auto px-6 lg:px-12 py-12">
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-        <div class="bg-white p-10 rounded-[2.25rem] border border-slate-200 shadow-sm">
-            <p class="text-[10px] font-black text-slate-400 uppercase mb-4 tracking-widest">Active Projects</p>
-            <h2 id="kpi-total" class="text-4xl font-black italic text-slate-900">--</h2>
+<main class="dashboard-container">
+    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8 mb-16">
+        <div class="metric-card bg-indigo-50/30 border-indigo-100">
+            <p class="metric-label">Master Budget</p>
+            <h2 id="kpi-budget" class="metric-value text-indigo-700">₱0.00</h2>
         </div>
-        <div class="bg-white p-10 rounded-[2.25rem] border border-slate-200 shadow-sm">
-            <p class="text-[10px] font-black text-slate-400 uppercase mb-4 tracking-widest">Global Progress</p>
-            <h2 id="kpi-avg" class="text-4xl font-black italic text-indigo-600">--%</h2>
+        <div class="metric-card">
+            <p class="metric-label">Actual Expenditure</p>
+            <h2 id="kpi-actual" class="metric-value">₱0.00</h2>
         </div>
-        <div class="bg-slate-900 p-10 rounded-[2.25rem] shadow-xl shadow-slate-200 flex justify-between items-center text-white">
+        <div class="metric-card">
+            <p class="metric-label">Cost Variance</p>
+            <h2 id="kpi-variance" class="metric-value">₱0.00</h2>
+        </div>
+        <div class="metric-card bg-slate-900 text-white border-none flex-row items-center justify-between">
             <div>
-                <p class="text-[10px] font-black text-slate-500 uppercase mb-4 tracking-widest">Portfolio Value</p>
-                <h2 id="kpi-budget" class="text-3xl font-black italic mb-1 text-white">₱0.00</h2>
-                <p class="text-[9px] font-bold text-slate-500 uppercase tracking-widest">Allocated Funds</p>
+                <p class="metric-label text-slate-500">Portfolio Progress</p>
+                <h2 id="kpi-avg" class="text-4xl font-black italic">--%</h2>
             </div>
-            <div class="w-16 h-16">
-                <canvas id="statusChart"></canvas>
-            </div>
+            <div class="w-16 h-16"><canvas id="statusChart"></canvas></div>
         </div>
     </div>
 
-    <div class="flex flex-col xl:flex-row gap-8 mb-16 items-center justify-between">
-        <div class="flex flex-col md:flex-row gap-4 w-full xl:w-auto items-center">
-            <div class="control-group md:w-96">
-                <input type="text" id="searchInput" placeholder="Search project or contractor..." class="modern-control">
-                <i class="fas fa-search search-icon"></i>
-            </div>
-            <select id="fyFilter" onchange="renderUI()" class="modern-select w-full md:w-auto">
+    <div class="control-strip">
+        <div class="search-wrapper">
+            <input type="text" id="searchInput" placeholder="Search by project, contractor, building location, or PO number..." class="modern-control">
+            <i class="fas fa-search search-icon"></i>
+        </div>
+        <div class="flex gap-4 w-full xl:w-auto">
+            <select id="fyFilter" onchange="renderUI()" class="modern-select">
                 <option value="All">All Fiscal Years</option>
             </select>
-        </div>
-        
-        <div class="segmented-nav">
-            <div class="nav-btn active" onclick="filterByStatus('All')" data-status="All">
-                <span class="w-2 h-2 rounded-full bg-slate-400"></span> All
-            </div>
-            <div class="nav-btn" onclick="filterByStatus('Completed')" data-status="Completed">
-                <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Completed
-            </div>
-            <div class="nav-btn" onclick="filterByStatus('In Progress')" data-status="In Progress">
-                <span class="w-2 h-2 rounded-full bg-amber-500"></span> Ongoing
-            </div>
-            <div class="nav-btn" onclick="filterByStatus('Proposed')" data-status="Proposed">
-                <span class="w-2 h-2 rounded-full bg-rose-500"></span> Proposed
+            <div class="flex bg-slate-200 p-1 rounded-2xl">
+                <button class="px-6 py-3 rounded-xl text-[10px] font-black uppercase transition-all" id="btn-all" onclick="filterByStatus('All')">All</button>
+                <button class="px-6 py-3 rounded-xl text-[10px] font-black text-slate-500 uppercase transition-all" id="btn-active" onclick="filterByStatus('In Progress')">Active</button>
             </div>
         </div>
     </div>
 
-    <div id="project-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 pb-24">
+    <div id="project-container" class="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-12 pb-32">
         </div>
 </main>
 
@@ -133,33 +118,22 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; letter-spacing: -0.02em; ba
             allProjects = await response.json();
             populateFYFilter();
             renderUI();
-        } catch (error) {
-            console.error("Sync Error:", error);
-        }
+        } catch (e) { console.error(e); }
     }
 
     function populateFYFilter() {
         const fySelect = document.getElementById('fyFilter');
         const years = [...new Set(allProjects.map(p => p.FiscalYear).filter(y => y))].sort().reverse();
-        years.forEach(year => {
-            const opt = document.createElement('option');
-            opt.value = year; opt.textContent = year; fySelect.appendChild(opt);
-        });
+        years.forEach(year => { const opt = document.createElement('option'); opt.value = year; opt.textContent = year; fySelect.appendChild(opt); });
     }
 
     function renderUI() {
         const searchTerm = document.getElementById('searchInput').value.toLowerCase();
         const selectedFY = document.getElementById('fyFilter').value;
-
         const filtered = allProjects.filter(p => {
-            const name = (p.ProjectName || "").toLowerCase();
-            const contractor = (p.Contractor || "").toLowerCase();
-            const matchesSearch = name.includes(searchTerm) || contractor.includes(searchTerm);
-            const matchesStatus = activeStatus === 'All' || p.Status === activeStatus;
-            const matchesFY = selectedFY === 'All' || p.FiscalYear === selectedFY;
-            return matchesSearch && matchesStatus && matchesFY;
+            const pool = `${p.ProjectName} ${p.Contractor} ${p.Location} ${p.PO_Number}`.toLowerCase();
+            return pool.includes(searchTerm) && (activeStatus === 'All' || p.Status === activeStatus) && (selectedFY === 'All' || p.FiscalYear === selectedFY);
         });
-
         renderCards(filtered);
         updateKPIs(filtered);
         updateChart(allProjects);
@@ -167,76 +141,53 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; letter-spacing: -0.02em; ba
 
     function renderCards(projects) {
         const container = document.getElementById('project-container');
-        container.innerHTML = projects.length ? '' : '<div class="col-span-full text-center py-20 opacity-30 flex flex-col items-center"><i class="fas fa-box-open text-4xl mb-4"></i><p class="text-[10px] font-black uppercase tracking-widest">No matching records</p></div>';
+        container.innerHTML = projects.length ? '' : '<div class="col-span-full py-40 text-center text-slate-300 font-bold uppercase tracking-[0.5em]">System ID: No Records Found</div>';
 
         projects.forEach(project => {
             const statusStyles = { 'Completed': 'bg-emerald-50 text-emerald-700 border-emerald-100', 'In Progress': 'bg-amber-50 text-amber-700 border-amber-100', 'Proposed': 'bg-slate-100 text-slate-600 border-slate-200' };
             const accentStyles = { 'Completed': 'card-accent-completed', 'In Progress': 'card-accent-ongoing', 'Proposed': 'card-accent-proposed' };
+            const prioStyles = { 'Urgent': 'bg-rose-50 text-rose-600 border-rose-100', 'Medium': 'bg-blue-50 text-blue-600 border-blue-100', 'Routine': 'bg-slate-50 text-slate-400 border-slate-200' };
+
+            const cleanNum = (v) => v ? Number(v.toString().replace(/,/g, '')) : 0;
+            const cost = '₱' + cleanNum(project.Cost).toLocaleString('en-PH', {minimumFractionDigits: 2});
             
-            const classStyle = statusStyles[project.Status] || statusStyles['Proposed'];
-            const accentStyle = accentStyles[project.Status] || accentStyles['Proposed'];
-            const cost = project.Cost ? '₱' + Number(project.Cost).toLocaleString('en-PH', {minimumFractionDigits: 2}) : '---';
-
-            // Scope & Remarks Parser (Splits by semicolon or newline)
-            const scopeHtml = project.Scope ? project.Scope.split(/[;\n]/).map((item, i) => 
-                `<li class="flex gap-3 mb-2"><span class="text-indigo-500 font-black tracking-tighter text-[9px]">${(i+1).toString().padStart(2, '0')}</span> ${item.trim()}</li>`
-            ).join('') : '<li class="text-slate-400 italic">No scope details provided.</li>';
-
-            const remarksHtml = project.Notes ? project.Notes.split(/[;\n]/).map((item, i) => 
-                `<li class="flex gap-3 mb-2"><span class="text-slate-400 font-black tracking-tighter text-[9px]">${(i+1).toString().padStart(2, '0')}</span> ${item.trim()}</li>`
-            ).join('') : '<li class="text-slate-400 italic text-[10px]">No administrative remarks.</li>';
-
-            const docLabels = { 'Completed': 'Inspection Report', 'In Progress': 'Approved Docs', 'Proposed': 'Detailed Estimate' };
-            let finalLabel = project.DocLabel || docLabels[project.Status] || 'Document';
-            if (!project.DocLabel && (project.ProjectName || "").toLowerCase().includes('consultancy') && project.Status !== 'Completed') {
-                finalLabel = 'Terms of Reference';
-            }
+            // Parser for lists (Scope, Notes, Location)
+            const listParser = (str, color) => str ? str.split(/[;\n]/).filter(x => x.trim()).map((item, i) => `<li class="flex gap-4 mb-2.5 items-start"><span class="${color} text-white rounded px-1.5 py-0.5 text-[7px] font-black mt-1">${i+1}</span> <span class="flex-grow">${item.trim()}</span></li>`).join('') : '---';
+            const locTags = project.Location ? project.Location.split(/[;\n]/).map(l => `<span class="loc-tag">${l.trim()}</span>`).join('') : '<span class="loc-tag">General Site</span>';
 
             container.innerHTML += `
-                <div class="project-card ${accentStyle} p-10 flex flex-col h-full shadow-sm">
+                <div class="project-card ${accentStyles[project.Status] || 'card-accent-proposed'} p-12 flex flex-col h-full shadow-sm">
                     <div class="flex justify-between items-center mb-8">
-                        <span class="badge ${classStyle}">${project.Status}</span>
-                        <span class="text-[10px] font-black tabular-nums text-slate-300 uppercase">${project.FiscalYear || 'FY --'}</span>
+                        <div class="flex gap-3">
+                            <span class="badge ${statusStyles[project.Status] || ''}">${project.Status}</span>
+                            <span class="badge ${prioStyles[project.Priority] || prioStyles['Routine']}"><i class="fas fa-bolt text-[7px]"></i> ${project.Priority || 'Routine'}</span>
+                        </div>
+                        <span class="text-[11px] font-black text-slate-300 uppercase tracking-widest">${project.FiscalYear || 'FY --'}</span>
                     </div>
-                    <h3 class="text-xl font-extrabold leading-tight uppercase mb-8 min-h-[5rem] flex items-center text-slate-800">${project.ProjectName || 'Untitled Project'}</h3>
+
+                    <div class="flex flex-wrap gap-2 mb-6">${locTags}</div>
+
+                    <h3 class="text-xl font-black leading-tight uppercase mb-10 min-h-[4rem] text-slate-800">${project.ProjectName}</h3>
                     
-                    <details class="group mb-4">
-                        <summary class="flex items-center justify-between cursor-pointer list-none bg-slate-50 p-4 rounded-2xl border border-slate-100 hover:border-indigo-200 transition-all">
-                            <span class="text-[10px] font-black text-slate-500 uppercase tracking-widest flex items-center gap-3">
-                                <i class="fas fa-list-check text-indigo-500"></i> Scope of Works
-                            </span>
-                            <i class="fas fa-chevron-down text-[10px] text-slate-300 group-open:rotate-180 transition-transform"></i>
-                        </summary>
-                        <div class="mt-4 px-2">
-                            <ul class="text-[11px] font-bold text-slate-600 leading-relaxed">
-                                ${scopeHtml}
-                            </ul>
-                        </div>
+                    <details class="group mb-5">
+                        <summary class="flex items-center justify-between cursor-pointer bg-slate-50 p-5 rounded-2xl border border-slate-100 hover:border-indigo-300 transition-all"><span class="text-[10px] font-black text-slate-500 uppercase tracking-widest flex items-center gap-3"><i class="fas fa-layer-group text-indigo-500"></i> Scope of Works</span><i class="fas fa-plus text-[9px] group-open:hidden"></i><i class="fas fa-minus text-[9px] hidden group-open:block"></i></summary>
+                        <div class="mt-5 px-3"><ul class="text-[11px] font-bold text-slate-600 leading-relaxed">${listParser(project.Scope, 'bg-indigo-600')}</ul></div>
                     </details>
 
-                    <details class="group mb-8">
-                        <summary class="flex items-center justify-between cursor-pointer list-none bg-indigo-50/30 p-4 rounded-2xl border border-indigo-100/50 hover:border-indigo-400 transition-all">
-                            <span class="text-[10px] font-black text-indigo-900/60 uppercase tracking-widest flex items-center gap-3">
-                                <i class="fas fa-comment-dots text-indigo-400"></i> Admin Remarks
-                            </span>
-                            <i class="fas fa-chevron-down text-[10px] text-indigo-300 group-open:rotate-180 transition-transform"></i>
-                        </summary>
-                        <div class="mt-4 px-2">
-                            <ul class="text-[11px] font-bold text-slate-500 leading-relaxed italic">
-                                ${remarksHtml}
-                            </ul>
-                        </div>
+                    <details class="group mb-12">
+                        <summary class="flex items-center justify-between cursor-pointer bg-indigo-50/20 p-5 rounded-2xl border border-indigo-100/30 hover:border-indigo-400 transition-all"><span class="text-[10px] font-black text-indigo-900/40 uppercase tracking-widest flex items-center gap-3"><i class="fas fa-comment-dots text-indigo-400"></i> Admin Remarks</span><i class="fas fa-plus text-[9px] group-open:hidden"></i><i class="fas fa-minus text-[9px] hidden group-open:block"></i></summary>
+                        <div class="mt-5 px-3"><ul class="text-[11px] font-bold text-slate-500 leading-relaxed italic">${listParser(project.Notes, 'bg-slate-400')}</ul></div>
                     </details>
 
-                    <div class="space-y-8 pt-8 border-t border-slate-100 mt-auto">
-                        <div class="flex justify-between items-end">
-                            <div><p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Contract Value</p><p class="text-base font-black text-slate-900 italic tracking-tighter">${cost}</p></div>
-                            <div class="text-right"><p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Contractor</p><p class="text-[10px] font-black text-slate-900">${project.Contractor || 'PSHS-WVCIC'}</p></div>
+                    <div class="space-y-10 pt-10 border-t border-slate-100 mt-auto">
+                        <div class="grid grid-cols-2 gap-6">
+                            <div><p class="text-[10px] font-black text-slate-400 uppercase mb-2">Contract Value</p><p class="text-lg font-black text-slate-900">${cost}</p></div>
+                            <div class="text-right"><p class="text-[10px] font-black text-slate-400 uppercase mb-2">Target Date</p><p class="text-xs font-black text-slate-600 uppercase tabular-nums">${project.TargetDate || 'Awaiting NTP'}</p></div>
                         </div>
-                        ${project.AttachmentURL ? `<a href="${project.AttachmentURL}" target="_blank" class="w-full py-5 bg-slate-900 text-white rounded-2xl text-[10px] font-black uppercase tracking-[0.25em] flex items-center justify-center gap-4 hover:bg-indigo-600 transition shadow-lg"><i class="fas fa-file-alt text-sm"></i> ${finalLabel}</a>` : `<div class="w-full py-5 bg-slate-100 text-slate-400 rounded-2xl text-[10px] font-black uppercase text-center tracking-widest">Awaiting Link</div>`}
+                        ${project.AttachmentURL ? `<a href="${project.AttachmentURL}" target="_blank" class="w-full py-6 bg-slate-900 text-white rounded-2xl text-[11px] font-black uppercase tracking-[0.3em] flex items-center justify-center gap-5 hover:bg-indigo-600 transition shadow-xl"><i class="fas fa-file-contract"></i> View Documents</a>` : `<div class="w-full py-6 bg-slate-100 text-slate-400 rounded-2xl text-[11px] font-black uppercase text-center tracking-widest">Awaiting Link</div>`}
                         <div>
-                            <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden mb-5"><div class="bg-indigo-600 h-full rounded-full transition-all duration-1000" style="width: ${project.Progress || 0}%"></div></div>
-                            <div class="flex justify-between items-center text-[10px] font-black text-slate-400 uppercase tracking-widest"><span>Completion Status</span><span class="text-slate-900 font-black">${project.Progress || 0}%</span></div>
+                            <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden mb-5"><div class="bg-indigo-600 h-full transition-all duration-1000" style="width: ${project.Progress || 0}%"></div></div>
+                            <div class="flex justify-between items-center text-[11px] font-black text-slate-400 uppercase tracking-widest"><span>Execution Progress</span><span class="text-slate-900 text-sm font-black italic">${project.Progress || 0}%</span></div>
                         </div>
                     </div>
                 </div>`;
@@ -244,11 +195,15 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; letter-spacing: -0.02em; ba
     }
 
     function updateKPIs(data) {
-        document.getElementById('kpi-total').textContent = data.length;
+        const cleanNum = (v) => v ? Number(v.toString().replace(/,/g, '')) : 0;
+        const total = data.reduce((sum, p) => sum + cleanNum(p.Cost), 0);
+        const actual = data.reduce((sum, p) => sum + cleanNum(p.ActualCost), 0);
         const avg = data.length ? data.reduce((sum, p) => sum + (Number(p.Progress) || 0), 0) / data.length : 0;
-        document.getElementById('kpi-avg').textContent = Math.round(avg) + '%';
-        const total = data.reduce((sum, p) => sum + (Number(p.Cost) || 0), 0);
+
         document.getElementById('kpi-budget').textContent = '₱' + total.toLocaleString('en-PH', {minimumFractionDigits: 2});
+        document.getElementById('kpi-actual').textContent = '₱' + actual.toLocaleString('en-PH', {minimumFractionDigits: 2});
+        document.getElementById('kpi-variance').textContent = (total - actual >= 0 ? '+' : '-') + '₱' + Math.abs(total - actual).toLocaleString('en-PH', {minimumFractionDigits: 2});
+        document.getElementById('kpi-avg').textContent = Math.round(avg) + '%';
     }
 
     function updateChart(data) {
@@ -258,14 +213,15 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; letter-spacing: -0.02em; ba
         const ctx = document.getElementById('statusChart').getContext('2d');
         chartInstance = new Chart(ctx, {
             type: 'doughnut',
-            data: { datasets: [{ data: Object.values(counts), backgroundColor: ['#10b981', '#f59e0b', '#64748b'], borderWidth: 0 }] },
-            options: { cutout: '80%', plugins: { legend: { display: false } }, responsive: true, maintainAspectRatio: false }
+            data: { datasets: [{ data: Object.values(counts), backgroundColor: ['#10b981', '#f59e0b', '#cbd5e1'], borderWidth: 0 }] },
+            options: { cutout: '70%', plugins: { legend: { display: false } }, responsive: true, maintainAspectRatio: false }
         });
     }
 
     function filterByStatus(status) {
         activeStatus = status;
-        document.querySelectorAll('.nav-btn').forEach(btn => { btn.classList.toggle('active', btn.getAttribute('data-status') === status); });
+        document.getElementById('btn-all').className = status === 'All' ? 'px-6 py-3 rounded-xl text-[10px] font-black bg-white shadow-sm uppercase transition-all' : 'px-6 py-3 rounded-xl text-[10px] font-black text-slate-500 uppercase transition-all';
+        document.getElementById('btn-active').className = status === 'In Progress' ? 'px-6 py-3 rounded-xl text-[10px] font-black bg-white shadow-sm uppercase transition-all' : 'px-6 py-3 rounded-xl text-[10px] font-black text-slate-500 uppercase transition-all';
         renderUI();
     }
 
