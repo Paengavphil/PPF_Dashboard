@@ -1,225 +1,193 @@
-<component name="canvas" id="v28-pshs-executive-grid" type="code" title="PSHS Executive Grid v28 - Clean & Professional" language="html" version="28">
+<component name="canvas" id="v29-pshs-user-friendly" type="code" title="PSHS Executive Dashboard v29 - Clean & Intuitive" language="html" version="29">
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PSHS-WVCIC | Infrastructure Dashboard</title>
+<title>PSHS-WVCIC | Infrastructure Status</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; color: #0f172a; letter-spacing: -0.01em; }
-.dashboard-container { @apply max-w-[1400px] mx-auto px-6 py-10; }
+.main-container { @apply max-w-7xl mx-auto px-6 py-12; }
 
-    /* KPI Aesthetic */
-    .kpi-card { @apply bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between transition-all hover:border-indigo-400; }
-    .kpi-label { @apply text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1; }
-    .kpi-value { @apply text-2xl font-black text-slate-900 tabular-nums; }
+    /* Simplified Header Metrics */
+    .stat-pill { @apply bg-white px-6 py-4 rounded-2xl border border-slate-200 shadow-sm flex flex-col; }
+    .stat-label { @apply text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1; }
+    .stat-value { @apply text-xl font-black text-slate-900 tabular-nums; }
 
-    /* Control Strip */
-    .control-strip { @apply flex flex-col md:flex-row gap-4 items-center mb-12 bg-white p-4 rounded-2xl border border-slate-200 shadow-sm; }
-    .search-container { @apply relative flex-grow w-full; }
-    .modern-input { @apply w-full pl-12 pr-6 py-3 rounded-xl border border-slate-100 bg-slate-50 transition-all text-xs font-bold outline-none focus:bg-white focus:border-indigo-400 focus:ring-4 focus:ring-indigo-50; }
-    .search-icon { @apply absolute left-4 top-1/2 -translate-y-1/2 text-slate-300; }
+    /* Clean Project Cards */
+    .project-card { @apply bg-white border border-slate-200 rounded-[2.5rem] overflow-hidden flex flex-col h-full transition-all duration-300 hover:shadow-xl hover:-translate-y-1; }
+    .status-bar { @apply h-2 w-full; }
+    .bg-completed { @apply bg-emerald-500; }
+    .bg-ongoing { @apply bg-amber-500; }
+    .bg-proposed { @apply bg-slate-300; }
 
-    /* Professional Cards */
-    .project-card { @apply bg-white border border-slate-200 rounded-[2rem] overflow-hidden flex flex-col h-full transition-all duration-300 hover:shadow-2xl hover:-translate-y-1; }
-    .status-accent { @apply h-2 w-full; }
-    .accent-completed { @apply bg-emerald-500; }
-    .accent-ongoing { @apply bg-amber-500; }
-    .accent-proposed { @apply bg-slate-300; }
+    .badge { @apply px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-tighter border; }
+    .location-tag { @apply bg-slate-100 text-slate-500 px-2 py-0.5 rounded text-[8px] font-bold uppercase mr-1 mb-1; }
 
-    .badge { @apply px-2.5 py-1 rounded-md text-[9px] font-black uppercase tracking-tighter border; }
-    .tag { @apply bg-slate-100 text-slate-500 px-2 py-0.5 rounded text-[8px] font-black uppercase tracking-tighter; }
+    /* Interactive Elements */
+    .search-box { @apply relative w-full mb-12; }
+    .search-input { @apply w-full pl-14 pr-6 py-5 rounded-3xl border border-slate-200 bg-white transition-all text-sm font-semibold outline-none focus:ring-4 focus:ring-indigo-50 focus:border-indigo-400 shadow-sm; }
+    .search-icon { @apply absolute left-6 top-1/2 -translate-y-1/2 text-slate-300 text-lg; }
 
     details summary::-webkit-details-marker { display: none; }
     details > summary { list-style: none; }
 </style>
 </head>
-<body>
+<body class="min-h-screen">
 
 <nav class="bg-white border-b border-slate-200 px-6 py-5 sticky top-0 z-50">
-    <div class="max-w-[1400px] mx-auto flex justify-between items-center">
+    <div class="max-w-7xl mx-auto flex justify-between items-center">
         <div class="flex items-center gap-4">
             <div class="bg-slate-900 w-10 h-10 rounded-xl flex items-center justify-center shadow-lg"><i class="fas fa-landmark text-white text-sm"></i></div>
             <div>
-                <h1 class="text-base font-black tracking-tight leading-none text-slate-900">PSHS-WVCIC</h1>
-                <p class="text-[8px] font-bold text-slate-400 uppercase tracking-widest mt-1">Infrastructure Command</p>
+                <h1 class="text-base font-black tracking-tighter leading-none">PSHS-WVCIC</h1>
+                <p class="text-[8px] font-bold text-slate-400 uppercase tracking-widest mt-1">Repair & Infrastructure Dashboard</p>
             </div>
         </div>
-        <div id="sync-status" class="flex items-center gap-2 bg-emerald-50 text-emerald-600 px-4 py-2 rounded-full border border-emerald-100 text-[10px] font-black uppercase tracking-widest">
-            <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span> Terminal Connected
+        <div id="live-sync" class="hidden md:flex items-center gap-2 bg-emerald-50 text-emerald-600 px-4 py-2 rounded-full border border-emerald-100 text-[9px] font-black uppercase tracking-widest">
+            <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span> Live Sync Active
         </div>
     </div>
 </nav>
 
-<main class="dashboard-container">
-    
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-        <div class="kpi-card border-l-4 border-indigo-500">
-            <span class="kpi-label">Master Budget</span>
-            <span id="kpi-budget" class="kpi-value">₱0.00</span>
+<main class="main-container">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+        <div class="stat-pill border-l-4 border-l-indigo-500">
+            <span class="stat-label">Allocated Budget</span>
+            <span id="stat-budget" class="stat-value">₱0.00</span>
         </div>
-        <div class="kpi-card">
-            <span class="kpi-label">Actual Expenditure</span>
-            <span id="kpi-actual" class="kpi-value">₱0.00</span>
+        <div class="stat-pill">
+            <span class="stat-label">Total Projects</span>
+            <span id="stat-count" class="stat-value">0</span>
         </div>
-        <div class="kpi-card">
-            <span class="kpi-label">Financial Variance</span>
-            <span id="kpi-variance" class="kpi-value">₱0.00</span>
-        </div>
-        <div class="kpi-card bg-slate-900 text-white border-none">
-            <span class="kpi-label text-slate-500">Execution Progress</span>
+        <div class="stat-pill">
+            <span class="stat-label">Global Progress</span>
             <div class="flex items-center justify-between">
-                <span id="kpi-avg" class="text-2xl font-black italic">--%</span>
-                <div class="w-10 h-10"><canvas id="progressChart"></canvas></div>
+                <span id="stat-progress" class="stat-value text-indigo-600">0%</span>
+                <div class="w-10 h-10"><canvas id="miniChart"></canvas></div>
             </div>
         </div>
     </div>
 
-    <div class="control-strip">
-        <div class="search-container">
-            <i class="fas fa-search search-icon"></i>
-            <input type="text" id="searchInput" placeholder="Search by project title, contractor, or location..." class="modern-input">
-        </div>
-        <div class="flex gap-3">
-            <select id="fyFilter" onchange="renderUI()" class="modern-input w-auto min-w-[160px] cursor-pointer bg-slate-50 border-none">
-                <option value="All">All Fiscal Years</option>
-            </select>
-            <div class="flex bg-slate-100 p-1 rounded-xl">
-                <button class="px-5 py-2.5 rounded-lg text-[10px] font-black bg-white shadow-sm uppercase transition-all" id="btn-all" onclick="filterByStatus('All')">All</button>
-                <button class="px-5 py-2.5 rounded-lg text-[10px] font-black text-slate-500 uppercase transition-all" id="btn-active" onclick="filterByStatus('In Progress')">Active</button>
-            </div>
-        </div>
+    <div class="search-box">
+        <i class="fas fa-search search-icon"></i>
+        <input type="text" id="searchInput" placeholder="Search for a project (e.g. 'Dormitory', 'Roof', 'Daedalus')..." class="search-input">
     </div>
 
-    <div id="project-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+    <div id="projectGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
         </div>
 </main>
 
 <script>
-    // CLEAN LINK IMPLEMENTATION
     const scriptURL = 'https://script.google.com/macros/s/AKfycbz-9wukcFnCwKNhcmTrTRQaY9fc_vOJA8O6yqNA71XKrJmiAj-b5f6uYzSG07JUjAcR/exec';
-    let allProjects = [];
-    let activeStatus = 'All';
-    let chartInstance = null;
+    let allData = [];
+    let chart = null;
 
-    async function init() {
+    async function loadDashboard() {
         try {
             const response = await fetch(scriptURL);
-            allProjects = await response.json();
-            populateFYFilter();
+            allData = await response.json();
             renderUI();
-        } catch (e) { console.error("Sync Failure:", e); }
-    }
-
-    function populateFYFilter() {
-        const fySelect = document.getElementById('fyFilter');
-        const years = [...new Set(allProjects.map(p => p.FiscalYear).filter(y => y))].sort().reverse();
-        years.forEach(year => { const opt = document.createElement('option'); opt.value = year; opt.textContent = year; fySelect.appendChild(opt); });
+        } catch (e) {
+            console.error("Dashboard failed to load:", e);
+            document.getElementById('projectGrid').innerHTML = `<div class="col-span-full text-center py-20 text-slate-400 font-bold uppercase text-xs">Connection Error. Please check the Masterlist access.</div>`;
+        }
     }
 
     function renderUI() {
         const term = document.getElementById('searchInput').value.toLowerCase();
-        const fy = document.getElementById('fyFilter').value;
-        const filtered = allProjects.filter(p => {
-            const pool = `${p.ProjectName} ${p.Contractor} ${p.Location}`.toLowerCase();
-            return pool.includes(term) && (activeStatus === 'All' || p.Status === activeStatus) && (fy === 'All' || p.FiscalYear === fy);
+        const filtered = allData.filter(p => {
+            const searchPool = `${p.ProjectName} ${p.Contractor} ${p.Location} ${p.FiscalYear}`.toLowerCase();
+            return searchPool.includes(term);
         });
-        renderCards(filtered);
-        updateKPIs(filtered);
-        updateMiniChart(allProjects);
-    }
 
-    function renderCards(projects) {
-        const grid = document.getElementById('project-grid');
-        grid.innerHTML = projects.length ? '' : '<div class="col-span-full py-40 text-center opacity-30 font-black uppercase tracking-[0.4em]">No Strategic Data Found</div>';
+        const grid = document.getElementById('projectGrid');
+        grid.innerHTML = filtered.length ? '' : '<div class="col-span-full text-center py-20 text-slate-300 font-black uppercase text-xs tracking-widest">No matching repairs found</div>';
 
-        projects.forEach(p => {
-            const accent = p.Status === 'Completed' ? 'accent-completed' : (p.Status === 'In Progress' ? 'accent-ongoing' : 'accent-proposed');
-            const badgeStyle = p.Status === 'Completed' ? 'bg-emerald-50 text-emerald-700 border-emerald-100' : (p.Status === 'In Progress' ? 'bg-amber-50 text-amber-700 border-amber-100' : 'bg-slate-100 text-slate-500 border-slate-200');
+        filtered.forEach(p => {
+            const statusColor = p.Status === 'Completed' ? 'bg-completed' : (p.Status === 'In Progress' ? 'bg-ongoing' : 'bg-proposed');
+            const badgeClass = p.Status === 'Completed' ? 'bg-emerald-50 text-emerald-700 border-emerald-100' : (p.Status === 'In Progress' ? 'bg-amber-50 text-amber-700 border-amber-100' : 'bg-slate-100 text-slate-500 border-slate-200');
             const cost = '₱' + Number(p.Cost || 0).toLocaleString('en-PH', {minimumFractionDigits: 2});
-            const listParser = (str, color) => str ? str.split(/[;\n]/).filter(x => x.trim()).map((item, i) => `<li class="flex gap-4 mb-3 items-start"><span class="${color} text-white rounded px-1.5 py-0.5 text-[7px] font-black mt-1">${i+1}</span> <span class="flex-grow">${item.trim()}</span></li>`).join('') : '---';
+            
+            const locations = (p.Location || "Main Campus").split(';').map(l => `<span class="location-tag">${l.trim()}</span>`).join('');
+            const listItems = (str, color) => str ? str.split(/[;\n]/).filter(x => x.trim()).map((item, i) => `<li class="flex gap-3 mb-2.5 items-start"><span class="${color} text-white rounded px-1.5 py-0.5 text-[7px] font-black mt-1">${i+1}</span> <span class="text-[11px] font-semibold text-slate-600">${item.trim()}</span></li>`).join('') : '---';
 
             grid.innerHTML += `
-                <div class="project-card shadow-sm">
-                    <div class="status-accent ${accent}"></div>
-                    <div class="p-10 flex flex-col h-full">
-                        <div class="flex justify-between items-center mb-8">
-                            <div class="flex gap-2">
-                                <span class="badge ${badgeStyle}">${p.Status}</span>
-                                <span class="badge ${p.Priority === 'Urgent' ? 'bg-rose-50 text-rose-600 border-rose-100' : 'bg-slate-50 text-slate-400 border-slate-200'}">${p.Priority || 'Routine'}</span>
-                            </div>
+                <div class="project-card">
+                    <div class="status-bar ${statusColor}"></div>
+                    <div class="p-8 flex flex-col h-full">
+                        <div class="flex justify-between items-center mb-6">
+                            <span class="badge ${badgeClass}">${p.Status}</span>
                             <span class="text-[10px] font-black text-slate-300 uppercase tracking-widest">${p.FiscalYear || 'FY --'}</span>
                         </div>
-
-                        <div class="flex flex-wrap gap-2 mb-6">
-                            ${(p.Location || "Main Campus").split(';').map(l => `<span class="tag">${l.trim()}</span>`).join('')}
-                        </div>
-
+                        
+                        <div class="flex flex-wrap mb-4">${locations}</div>
                         <h3 class="text-lg font-extrabold leading-tight uppercase mb-8 min-h-[4rem] text-slate-800 tracking-tight">${p.ProjectName}</h3>
                         
                         <details class="group mb-4">
-                            <summary class="flex items-center justify-between cursor-pointer bg-slate-50 p-4 rounded-xl border border-slate-100 hover:border-indigo-300 transition-all"><span class="text-[9px] font-black text-slate-500 uppercase tracking-widest"><i class="fas fa-list-check mr-2"></i> Scope</span><i class="fas fa-plus text-[8px] group-open:hidden"></i><i class="fas fa-minus text-[8px] hidden group-open:block"></i></summary>
-                            <div class="mt-4 px-2"><ul class="text-[10px] font-semibold text-slate-600 leading-relaxed">${listParser(p.Scope, 'bg-indigo-600')}</ul></div>
+                            <summary class="flex items-center justify-between cursor-pointer bg-slate-50 p-4 rounded-xl border border-slate-100 hover:border-indigo-200 transition-all">
+                                <span class="text-[9px] font-black text-slate-500 uppercase tracking-widest"><i class="fas fa-list-check mr-2"></i> Work Scope</span>
+                                <i class="fas fa-plus text-[8px] group-open:hidden"></i><i class="fas fa-minus text-[8px] hidden group-open:block"></i>
+                            </summary>
+                            <div class="mt-4 px-2"><ul class="list-none">${listItems(p.Scope, 'bg-indigo-600')}</ul></div>
                         </details>
 
                         <details class="group mb-10">
-                            <summary class="flex items-center justify-between cursor-pointer bg-slate-50/50 p-4 rounded-xl border border-slate-100 hover:border-slate-300 transition-all"><span class="text-[9px] font-black text-slate-400 uppercase tracking-widest"><i class="fas fa-comment-dots mr-2"></i> Remarks</span><i class="fas fa-plus text-[8px] group-open:hidden"></i><i class="fas fa-minus text-[8px] hidden group-open:block"></i></summary>
-                            <div class="mt-4 px-2"><ul class="text-[10px] font-medium text-slate-500 italic leading-relaxed">${listParser(p.Notes, 'bg-slate-400')}</ul></div>
+                            <summary class="flex items-center justify-between cursor-pointer bg-slate-50/50 p-4 rounded-xl border border-slate-100 hover:border-slate-300 transition-all">
+                                <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest"><i class="fas fa-comment-dots mr-2"></i> Remarks</span>
+                                <i class="fas fa-plus text-[8px] group-open:hidden"></i><i class="fas fa-minus text-[8px] hidden group-open:block"></i>
+                            </summary>
+                            <div class="mt-4 px-2"><ul class="list-none">${listItems(p.Notes, 'bg-slate-400')}</ul></div>
                         </details>
 
-                        <div class="mt-auto pt-10 border-t border-slate-100">
-                            <div class="grid grid-cols-2 gap-4 mb-8">
-                                <div><p class="text-[9px] font-black text-slate-400 uppercase mb-1">Budget</p><p class="text-sm font-black text-slate-900">${cost}</p></div>
-                                <div class="text-right"><p class="text-[9px] font-black text-slate-400 uppercase mb-1">Target</p><p class="text-[10px] font-black text-slate-700">${p.TargetDate || 'TBD'}</p></div>
+                        <div class="mt-auto pt-8 border-t border-slate-100">
+                            <div class="flex justify-between items-end mb-6">
+                                <div><p class="text-[9px] font-black text-slate-400 uppercase mb-1">Contractor</p><p class="text-[11px] font-black text-slate-900 truncate max-w-[120px]">${p.Contractor || 'PSHS-WVCIC'}</p></div>
+                                <div class="text-right"><p class="text-[9px] font-black text-slate-400 uppercase mb-1">Budget</p><p class="text-sm font-black text-slate-900 tabular-nums">${cost}</p></div>
                             </div>
-                            ${p.AttachmentURL ? `<a href="${p.AttachmentURL}" target="_blank" class="w-full py-4 bg-slate-900 text-white rounded-xl text-[10px] font-black uppercase tracking-[0.2em] flex items-center justify-center gap-3 hover:bg-indigo-600 transition shadow-lg"><i class="fas fa-file-contract"></i> ${p.DocLabel || 'View Record'}</a>` : `<div class="w-full py-4 bg-slate-50 text-slate-400 rounded-xl text-[10px] font-black uppercase text-center tracking-widest">Awaiting Submission</div>`}
+                            ${p.AttachmentURL ? `<a href="${p.AttachmentURL}" target="_blank" class="w-full py-4 bg-slate-900 text-white rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] flex items-center justify-center gap-3 hover:bg-indigo-600 transition shadow-lg"><i class="fas fa-file-invoice"></i> ${p.DocLabel || 'View Documents'}</a>` : `<div class="w-full py-4 bg-slate-50 text-slate-400 rounded-2xl text-[10px] font-black uppercase text-center tracking-widest italic">Files Pending</div>`}
                             <div class="mt-8">
-                                <div class="flex justify-between items-center text-[9px] font-black text-slate-400 uppercase tracking-widest mb-3"><span>Progress</span><span>${p.Progress || 0}%</span></div>
+                                <div class="flex justify-between items-center text-[9px] font-black text-slate-400 uppercase tracking-widest mb-2"><span>Completion</span><span>${p.Progress || 0}%</span></div>
                                 <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden"><div class="bg-indigo-600 h-full transition-all duration-700" style="width: ${p.Progress || 0}%"></div></div>
                             </div>
                         </div>
                     </div>
                 </div>`;
         });
+
+        updateStats(filtered);
     }
 
-    function updateKPIs(data) {
-        const clean = (v) => v ? Number(v.toString().replace(/,/g, '')) : 0;
-        const budget = data.reduce((sum, p) => sum + clean(p.Cost), 0);
-        const actual = data.reduce((sum, p) => sum + clean(p.ActualCost), 0);
+    function updateStats(data) {
+        const budget = data.reduce((sum, p) => sum + Number(p.Cost || 0), 0);
         const avg = data.length ? data.reduce((sum, p) => sum + (Number(p.Progress) || 0), 0) / data.length : 0;
 
-        document.getElementById('kpi-budget').textContent = '₱' + budget.toLocaleString('en-PH');
-        document.getElementById('kpi-actual').textContent = '₱' + actual.toLocaleString('en-PH');
-        document.getElementById('kpi-variance').textContent = '₱' + (budget - actual).toLocaleString('en-PH');
-        document.getElementById('kpi-avg').textContent = Math.round(avg) + '%';
+        document.getElementById('stat-budget').textContent = '₱' + budget.toLocaleString('en-PH', {minimumFractionDigits: 2});
+        document.getElementById('stat-count').textContent = data.length;
+        document.getElementById('stat-progress').textContent = Math.round(avg) + '%';
+
+        updateChart(data);
     }
 
-    function updateMiniChart(data) {
+    function updateChart(data) {
         const counts = { 'Completed': 0, 'In Progress': 0, 'Proposed': 0 };
         data.forEach(p => { if (counts[p.Status] !== undefined) counts[p.Status]++; });
-        if (chartInstance) chartInstance.destroy();
-        const ctx = document.getElementById('progressChart').getContext('2d');
-        chartInstance = new Chart(ctx, {
+        
+        if (chart) chart.destroy();
+        const ctx = document.getElementById('miniChart').getContext('2d');
+        chart = new Chart(ctx, {
             type: 'doughnut',
             data: { datasets: [{ data: Object.values(counts), backgroundColor: ['#10b981', '#f59e0b', '#cbd5e1'], borderWidth: 0 }] },
             options: { cutout: '70%', plugins: { legend: { display: false } }, responsive: true, maintainAspectRatio: false }
         });
     }
 
-    function filterByStatus(status) {
-        activeStatus = status;
-        document.getElementById('btn-all').className = status === 'All' ? 'px-5 py-2.5 rounded-lg text-[10px] font-black bg-white shadow-sm uppercase transition-all' : 'px-5 py-2.5 rounded-lg text-[10px] font-black text-slate-500 uppercase transition-all';
-        document.getElementById('btn-active').className = status === 'In Progress' ? 'px-5 py-2.5 rounded-lg text-[10px] font-black bg-white shadow-sm uppercase transition-all' : 'px-5 py-2.5 rounded-lg text-[10px] font-black text-slate-500 uppercase transition-all';
-        renderUI();
-    }
-
     document.getElementById('searchInput').addEventListener('input', renderUI);
-    init();
+    loadDashboard();
 </script>
 </body>
 </html>
