@@ -1,44 +1,40 @@
-<component name="canvas" id="v36-pshs-mancom-ready" type="code" title="PSHS Command Console v36 - Visual Fix" language="html" version="36">
+<component name="canvas" id="v37-pshs-precision-console" type="code" title="PSHS Executive Precision Console v37" language="html" version="37">
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PSHS-WVCIC | Infrastructure Command</title>
+<title>PSHS-WVCIC | Precision Command</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; color: #1e293b; }
-.dashboard-container { @apply max-w-[1600px] mx-auto px-8 py-10; }
+body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; color: #0f172a; }
+.dashboard-container { @apply max-w-[1600px] mx-auto px-10 py-12; }
 
-    /* Top Bar Metric Tiles */
-    .metric-tile { @apply bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm flex flex-col justify-between transition-all min-h-[140px]; }
-    .metric-label { @apply text-[10px] font-extrabold text-slate-400 uppercase tracking-widest mb-1; }
-    .metric-value { @apply text-xl font-black text-slate-900 tabular-nums; }
-    
-    /* The Dark Progress Tile from your Reference */
-    .metric-dark { @apply bg-[#0f172a] text-white border-none shadow-xl flex-row items-center justify-between p-8; }
-    .metric-dark .metric-value { @apply text-4xl text-white italic tracking-tighter; }
+    /* KPI Card Styling - Prevents Overlapping */
+    .kpi-card { @apply bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm flex flex-col justify-between min-h-[140px] transition-all hover:shadow-md; }
+    .kpi-label { @apply text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1; }
+    .kpi-value { @apply text-xl font-black text-slate-900 tabular-nums tracking-tighter; }
 
-    /* Gauges Section */
-    .gauge-card { @apply bg-white p-5 rounded-[2rem] border border-slate-100 flex flex-col items-center justify-center text-center shadow-sm min-h-[140px]; }
-    .gauge-label { @apply text-[9px] font-black text-slate-400 uppercase tracking-widest mb-3; }
+    /* Ideal Reference: Dark Portfolio Card */
+    .kpi-dark { @apply bg-[#0f172a] text-white border-none shadow-2xl flex-row items-center justify-between p-8; }
+    .kpi-dark .kpi-value { @apply text-4xl font-extrabold italic tracking-tighter; }
 
-    /* Project Cards - v20 Visual Base */
-    .project-card { @apply bg-white border border-slate-200 rounded-[2.5rem] overflow-hidden flex flex-col h-full transition-all duration-300 hover:shadow-2xl hover:-translate-y-1; }
-    .status-header { @apply h-3 w-full; }
+    /* Project Cards - v20 Visual Structure */
+    .project-card { @apply bg-white border border-slate-200 rounded-[3rem] overflow-hidden flex flex-col h-full transition-all duration-500 hover:shadow-2xl hover:-translate-y-2; }
+    .status-accent { @apply h-3.5 w-full; }
     .bg-completed { @apply bg-[#10b981]; }
     .bg-ongoing { @apply bg-[#f59e0b]; }
-    .bg-proposed { @apply bg-[#94a3b8]; }
+    .bg-proposed { @apply bg-[#64748b]; }
 
-    /* Detail Dropdowns */
-    .detail-box { @apply bg-slate-50/50 p-5 rounded-2xl border border-slate-100 mb-4 cursor-pointer hover:border-indigo-200 transition-all; }
-    .task-row { @apply flex gap-4 py-2 border-b border-slate-100 last:border-none; }
-    .task-dot { @apply w-4 h-4 rounded-full flex items-center justify-center text-[8px] font-black text-white shrink-0 mt-0.5; }
+    /* Modern Details Dropdowns */
+    .detail-trigger { @apply bg-slate-50/80 p-5 rounded-2xl border border-slate-100 mb-4 flex items-center justify-between cursor-pointer hover:bg-white hover:border-indigo-200 transition-all; }
+    .task-line { @apply flex gap-4 py-3 border-b border-slate-100 last:border-none items-start; }
+    .task-bullet { @apply w-5 h-5 rounded-full flex items-center justify-center text-[8px] font-black text-white shrink-0 mt-0.5; }
 
-    .search-area { @apply w-full pl-14 pr-6 py-5 rounded-[1.5rem] border border-slate-100 bg-white shadow-sm font-bold text-sm outline-none focus:ring-4 focus:ring-indigo-50 focus:border-indigo-400; }
+    .search-field { @apply w-full pl-14 pr-6 py-5 rounded-[2rem] border border-slate-100 bg-white shadow-sm font-bold text-sm outline-none focus:ring-4 focus:ring-indigo-50 focus:border-indigo-400; }
     
     details summary::-webkit-details-marker { display: none; }
     details > summary { list-style: none; }
@@ -46,64 +42,67 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; 
 </head>
 <body>
 
-<nav class="bg-white/80 backdrop-blur-md border-b border-slate-100 px-8 py-5 sticky top-0 z-50">
+<nav class="bg-white/90 backdrop-blur-md border-b border-slate-100 px-10 py-6 sticky top-0 z-50">
     <div class="max-w-[1600px] mx-auto flex justify-between items-center">
-        <div class="flex items-center gap-4">
-            <div class="bg-slate-900 w-10 h-10 rounded-xl flex items-center justify-center shadow-lg"><i class="fas fa-layer-group text-white text-xs"></i></div>
+        <div class="flex items-center gap-5">
+            <div class="bg-slate-900 w-12 h-12 rounded-2xl flex items-center justify-center shadow-lg"><i class="fas fa-microchip text-white text-sm"></i></div>
             <div>
-                <h1 class="text-sm font-black tracking-tighter uppercase leading-none">PSHS-WVCIC</h1>
-                <p class="text-[8px] font-bold text-slate-400 uppercase tracking-widest mt-1">Infrastructure Command Console</p>
+                <h1 class="text-base font-black tracking-tighter uppercase leading-none">PSHS-WVCIC</h1>
+                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-1.5">Infrastructure Management Console</p>
             </div>
         </div>
-        <div class="flex items-center gap-2 bg-emerald-50 text-emerald-600 px-4 py-2 rounded-full border border-emerald-100 text-[9px] font-black uppercase">
-            <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span> Masterlist Synchronized
+        <div class="flex items-center gap-3 bg-emerald-50 text-emerald-600 px-5 py-3 rounded-full border border-emerald-100 text-[10px] font-black uppercase">
+            <span class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span> Terminal Connected
         </div>
     </div>
 </nav>
 
 <main class="dashboard-container">
     
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6 mb-12">
-        <div class="metric-tile border-l-4 border-l-indigo-500">
-            <span class="metric-label">Allocated Budget</span>
-            <span id="kpi-budget" class="metric-value">₱0.00</span>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-8 mb-16">
+        <div class="kpi-card border-l-4 border-l-indigo-600">
+            <span class="kpi-label">Allocated Budget</span>
+            <span id="kpi-budget" class="kpi-value text-indigo-700">₱0.00</span>
         </div>
-        <div class="metric-tile">
-            <span class="metric-label">Actual Expenditure</span>
-            <span id="kpi-actual" class="metric-value text-slate-500">₱0.00</span>
+        <div class="kpi-card">
+            <span class="kpi-label">Actual Expenditure</span>
+            <span id="kpi-actual" class="kpi-value">₱0.00</span>
         </div>
-        <div class="metric-tile">
-            <span class="metric-label">Cost Variance</span>
-            <span id="kpi-variance" class="metric-value text-rose-500">₱0.00</span>
+        <div class="kpi-card">
+            <span class="kpi-label">Cost Variance</span>
+            <span id="kpi-variance" class="kpi-value text-rose-500">₱0.00</span>
         </div>
-        <div class="metric-tile metric-dark col-span-1 lg:col-span-1">
+        <div class="kpi-card kpi-dark col-span-1">
             <div>
-                <span class="metric-label text-slate-500">Portfolio Progress</span>
-                <div id="kpi-progress" class="metric-value">--%</div>
+                <span class="kpi-label text-slate-500">Portfolio Progress</span>
+                <div id="kpi-progress" class="kpi-value">0%</div>
             </div>
-            <div class="w-12 h-12"><canvas id="miniTrend"></canvas></div>
+            <div class="w-12 h-12 bg-slate-800 rounded-xl flex items-center justify-center"><i class="fas fa-chart-line text-indigo-400"></i></div>
         </div>
-        <div class="gauge-card">
-            <span class="gauge-label">SPI (Schedule)</span>
-            <div class="w-20 h-10 relative"><canvas id="gaugeSPI"></canvas></div>
-            <span id="spi-text" class="text-[11px] font-black mt-2 text-indigo-600">1.00</span>
+        <div class="kpi-card items-center justify-center text-center">
+            <span class="kpi-label mb-3">SPI (Schedule)</span>
+            <div class="w-24 h-12 relative"><canvas id="gaugeSPI"></canvas></div>
+            <span id="spi-text" class="text-[11px] font-black mt-2 text-indigo-600 tracking-widest">1.00</span>
         </div>
-        <div class="gauge-card">
-            <span class="gauge-label">CPI (Cost)</span>
-            <div class="w-20 h-10 relative"><canvas id="gaugeCPI"></canvas></div>
-            <span id="cpi-text" class="text-[11px] font-black mt-2 text-emerald-600">1.00</span>
+        <div class="kpi-card items-center justify-center text-center">
+            <span class="kpi-label mb-3">CPI (Cost)</span>
+            <div class="w-24 h-12 relative"><canvas id="gaugeCPI"></canvas></div>
+            <span id="cpi-text" class="text-[11px] font-black mt-2 text-emerald-600 tracking-widest">1.00</span>
         </div>
     </div>
 
-    <div class="flex flex-col md:flex-row gap-6 mb-12 items-center">
+    <div class="flex flex-col md:flex-row gap-8 mb-16 items-center">
         <div class="relative flex-grow w-full">
             <i class="fas fa-search absolute left-6 top-1/2 -translate-y-1/2 text-slate-300"></i>
-            <input type="text" id="searchInput" placeholder="Search projects or contractors..." class="search-area">
+            <input type="text" id="searchInput" placeholder="Search by Project Title, Contractor, or Building..." class="search-field">
         </div>
-        <select id="fyFilter" onchange="renderUI()" class="search-area w-auto min-w-[180px] bg-slate-50 border-none cursor-pointer"></select>
+        <select id="fyFilter" onchange="renderUI()" class="search-field w-auto min-w-[200px] bg-slate-50 border-none cursor-pointer">
+            <option value="All">All Fiscal Years</option>
+        </select>
     </div>
 
-    <div id="project-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 pb-40"></div>
+    <div id="project-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 pb-48">
+        </div>
 </main>
 
 <script>
@@ -118,13 +117,13 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; 
             populateFYFilter();
             initCharts();
             renderUI();
-        } catch (e) { console.error("Sync Failure:", e); }
+        } catch (e) { console.error("Sync Error:", e); }
     }
 
     function populateFYFilter() {
         const fySelect = document.getElementById('fyFilter');
         const years = [...new Set(allProjects.map(p => p.FiscalYear).filter(y => y))].sort().reverse();
-        fySelect.innerHTML = '<option value="All">All Fiscal Years</option>' + years.map(y => `<option value="${y}">${y}</option>`).join('');
+        years.forEach(year => { const opt = document.createElement('option'); opt.value = year; opt.textContent = `FY ${year}`; fySelect.appendChild(opt); });
     }
 
     function clean(v) {
@@ -134,8 +133,8 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; 
         return isNaN(num) ? 0 : num;
     }
 
-    function formatStrategicDate(dateStr) {
-        if (!dateStr || dateStr === "TBD" || dateStr === "Pending") return "---";
+    function formatHumanDate(dateStr) {
+        if (!dateStr || dateStr === "TBD" || dateStr === "---") return "Pending Date";
         const date = new Date(dateStr);
         return isNaN(date.getTime()) ? dateStr : date.toLocaleDateString('en-PH', { month: 'short', day: '2-digit', year: 'numeric' });
     }
@@ -153,41 +152,49 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; 
 
     function renderCards(projects) {
         const grid = document.getElementById('project-grid');
-        grid.innerHTML = projects.length ? '' : '<div class="col-span-full py-20 text-center opacity-20 font-black uppercase text-xs">No Data Synchronized</div>';
+        grid.innerHTML = projects.length ? '' : '<div class="col-span-full py-40 text-center opacity-20 font-black uppercase text-xs tracking-[0.4em]">Infrastructure Offline</div>';
 
         projects.forEach(p => {
             const accent = p.Status === 'Completed' ? 'bg-completed' : (p.Status === 'In Progress' ? 'bg-ongoing' : 'bg-proposed');
-            const badge = p.Status === 'Completed' ? 'bg-emerald-50 text-emerald-700 border-emerald-100' : (p.Status === 'In Progress' ? 'bg-amber-50 text-amber-700 border-amber-100' : 'bg-slate-100 text-slate-500 border-slate-200');
+            const badgeStyle = p.Status === 'Completed' ? 'bg-emerald-50 text-emerald-700 border-emerald-100' : (p.Status === 'In Progress' ? 'bg-amber-50 text-amber-700 border-amber-100' : 'bg-slate-100 text-slate-500 border-slate-200');
             const cost = '₱' + clean(p.Cost).toLocaleString('en-PH', {minimumFractionDigits: 2});
             
             const listParser = (str, color) => {
-                if (!str || str === "---") return '<p class="text-[10px] text-slate-300 italic">No details</p>';
+                if (!str || str === "---") return '<p class="text-[10px] text-slate-300 italic">No details found</p>';
                 return str.split(/[;\n]/).filter(x => x.trim()).map((item, i) => {
                     const isDone = p.Status === 'Completed';
-                    return `<div class="task-row"><span class="task-dot ${isDone ? 'bg-emerald-500' : color}">${isDone ? '✓' : i + 1}</span><span class="text-[11px] font-bold text-slate-600">${item.trim()}</span></div>`;
+                    return `<div class="task-line"><span class="task-bullet ${isDone ? 'bg-emerald-500' : color}">${isDone ? '<i class="fas fa-check"></i>' : i + 1}</span><span class="text-[11px] font-bold text-slate-700 leading-snug">${item.trim()}</span></div>`;
                 }).join('');
             };
 
             grid.innerHTML += `
                 <div class="project-card shadow-sm">
-                    <div class="status-header ${accent}"></div>
+                    <div class="status-accent ${accent}"></div>
                     <div class="p-10 flex flex-col h-full">
-                        <div class="flex justify-between items-center mb-8">
-                            <span class="badge ${badge}">${p.Status}</span>
-                            <span class="text-[9px] font-black text-slate-300 uppercase">${p.FiscalYear || 'FY --'}</span>
+                        <div class="flex justify-between items-center mb-10">
+                            <span class="badge ${badgeStyle}">${p.Status}</span>
+                            <span class="text-[10px] font-black text-slate-300 uppercase tracking-widest">${p.FiscalYear || 'FY --'}</span>
                         </div>
-                        <h3 class="text-xl font-black leading-tight uppercase mb-8 min-h-[4rem] text-slate-800 tracking-tight">${p.ProjectName}</h3>
                         
-                        <details class="group"><summary class="detail-box flex items-center justify-between"><span class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Scope of Works</span><i class="fas fa-plus text-[8px] group-open:hidden"></i><i class="fas fa-minus text-[8px] hidden group-open:block"></i></summary><div class="mb-6 px-2">${listParser(p.Scope, 'bg-indigo-500')}</div></details>
-                        <details class="group"><summary class="detail-box flex items-center justify-between"><span class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Admin Remarks</span><i class="fas fa-plus text-[8px] group-open:hidden"></i><i class="fas fa-minus text-[8px] hidden group-open:block"></i></summary><div class="mb-6 px-2">${listParser(p.Notes, 'bg-slate-400')}</div></details>
+                        <div class="flex flex-wrap gap-2 mb-6">
+                            ${(p.Location || "General").split(';').map(l => `<span class="bg-slate-100 text-slate-500 px-3 py-1 rounded-lg text-[8px] font-black uppercase tracking-widest">${l.trim()}</span>`).join('')}
+                        </div>
 
-                        <div class="mt-auto pt-8 border-t border-slate-100">
-                            <div class="grid grid-cols-2 gap-4 mb-6">
-                                <div><p class="text-[9px] font-black text-slate-400 uppercase mb-1">Target</p><p class="text-[10px] font-black text-slate-900">${formatStrategicDate(p.TargetDate)}</p></div>
-                                <div class="text-right"><p class="text-[9px] font-black text-slate-400 uppercase mb-1">Cost</p><p class="text-[11px] font-black text-slate-900">${cost}</p></div>
+                        <h3 class="text-2xl font-black leading-tight uppercase mb-10 min-h-[5rem] text-slate-800 tracking-tight">${p.ProjectName}</h3>
+                        
+                        <details class="group"><summary class="detail-trigger"><span class="text-[10px] font-black text-slate-400 uppercase tracking-widest"><i class="fas fa-tasks mr-2 text-indigo-500"></i> Scope of Works</span><i class="fas fa-chevron-down text-[8px] group-open:rotate-180 transition-transform"></i></summary><div class="mb-8 px-2">${listParser(p.Scope, 'bg-indigo-600')}</div></details>
+                        <details class="group"><summary class="detail-trigger"><span class="text-[10px] font-black text-slate-400 uppercase tracking-widest"><i class="fas fa-comment-dots mr-2 text-slate-400"></i> Admin Remarks</span><i class="fas fa-chevron-down text-[8px] group-open:rotate-180 transition-transform"></i></summary><div class="mb-8 px-2">${listParser(p.Notes, 'bg-slate-500')}</div></details>
+
+                        <div class="mt-auto pt-10 border-t border-slate-100">
+                            <div class="grid grid-cols-2 gap-4 mb-8">
+                                <div><p class="text-[9px] font-black text-slate-400 uppercase mb-1">Target End</p><p class="text-[11px] font-black text-slate-900">${formatHumanDate(p.TargetDate)}</p></div>
+                                <div class="text-right"><p class="text-[9px] font-black text-slate-400 uppercase mb-1">Contract Value</p><p class="text-xs font-black text-slate-900">${cost}</p></div>
                             </div>
-                            <div class="flex justify-between items-center text-[9px] font-black text-slate-300 uppercase mb-2"><span>Completion</span><span>${p.Progress || 0}%</span></div>
-                            <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden"><div class="bg-indigo-600 h-full transition-all duration-1000" style="width: ${p.Progress || 0}%"></div></div>
+                            ${p.AttachmentURL ? `<a href="${p.AttachmentURL}" target="_blank" class="w-full py-5 bg-slate-900 text-white rounded-2xl text-[10px] font-black uppercase tracking-[0.3em] flex items-center justify-center gap-4 hover:bg-indigo-600 transition shadow-xl"><i class="fas fa-file-contract"></i> Record Link</a>` : `<div class="w-full py-5 bg-slate-50 text-slate-300 rounded-2xl text-[10px] font-black uppercase text-center tracking-widest italic">Awaiting Docs</div>`}
+                            <div class="mt-12">
+                                <div class="flex justify-between items-center text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3"><span>Work Status</span><span class="text-slate-900 italic font-black">${p.Progress || 0}%</span></div>
+                                <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden shadow-inner"><div class="bg-indigo-600 h-full transition-all duration-1000" style="width: ${p.Progress || 0}%"></div></div>
+                            </div>
                         </div>
                     </div>
                 </div>`;
@@ -196,9 +203,8 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; 
 
     function initCharts() {
         const opt = { cutout: '80%', circumfrence: 180, rotation: 270, plugins: { legend: { display: false } }, responsive: true, maintainAspectRatio: false };
-        charts.spi = new Chart(document.getElementById('gaugeSPI'), { type: 'doughnut', data: { datasets: [{ data: [0, 1], backgroundColor: ['#6366f1', '#f1f5f9'], borderWidth: 0 }] }, options: opt });
-        charts.cpi = new Chart(document.getElementById('gaugeCPI'), { type: 'doughnut', data: { datasets: [{ data: [0, 1], backgroundColor: ['#10b981', '#f1f5f9'], borderWidth: 0 }] }, options: opt });
-        charts.trend = new Chart(document.getElementById('miniTrend'), { type: 'line', data: { labels: [1,2,3,4,5], datasets: [{ data: [10,25,20,45,60], borderColor: '#6366f1', borderWidth: 2, tension: 0.4, pointRadius: 0 }] }, options: { plugins: { legend: { display: false } }, scales: { x: { display: false }, y: { display: false } }, responsive: true, maintainAspectRatio: false } });
+        charts.spi = new Chart(document.getElementById('gaugeSPI'), { type: 'doughnut', data: { datasets: [{ data: [0.5, 0.5], backgroundColor: ['#6366f1', '#f1f5f9'], borderWidth: 0 }] }, options: opt });
+        charts.cpi = new Chart(document.getElementById('gaugeCPI'), { type: 'doughnut', data: { datasets: [{ data: [0.5, 0.5], backgroundColor: ['#10b981', '#f1f5f9'], borderWidth: 0 }] }, options: opt });
     }
 
     function updateKPIs(data) {
