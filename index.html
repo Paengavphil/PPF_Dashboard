@@ -1,4 +1,4 @@
-<component name="canvas" id="v49-obsidian-signature" type="code" title="PSHS Obsidian Executive Signature v49" language="html" version="49">
+<component name="canvas" id="v50-executive-command-interface" type="code" title="PSHS Executive Command Interface v450" language="html" version="50">
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,7 +11,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root { --bg: #020617; --card: #0f172a; --accent: #6366f1; --success: #10b981; }
-body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg); color: #f1f5f9; letter-spacing: -0.01em; }
+body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg); color: #f1f5f9; letter-spacing: -0.02em; }
 .dashboard-container { @apply max-w-[1750px] mx-auto px-10 py-10; }
 
     /* KPI Tiles */
@@ -19,32 +19,30 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg)
     .kpi-label { @apply text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] mb-2; }
     .kpi-value { @apply text-2xl font-black text-white tabular-nums tracking-tighter; }
     
-    .kpi-active { @apply bg-indigo-600 border-none shadow-indigo-600/20 ring-1 ring-white/10; }
-    .kpi-active .kpi-value { @apply text-4xl italic font-extrabold; }
+    .kpi-hero { @apply bg-indigo-600 border-none shadow-indigo-600/20 ring-1 ring-white/10; }
+    .kpi-hero .kpi-value { @apply text-4xl italic font-extrabold; }
 
     /* Infrastructure Card */
-    .project-card { @apply bg-[#0f172a] border border-slate-800/60 rounded-[3.2rem] overflow-hidden flex flex-col h-full transition-all duration-700 hover:shadow-indigo-500/10 hover:-translate-y-2; }
+    .project-card { @apply bg-[#0f172a] border border-slate-800/60 rounded-[3.5rem] overflow-hidden flex flex-col h-full transition-all duration-700 hover:shadow-indigo-500/10 hover:-translate-y-2; }
     .status-accent { @apply h-3.5 w-full; }
     .bg-completed { @apply bg-emerald-500; }
     .bg-ongoing { @apply bg-amber-500; }
     .bg-proposed { @apply bg-slate-700; }
 
-    /* SLEEK DROPBARS & ROTATION (v49 Final Logic) */
+    /* SLEEK DROPBARS & GUARANTEED ROTATION (Ref: v50 Fix) */
     .detail-bar { @apply bg-slate-900/40 p-6 rounded-2xl border border-slate-800 mb-5 flex items-center justify-between cursor-pointer hover:bg-slate-800/60 transition-all; }
     
-    /* The Chevron Rotation Guard */
+    /* The Rotation Engine: Icons must be block/inline-block to rotate */
     .chevron-icon { 
         @apply text-[11px] text-slate-600 transition-all duration-500 ease-in-out; 
-        display: inline-block;
-        margin-left: 2rem; /* Strategic Gutter */
+        display: inline-block; 
     }
     details[open] .chevron-icon { 
         transform: rotate(90deg); 
         color: #6366f1; 
-        @apply shadow-indigo-500/50;
     }
 
-    /* HEADER TEXT (Increased size and weight) */
+    /* TYPOGRAPHY HIERARCHY (Ref: v50 Fix) */
     .bar-label { @apply text-[15px] font-black text-slate-400 uppercase tracking-widest flex items-center; }
 
     /* NUMBERED LIST STYLE */
@@ -66,7 +64,7 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg)
             <div class="bg-indigo-600 w-12 h-12 rounded-2xl flex items-center justify-center shadow-indigo-600/30 border border-white/10 shadow-2xl"><i class="fas fa-drafting-compass text-white text-sm"></i></div>
             <div>
                 <h1 class="text-xl font-black tracking-tighter uppercase leading-none">PSHS-WVCIC</h1>
-                <p class="text-[10px] font-bold text-slate-500 uppercase tracking-[0.4em] mt-2">Executive Strategy Console v49</p>
+                <p class="text-[10px] font-bold text-slate-500 uppercase tracking-[0.4em] mt-2">Executive Strategy Console v50</p>
             </div>
         </div>
         <div class="flex items-center gap-3 bg-emerald-500/5 text-emerald-400 px-6 py-3 rounded-full border border-emerald-500/10 text-[10px] font-black uppercase tracking-widest">
@@ -90,7 +88,7 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg)
             <span class="kpi-label">Variance</span>
             <span id="kpi-variance" class="kpi-value text-rose-500">₱0.00</span>
         </div>
-        <div class="kpi-tile kpi-active">
+        <div class="kpi-tile kpi-hero">
             <span class="kpi-label text-indigo-200">Execution Progress</span>
             <span id="kpi-progress" class="kpi-value">0%</span>
         </div>
