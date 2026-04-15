@@ -1,4 +1,4 @@
-<component name="canvas" id="v68-high-impact-terminal" type="code" title="PSHS Executive Terminal v68 - High-Impact Edition" language="html" version="68">
+<component name="canvas" id="v69-balanced-authority" type="code" title="PSHS Executive Terminal v69 - Balanced Big Numbers" language="html" version="69">
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,23 +14,23 @@
 body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg); color: #f1f5f9; letter-spacing: -0.02em; }
 .dashboard-container { @apply max-w-[1750px] mx-auto px-10 py-10; }
 
-    /* HIGH-IMPACT KPI CARDS (Ref: image_ed0e85) */
-    .kpi-card { @apply bg-[#0f172a] p-10 rounded-[3rem] border border-slate-800/50 shadow-2xl flex flex-col justify-between min-h-[220px] transition-all hover:border-indigo-500/30; }
-    .kpi-label { @apply text-[11px] font-black text-slate-500 uppercase tracking-[0.4em] mb-6; }
-    .kpi-value-large { @apply text-5xl lg:text-6xl font-black text-white tabular-nums tracking-tighter leading-none; }
+    /* PRIMARY HIGH-IMPACT CARDS (Allocation, Exp, Var, Exec) */
+    .kpi-main-card { @apply bg-[#0f172a] p-10 rounded-[2.5rem] border border-slate-800/50 shadow-2xl flex flex-col justify-between min-h-[200px] transition-all hover:border-indigo-500/30; }
+    .kpi-label { @apply text-[10px] font-black text-slate-500 uppercase tracking-[0.4em] mb-4; }
+    .kpi-value-big { @apply text-4xl lg:text-5xl font-black text-white tabular-nums tracking-tighter leading-none; }
     
-    /* Specialized Hero KPI (Execution) */
-    .kpi-hero { @apply bg-indigo-600 border-none shadow-indigo-600/20 ring-1 ring-white/10; }
-    .kpi-hero .kpi-value-large { @apply text-7xl lg:text-8xl italic font-extrabold text-white; }
+    /* SECONDARY KPI CARDS (SPI, CPI) */
+    .kpi-sub-card { @apply bg-[#0f172a]/50 p-8 rounded-[2rem] border border-slate-800/40 flex flex-col items-center justify-center text-center transition-all hover:bg-[#0f172a]; }
+    .kpi-value-sub { @apply text-3xl font-black tabular-nums tracking-tighter mt-2; }
 
-    /* Infrastructure Card */
+    /* Project Cards */
     .project-card { @apply bg-[#0f172a] border border-slate-800/60 rounded-[3.5rem] overflow-hidden flex flex-col h-full transition-all duration-700 hover:shadow-indigo-500/10 hover:-translate-y-2; }
     .status-accent { @apply h-3.5 w-full; }
     .bg-completed { @apply bg-emerald-500; }
     .bg-ongoing { @apply bg-amber-500; }
     .bg-proposed { @apply bg-slate-700; }
 
-    /* DROPBARS (Ref: Far-Right Pinned Chevron) */
+    /* DROPBARS (Ref: Far-Right Chevron) */
     .detail-bar { @apply bg-slate-900/40 px-8 py-7 rounded-2xl border border-slate-800 mb-5 cursor-pointer hover:bg-slate-800/60 transition-all block; }
     .summary-flex { display: flex; justify-content: space-between; align-items: center; width: 100%; }
     
@@ -43,12 +43,6 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg)
     }
     details[open] .chevron-icon { transform: rotate(90deg); color: #6366f1; }
 
-    /* TYPOGRAPHY hierarchy */
-    .bar-label { @apply text-[16px] font-black text-slate-400 uppercase tracking-widest flex items-center; }
-    .list-row { @apply flex gap-6 py-5 border-b border-slate-800/30 last:border-none items-start; }
-    .list-number { @apply text-[14px] font-black text-indigo-400 min-w-[30px] mt-0.5; }
-    .list-text { @apply text-[14px] font-bold text-slate-400 leading-relaxed; }
-
     /* SEARCH HUB */
     .search-hub { @apply w-full pl-16 pr-8 py-8 rounded-[3rem] border border-slate-800 bg-[#0f172a] text-white font-bold text-lg outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500/40 transition-all; }
     
@@ -58,65 +52,71 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg)
 </head>
 <body>
 
-<nav class="bg-[#020617]/95 backdrop-blur-3xl border-b border-slate-800/50 px-10 py-12 sticky top-0 z-50">
+<nav class="bg-[#020617]/95 backdrop-blur-3xl border-b border-slate-800/50 px-10 py-10 sticky top-0 z-50">
     <div class="max-w-[1750px] mx-auto flex justify-between items-center">
         <div class="flex items-center gap-8">
-            <div class="bg-indigo-600 w-16 h-16 rounded-2xl flex items-center justify-center shadow-indigo-600/30 border border-white/10 shadow-2xl"><i class="fas fa-layer-group text-white text-2xl"></i></div>
+            <div class="bg-indigo-600 w-14 h-14 rounded-2xl flex items-center justify-center shadow-indigo-600/30 border border-white/10 shadow-2xl"><i class="fas fa-layer-group text-white text-xl"></i></div>
             <div>
-                <h1 class="text-3xl font-black tracking-tighter uppercase leading-none text-white">PSHS-WVCIC</h1>
-                <p class="text-[12px] font-bold text-slate-500 uppercase tracking-[0.5em] mt-3 text-indigo-400/80">Executive Strategy Terminal v68</p>
+                <h1 class="text-2xl font-black tracking-tighter uppercase leading-none text-white">PSHS-WVCIC</h1>
+                <p class="text-[11px] font-bold text-slate-500 uppercase tracking-[0.4em] mt-2 text-indigo-400/80">Institutional Strategy Terminal v69</p>
             </div>
         </div>
-        <div class="flex items-center gap-4 bg-emerald-500/5 text-emerald-400 px-10 py-5 rounded-full border border-emerald-500/10 text-[12px] font-black uppercase tracking-widest">
-            <span class="w-3 h-3 bg-emerald-500 rounded-full animate-pulse shadow-[0_0_15px_#10b981]"></span> Live Data Stream
+        <div class="flex items-center gap-3 bg-emerald-500/5 text-emerald-400 px-8 py-4 rounded-full border border-emerald-500/10 text-[11px] font-black uppercase tracking-widest">
+            <span class="w-2.5 h-2.5 bg-emerald-500 rounded-full animate-pulse shadow-[0_0_15px_#10b981]"></span> Live Node Active
         </div>
     </div>
 </nav>
 
 <main class="dashboard-container">
     
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-10 mb-28">
-        <div class="kpi-card border-l-8 border-l-indigo-600">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 gap-8 mb-24">
+        
+        <div class="kpi-main-card border-l-4 border-l-indigo-500">
             <span class="kpi-label">Allocation</span>
-            <span id="kpi-budget" class="kpi-value-large text-white">₱0.00</span>
+            <span id="kpi-budget" class="kpi-value-big">₱0.00</span>
         </div>
-        <div class="kpi-card">
+        
+        <div class="kpi-main-card border-l-4 border-l-slate-700">
             <span class="kpi-label">Expenditure</span>
-            <span id="kpi-actual" class="kpi-value-large text-slate-400">₱0.00</span>
+            <span id="kpi-actual" class="kpi-value-big text-slate-400">₱0.00</span>
         </div>
-        <div class="kpi-card">
+        
+        <div class="kpi-main-card border-l-4 border-l-rose-600">
             <span class="kpi-label">Financial Variance</span>
-            <span id="kpi-variance" class="kpi-value-large text-rose-500">₱0.00</span>
+            <span id="kpi-variance" class="kpi-value-big text-rose-500">₱0.00</span>
         </div>
-        <div class="kpi-card kpi-hero">
-            <span class="kpi-label text-indigo-100">Execution</span>
-            <span id="kpi-progress" class="kpi-value-large">0%</span>
+
+        <div class="kpi-main-card bg-indigo-600 border-none shadow-indigo-600/20">
+            <span class="kpi-label text-indigo-100">Execution Progress</span>
+            <span id="kpi-progress" class="kpi-value-big text-white italic">0%</span>
         </div>
-        <div class="kpi-card items-center justify-center text-center">
-            <span class="kpi-label mb-6">SPI (Schedule)</span>
-            <div class="w-32 h-16 relative mb-4"><canvas id="gaugeSPI"></canvas></div>
-            <span id="spi-text" class="text-6xl font-black tracking-tighter text-indigo-400">1.00</span>
+
+        <div class="kpi-sub-card">
+            <span class="kpi-label mb-2">SPI (Schedule)</span>
+            <div class="w-24 h-12 relative"><canvas id="gaugeSPI"></canvas></div>
+            <span id="spi-text" class="kpi-value-sub text-indigo-400">1.00</span>
         </div>
-        <div class="kpi-card items-center justify-center text-center">
-            <span class="kpi-label mb-6">CPI (Cost)</span>
-            <div class="w-32 h-16 relative mb-4"><canvas id="gaugeCPI"></canvas></div>
-            <span id="cpi-text" class="text-6xl font-black tracking-tighter text-emerald-400">1.00</span>
+
+        <div class="kpi-sub-card">
+            <span class="kpi-label mb-2">CPI (Cost)</span>
+            <div class="w-24 h-12 relative"><canvas id="gaugeCPI"></canvas></div>
+            <span id="cpi-text" class="kpi-value-sub text-emerald-400">1.00</span>
         </div>
     </div>
 
-    <div class="flex flex-col xl:flex-row gap-10 mb-24 items-center">
+    <div class="flex flex-col xl:flex-row gap-10 mb-20 items-center">
         <div class="relative flex-grow w-full">
             <i class="fas fa-search absolute left-10 top-1/2 -translate-y-1/2 text-slate-700 text-xl"></i>
             <input type="text" id="searchInput" placeholder="Filter Strategic Project Milestone Records..." class="search-hub">
         </div>
-        <select id="fyFilter" onchange="renderUI()" class="search-hub w-auto min-w-[320px] bg-[#0f172a] border-slate-800 text-slate-400 cursor-pointer"></select>
+        <select id="fyFilter" onchange="renderUI()" class="search-hub w-auto min-w-[280px] bg-[#0f172a] border-slate-800 text-slate-400 cursor-pointer"></select>
     </div>
 
-    <div id="project-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-16 pb-64"></div>
+    <div id="project-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 pb-64"></div>
 </main>
 
 <script>
-    // v68 PROTECTED UNICODE URL
+    // v69 PROTECTED UNICODE URL
     const scriptURL = `https\u003A//script.google.com/macros/s/AKfycbz-9wukcFnCwKNhcmTrTRQaY9fc_vOJA8O6yqNA71XKrJmiAj-b5f6uYzSG07JUjAcR/exec`;
     
     let allProjects = [];
@@ -129,7 +129,7 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg)
             populateFYFilter();
             initCharts();
             renderUI();
-        } catch (e) { console.error("Handshake Severed:", e); }
+        } catch (e) { console.error("Sync Failure:", e); }
     }
 
     function populateFYFilter() {
@@ -158,7 +158,7 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg)
 
     function renderCards(projects) {
         const grid = document.getElementById('project-grid');
-        grid.innerHTML = projects.length ? '' : '<div class="col-span-full py-64 text-center opacity-10 font-black uppercase text-sm tracking-[2em]">Scanning Core</div>';
+        grid.innerHTML = projects.length ? '' : '<div class="col-span-full py-40 text-center opacity-10 font-black uppercase text-xs tracking-[1em]">Scanning Records</div>';
 
         projects.forEach(p => {
             const accent = p.Status === 'Completed' ? 'bg-completed' : (p.Status === 'In Progress' ? 'bg-ongoing' : 'bg-slate-700');
@@ -168,49 +168,32 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg)
             const listParser = (str) => {
                 if (!str || str === "---") return '<p class="text-[14px] text-slate-600 italic px-2">No data recorded</p>';
                 return str.split(/[;\n]/).filter(x => x.trim()).map((item, index) => {
-                    return `<div class="list-row"><span class="list-number">${index + 1}.</span><span class="list-text">${item.trim()}</span></div>`;
+                    return `<div class="flex gap-4 py-4 border-b border-slate-800/30 last:border-none items-start"><span class="text-[13px] font-black text-indigo-400 min-w-[28px] mt-0.5">${index + 1}.</span><span class="text-[13.5px] font-bold text-slate-400 leading-relaxed">${item.trim()}</span></div>`;
                 }).join('');
             };
 
             grid.innerHTML += `
                 <div class="project-card shadow-2xl">
                     <div class="status-accent ${accent}"></div>
-                    <div class="p-12 flex flex-col h-full">
-                        <div class="flex justify-between items-center mb-10">
-                            <span class="px-5 py-2.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] border border-white/5 ${badgeStyle}">${p.Status}</span>
-                            <span class="text-[11px] font-black text-slate-700 uppercase tracking-widest">${p.FiscalYear || 'FY --'}</span>
+                    <div class="p-10 flex flex-col h-full">
+                        <div class="flex justify-between items-center mb-8">
+                            <span class="px-4 py-2 rounded-full text-[9px] font-black uppercase tracking-[0.15em] border border-white/5 ${badgeStyle}">${p.Status}</span>
+                            <span class="text-[10px] font-black text-slate-700 uppercase tracking-widest">${p.FiscalYear || 'FY --'}</span>
                         </div>
-                        <h3 class="text-3xl font-black leading-tight uppercase mb-16 min-h-[7.5rem] text-white tracking-tight italic">${p.ProjectName}</h3>
+                        <h3 class="text-2xl font-black leading-tight uppercase mb-12 min-h-[6.5rem] text-white tracking-tight italic">${p.ProjectName}</h3>
                         
-                        <details class="group">
-                            <summary class="detail-bar">
-                                <div class="summary-flex">
-                                    <span class="bar-label"><i class="fas fa-drafting-compass mr-5 text-indigo-500 text-lg"></i> Scope of Works</span>
-                                    <span class="chevron-icon"><i class="fas fa-chevron-right"></i></span>
-                                </div>
-                            </summary>
-                            <div class="mb-12 px-2">${listParser(p.Scope)}</div>
-                        </details>
+                        <details class="group"><summary class="detail-bar"><div class="summary-flex"><span class="text-[16px] font-black text-slate-400 uppercase tracking-widest flex items-center"><i class="fas fa-drafting-compass mr-5 text-indigo-500"></i> Scope of Works</span><span class="chevron-icon"><i class="fas fa-chevron-right"></i></span></div></summary><div class="mb-10 px-2">${listParser(p.Scope)}</div></details>
+                        <details class="group"><summary class="detail-bar"><div class="summary-flex"><span class="text-[16px] font-black text-slate-400 uppercase tracking-widest flex items-center"><i class="fas fa-pen-nib mr-5 text-slate-600"></i> Admin Remarks</span><span class="chevron-icon"><i class="fas fa-chevron-right"></i></span></div></summary><div class="mb-10 px-2">${listParser(p.Notes)}</div></details>
 
-                        <details class="group">
-                            <summary class="detail-bar">
-                                <div class="summary-flex">
-                                    <span class="bar-label"><i class="fas fa-pen-nib mr-5 text-slate-600 text-lg"></i> Admin Remarks</span>
-                                    <span class="chevron-icon"><i class="fas fa-chevron-right"></i></span>
-                                </div>
-                            </summary>
-                            <div class="mb-12 px-2">${listParser(p.Notes)}</div>
-                        </details>
-
-                        <div class="mt-auto pt-12 border-t border-slate-800">
-                            <div class="grid grid-cols-2 gap-6 mb-12">
-                                <div><p class="text-[11px] font-black text-slate-600 uppercase mb-3 tracking-widest">Target Finish</p><p class="text-[12px] font-black text-white">${p.TargetDate || '---'}</p></div>
-                                <div class="text-right"><p class="text-[11px] font-black text-slate-600 uppercase mb-3 tracking-widest">Institutional Valuation</p><p class="text-sm font-black text-white tabular-nums">${cost}</p></div>
+                        <div class="mt-auto pt-10 border-t border-slate-800">
+                            <div class="grid grid-cols-2 gap-4 mb-10">
+                                <div><p class="text-[10px] font-black text-slate-600 uppercase mb-2 tracking-widest">Target Finish</p><p class="text-[11px] font-black text-white">${p.TargetDate || '---'}</p></div>
+                                <div class="text-right"><p class="text-[10px] font-black text-slate-600 uppercase mb-2 tracking-widest">Valuation</p><p class="text-sm font-black text-white tabular-nums">${cost}</p></div>
                             </div>
-                            ${p.AttachmentURL ? `<a href="${p.AttachmentURL}" target="_blank" class="w-full py-6 bg-white text-[#030712] rounded-[2rem] text-[11px] font-black uppercase tracking-[0.5em] flex items-center justify-center gap-5 hover:bg-indigo-600 hover:text-white transition-all shadow-2xl"><i class="fas fa-file-contract"></i> Record Vault</a>` : `<div class="w-full py-6 bg-gray-800/30 text-slate-700 rounded-[2rem] text-[11px] font-black uppercase text-center tracking-widest italic border border-slate-800/30">Archives Offline</div>`}
-                            <div class="mt-16">
-                                <div class="flex justify-between items-center text-[11px] font-black text-slate-700 uppercase tracking-widest mb-5"><span>Execution Progress</span><span class="text-indigo-400 font-black">${p.Progress || 0}%</span></div>
-                                <div class="w-full bg-slate-800 h-3 rounded-full overflow-hidden shadow-inner"><div class="bg-indigo-600 h-full transition-all duration-1000 shadow-[0_0_20px_#6366f1]" style="width: ${p.Progress || 0}%"></div></div>
+                            ${p.AttachmentURL ? `<a href="${p.AttachmentURL}" target="_blank" class="w-full py-5 bg-white text-[#030712] rounded-[2rem] text-[10px] font-black uppercase tracking-[0.5em] flex items-center justify-center gap-4 hover:bg-indigo-600 hover:text-white transition-all shadow-2xl"><i class="fas fa-file-contract"></i> Record Vault</a>` : `<div class="w-full py-5 bg-gray-800/30 text-slate-700 rounded-[2rem] text-[10px] font-black uppercase text-center tracking-widest italic border border-slate-800/30">Archives Offline</div>`}
+                            <div class="mt-12">
+                                <div class="flex justify-between items-center text-[10px] font-black text-slate-700 uppercase tracking-widest mb-4"><span>Execution</span><span class="text-indigo-400 font-black">${p.Progress || 0}%</span></div>
+                                <div class="w-full bg-slate-800 h-2.5 rounded-full overflow-hidden shadow-inner"><div class="bg-indigo-600 h-full transition-all duration-1000 shadow-[0_0_20px_#6366f1]" style="width: ${p.Progress || 0}%"></div></div>
                             </div>
                         </div>
                     </div>
