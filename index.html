@@ -17,7 +17,6 @@
         .kpi-gradient-card { 
             @apply p-8 rounded-[2rem] shadow-2xl flex flex-col justify-between min-h-[180px] transition-all duration-500 hover:-translate-y-1 relative overflow-hidden; 
         }
-        /* Gradient Overlays for Depth */
         .kpi-gradient-card::after {
             content: '';
             @apply absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-50 pointer-events-none;
@@ -29,16 +28,19 @@
         .kpi-gradient-card:hover .kpi-icon { @apply scale-110 text-white/50; }
         .kpi-subtext { @apply text-[10px] font-bold text-white/60 uppercase tracking-widest z-10 mt-auto; }
 
-        /* Specific Card Gradients */
         .bg-card-alloc { @apply bg-gradient-to-br from-blue-500 to-indigo-700; shadow: 0 10px 30px -10px rgba(59, 130, 246, 0.5); }
         .bg-card-exp { @apply bg-gradient-to-br from-violet-500 to-purple-800; shadow: 0 10px 30px -10px rgba(139, 92, 246, 0.5); }
         .bg-card-var { @apply bg-gradient-to-br from-rose-500 to-red-800; shadow: 0 10px 30px -10px rgba(244, 63, 94, 0.5); }
         .bg-card-exec { @apply bg-gradient-to-br from-emerald-400 to-teal-700; shadow: 0 10px 30px -10px rgba(16, 185, 129, 0.5); }
 
-        /* SECONDARY KPI CARDS (SPI, CPI) */
+        /* SECONDARY KPI CARDS */
         .kpi-sub-card { @apply bg-[#0f172a] p-6 rounded-[2rem] border border-slate-800/60 shadow-xl flex flex-col items-center justify-center text-center transition-all hover:border-slate-700; }
         .kpi-sub-label { @apply text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-2; }
         .kpi-value-sub { @apply text-2xl font-black tabular-nums tracking-tighter mt-2; }
+
+        /* ANALYTICS SECTION */
+        .analytics-card { @apply bg-[#0f172a] p-8 rounded-[2.5rem] border border-slate-800/60 shadow-xl relative; }
+        .analytics-title { @apply text-[12px] font-black text-slate-400 uppercase tracking-widest mb-6 block border-b border-slate-800/50 pb-4; }
 
         /* Project Cards */
         .project-card { @apply bg-[#0f172a] border border-slate-800/60 rounded-[2.5rem] overflow-hidden flex flex-col h-full transition-all duration-500 hover:shadow-indigo-500/10 hover:-translate-y-1; }
@@ -47,13 +49,13 @@
         .bg-ongoing { @apply bg-amber-500; }
         .bg-proposed { @apply bg-slate-700; }
 
-        /* DROPBARS (Compact & Tight) */
+        /* DROPBARS */
         .detail-bar { @apply bg-slate-900/50 px-6 py-4 rounded-xl border border-slate-800/80 mb-3 cursor-pointer hover:bg-slate-800 transition-all block; }
         .summary-flex { display: flex; justify-content: space-between; align-items: center; width: 100%; }
         .chevron-icon { @apply text-[12px] text-slate-500 transition-transform duration-300; }
         details[open] .chevron-icon { transform: rotate(90deg); color: #6366f1; }
 
-        /* LISTS - Tight Vertical Spacing */
+        /* LISTS */
         .bar-label { @apply text-[14px] font-black text-slate-300 uppercase tracking-widest flex items-center; }
         .list-row { @apply flex gap-4 py-2 border-b border-slate-800/30 last:border-none items-start; }
         .list-number { @apply text-[12px] font-black text-indigo-400 min-w-[20px] mt-0.5; }
@@ -87,54 +89,48 @@
 
     <main class="dashboard-container">
         
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6 mb-16">
-            
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6 mb-10">
             <div class="kpi-gradient-card bg-card-alloc shadow-blue-900/20">
                 <i class="fas fa-wallet kpi-icon"></i>
-                <div class="flex flex-col h-full">
-                    <span class="kpi-label">Allocation</span>
-                    <span id="kpi-budget" class="kpi-value-big">₱0.00</span>
-                    <span class="kpi-subtext">Total Institutional Budget</span>
-                </div>
+                <div class="flex flex-col h-full"><span class="kpi-label">Allocation</span><span id="kpi-budget" class="kpi-value-big">₱0.00</span><span class="kpi-subtext">Total Budget</span></div>
             </div>
-            
             <div class="kpi-gradient-card bg-card-exp shadow-purple-900/20">
                 <i class="fas fa-file-invoice-dollar kpi-icon"></i>
-                <div class="flex flex-col h-full">
-                    <span class="kpi-label">Expenditure</span>
-                    <span id="kpi-actual" class="kpi-value-big">₱0.00</span>
-                    <span class="kpi-subtext">Capital Utilized</span>
-                </div>
+                <div class="flex flex-col h-full"><span class="kpi-label">Expenditure</span><span id="kpi-actual" class="kpi-value-big">₱0.00</span><span class="kpi-subtext">Capital Utilized</span></div>
             </div>
-            
             <div class="kpi-gradient-card bg-card-var shadow-rose-900/20">
                 <i class="fas fa-chart-pie kpi-icon"></i>
-                <div class="flex flex-col h-full">
-                    <span class="kpi-label">Variance</span>
-                    <span id="kpi-variance" class="kpi-value-big">₱0.00</span>
-                    <span class="kpi-subtext">Remaining Capital</span>
-                </div>
+                <div class="flex flex-col h-full"><span class="kpi-label">Variance</span><span id="kpi-variance" class="kpi-value-big">₱0.00</span><span class="kpi-subtext">Remaining Capital</span></div>
             </div>
-
             <div class="kpi-gradient-card bg-card-exec shadow-emerald-900/20">
                 <i class="fas fa-tasks kpi-icon"></i>
-                <div class="flex flex-col h-full">
-                    <span class="kpi-label">Execution</span>
-                    <span id="kpi-progress" class="kpi-value-big italic">0%</span>
-                    <span class="kpi-subtext">Physical Completion Avg</span>
-                </div>
+                <div class="flex flex-col h-full"><span class="kpi-label">Execution</span><span id="kpi-progress" class="kpi-value-big italic">0%</span><span class="kpi-subtext">Physical Avg</span></div>
             </div>
-
             <div class="kpi-sub-card">
                 <span class="kpi-sub-label">SPI (Schedule)</span>
                 <div class="w-20 h-10 relative mt-2"><canvas id="gaugeSPI"></canvas></div>
                 <span id="spi-text" class="kpi-value-sub text-indigo-400">1.00</span>
             </div>
-
             <div class="kpi-sub-card">
                 <span class="kpi-sub-label">CPI (Cost)</span>
                 <div class="w-20 h-10 relative mt-2"><canvas id="gaugeCPI"></canvas></div>
                 <span id="cpi-text" class="kpi-value-sub text-emerald-400">1.00</span>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-12">
+            <div class="analytics-card lg:col-span-1 h-[380px] flex flex-col">
+                <span class="analytics-title"><i class="fas fa-circle-notch text-indigo-500 mr-2"></i> Portfolio Health Breakdown</span>
+                <div class="flex-grow relative w-full flex justify-center pb-4">
+                    <canvas id="statusChart"></canvas>
+                </div>
+            </div>
+            
+            <div class="analytics-card lg:col-span-2 h-[380px] flex flex-col">
+                <span class="analytics-title"><i class="fas fa-chart-bar text-purple-500 mr-2"></i> Top 5 Projects: Allocation vs. Expenditure</span>
+                <div class="flex-grow relative w-full pb-2">
+                    <canvas id="budgetChart"></canvas>
+                </div>
             </div>
         </div>
 
@@ -150,7 +146,7 @@
     </main>
 
     <script>
-        // PROTECTED URL - ZERO EDIT REQUIRED
+        // PROTECTED URL 
         const scriptURL = `https\u003A//script.google.com/macros/s/AKfycbz-9wukcFnCwKNhcmTrTRQaY9fc_vOJA8O6yqNA71XKrJmiAj-b5f6uYzSG07JUjAcR/exec`;
         
         let allProjects = [];
@@ -188,6 +184,7 @@
             });
             renderCards(filtered);
             updateKPIs(filtered);
+            updateAnalytics(filtered); // Update the new charts based on search!
         }
 
         function renderCards(projects) {
@@ -210,56 +207,24 @@
                     <div class="project-card shadow-xl">
                         <div class="status-accent ${accent}"></div>
                         <div class="p-8 flex flex-col h-full">
-                            
                             <div class="flex justify-between items-center mb-6">
                                 <span class="px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-[0.15em] border ${badgeStyle}">${p.Status}</span>
                                 <span class="text-[10px] font-black text-slate-600 uppercase tracking-widest">${p.FiscalYear || 'FY --'}</span>
                             </div>
-                            
                             <h3 class="text-xl font-black leading-tight uppercase mb-8 min-h-[4.5rem] text-white tracking-tight">${p.ProjectName}</h3>
                             
-                            <details class="group">
-                                <summary class="detail-bar">
-                                    <div class="summary-flex">
-                                        <span class="bar-label"><i class="fas fa-drafting-compass mr-3 text-indigo-400"></i> Scope of Works</span>
-                                        <span class="chevron-icon"><i class="fas fa-chevron-right"></i></span>
-                                    </div>
-                                </summary>
-                                <div class="mb-6 px-2">${listParser(p.Scope)}</div>
-                            </details>
-
-                            <details class="group">
-                                <summary class="detail-bar">
-                                    <div class="summary-flex">
-                                        <span class="bar-label"><i class="fas fa-pen-nib mr-3 text-slate-500"></i> Admin Remarks</span>
-                                        <span class="chevron-icon"><i class="fas fa-chevron-right"></i></span>
-                                    </div>
-                                </summary>
-                                <div class="mb-6 px-2">${listParser(p.Notes)}</div>
-                            </details>
+                            <details class="group"><summary class="detail-bar"><div class="summary-flex"><span class="bar-label"><i class="fas fa-drafting-compass mr-3 text-indigo-400"></i> Scope of Works</span><span class="chevron-icon"><i class="fas fa-chevron-right"></i></span></div></summary><div class="mb-6 px-2">${listParser(p.Scope)}</div></details>
+                            <details class="group"><summary class="detail-bar"><div class="summary-flex"><span class="bar-label"><i class="fas fa-pen-nib mr-3 text-slate-500"></i> Admin Remarks</span><span class="chevron-icon"><i class="fas fa-chevron-right"></i></span></div></summary><div class="mb-6 px-2">${listParser(p.Notes)}</div></details>
 
                             <div class="mt-auto pt-6 border-t border-slate-800">
                                 <div class="grid grid-cols-2 gap-4 mb-6">
-                                    <div>
-                                        <p class="text-[9px] font-black text-slate-500 uppercase mb-1 tracking-widest">Target Finish</p>
-                                        <p class="text-[11px] font-black text-slate-200">${p.TargetDate || '---'}</p>
-                                    </div>
-                                    <div class="text-right">
-                                        <p class="text-[9px] font-black text-slate-500 uppercase mb-1 tracking-widest">Valuation</p>
-                                        <p class="text-[12px] font-black text-white tabular-nums">${cost}</p>
-                                    </div>
+                                    <div><p class="text-[9px] font-black text-slate-500 uppercase mb-1 tracking-widest">Target Finish</p><p class="text-[11px] font-black text-slate-200">${p.TargetDate || '---'}</p></div>
+                                    <div class="text-right"><p class="text-[9px] font-black text-slate-500 uppercase mb-1 tracking-widest">Valuation</p><p class="text-[12px] font-black text-white tabular-nums">${cost}</p></div>
                                 </div>
-                                
                                 ${p.AttachmentURL ? `<a href="${p.AttachmentURL}" target="_blank" class="w-full py-4 bg-white text-[#030712] rounded-xl text-[10px] font-black uppercase tracking-[0.2em] flex items-center justify-center gap-3 hover:bg-indigo-600 hover:text-white transition-all shadow-md"><i class="fas fa-file-contract"></i> Record Vault</a>` : `<div class="w-full py-4 bg-[#0f172a] text-slate-600 rounded-xl text-[10px] font-black uppercase text-center tracking-widest italic border border-slate-800">Archives Offline</div>`}
-                                
                                 <div class="mt-8">
-                                    <div class="flex justify-between items-center text-[10px] font-black text-slate-500 uppercase tracking-widest mb-3">
-                                        <span>Progress</span>
-                                        <span class="text-indigo-400 font-black">${p.Progress || 0}%</span>
-                                    </div>
-                                    <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden shadow-inner">
-                                        <div class="bg-indigo-500 h-full transition-all duration-1000" style="width: ${p.Progress || 0}%"></div>
-                                    </div>
+                                    <div class="flex justify-between items-center text-[10px] font-black text-slate-500 uppercase tracking-widest mb-3"><span>Progress</span><span class="text-indigo-400 font-black">${p.Progress || 0}%</span></div>
+                                    <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden shadow-inner"><div class="bg-indigo-500 h-full transition-all duration-1000" style="width: ${p.Progress || 0}%"></div></div>
                                 </div>
                             </div>
                         </div>
@@ -268,9 +233,69 @@
         }
 
         function initCharts() {
-            const opt = { cutout: '82%', circumfrence: 180, rotation: 270, plugins: { legend: { display: false } }, responsive: true, maintainAspectRatio: false };
-            charts.spi = new Chart(document.getElementById('gaugeSPI'), { type: 'doughnut', data: { datasets: [{ data: [0.5, 0.5], backgroundColor: ['#6366f1', '#1f2937'], borderWidth: 0 }] }, options: opt });
-            charts.cpi = new Chart(document.getElementById('gaugeCPI'), { type: 'doughnut', data: { datasets: [{ data: [0.5, 0.5], backgroundColor: ['#10b981', '#1f2937'], borderWidth: 0 }] }, options: opt });
+            // Gauge Defaults
+            const gaugeOpt = { cutout: '82%', circumfrence: 180, rotation: 270, plugins: { legend: { display: false }, tooltip: { enabled: false } }, responsive: true, maintainAspectRatio: false };
+            charts.spi = new Chart(document.getElementById('gaugeSPI'), { type: 'doughnut', data: { datasets: [{ data: [0.5, 0.5], backgroundColor: ['#6366f1', '#1e293b'], borderWidth: 0 }] }, options: gaugeOpt });
+            charts.cpi = new Chart(document.getElementById('gaugeCPI'), { type: 'doughnut', data: { datasets: [{ data: [0.5, 0.5], backgroundColor: ['#10b981', '#1e293b'], borderWidth: 0 }] }, options: gaugeOpt });
+
+            // 1. Health Ring Chart
+            charts.status = new Chart(document.getElementById('statusChart'), {
+                type: 'doughnut',
+                data: { labels: [], datasets: [{ data: [], backgroundColor: ['#10b981', '#f59e0b', '#334155'], borderWidth: 0, hoverOffset: 4 }] },
+                options: {
+                    responsive: true, maintainAspectRatio: false, cutout: '70%',
+                    plugins: { 
+                        legend: { position: 'bottom', labels: { padding: 20, color: '#94a3b8', font: { family: 'Plus Jakarta Sans', size: 11, weight: 'bold' } } },
+                        tooltip: { backgroundColor: '#0f172a', titleFont: { family: 'Plus Jakarta Sans' }, bodyFont: { family: 'Plus Jakarta Sans' }, borderColor: '#1e293b', borderWidth: 1 }
+                    }
+                }
+            });
+
+            // 2. Budget vs Exp Bar Chart
+            charts.budget = new Chart(document.getElementById('budgetChart'), {
+                type: 'bar',
+                data: { labels: [], datasets: [
+                    { label: 'Allocated Budget', data: [], backgroundColor: '#3b82f6', borderRadius: 4, barPercentage: 0.8 },
+                    { label: 'Actual Expenditure', data: [], backgroundColor: '#8b5cf6', borderRadius: 4, barPercentage: 0.8 }
+                ]},
+                options: {
+                    indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+                    plugins: { 
+                        legend: { position: 'top', align: 'end', labels: { color: '#94a3b8', boxWidth: 12, font: { family: 'Plus Jakarta Sans', size: 11, weight: 'bold' } } },
+                        tooltip: { backgroundColor: '#0f172a', titleFont: { family: 'Plus Jakarta Sans' }, bodyFont: { family: 'Plus Jakarta Sans' }, borderColor: '#1e293b', borderWidth: 1, callbacks: { label: function(context) { return context.dataset.label + ': ₱' + context.parsed.x.toLocaleString('en-PH'); } } }
+                    },
+                    scales: {
+                        x: { grid: { color: '#1e293b' }, ticks: { color: '#64748b', font: { family: 'Plus Jakarta Sans' }, callback: function(val) { return '₱' + (val/1000000).toFixed(1) + 'M'; } } },
+                        y: { grid: { display: false }, ticks: { color: '#cbd5e1', font: { family: 'Plus Jakarta Sans', size: 11, weight: 'bold' } } }
+                    }
+                }
+            });
+        }
+
+        function updateAnalytics(data) {
+            if(!data || data.length === 0) return;
+
+            // Update Status Doughnut
+            let counts = { 'Completed': 0, 'In Progress': 0, 'Proposed/Other': 0 };
+            data.forEach(p => {
+                let s = p.Status ? p.Status.toString().toLowerCase() : '';
+                if(s.includes('complete')) counts['Completed']++;
+                else if(s.includes('progress') || s.includes('ongoing')) counts['In Progress']++;
+                else counts['Proposed/Other']++;
+            });
+            charts.status.data.labels = ['Completed', 'In Progress', 'Proposed/Other'];
+            charts.status.data.datasets[0].data = [counts['Completed'], counts['In Progress'], counts['Proposed/Other']];
+            charts.status.update();
+
+            // Update Top 5 Budget Bar Chart
+            let sortedByCost = [...data].sort((a, b) => clean(b.Cost) - clean(a.Cost)).slice(0, 5);
+            charts.budget.data.labels = sortedByCost.map(p => {
+                let name = p.ProjectName || 'Unknown';
+                return name.length > 28 ? name.substring(0, 28) + '...' : name; // Truncate long names for Y-axis
+            });
+            charts.budget.data.datasets[0].data = sortedByCost.map(p => clean(p.Cost));
+            charts.budget.data.datasets[1].data = sortedByCost.map(p => clean(p.ActualCost));
+            charts.budget.update();
         }
 
         function updateKPIs(data) {
