@@ -12,17 +12,17 @@
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #FFFCF4; color: #6F6134; letter-spacing: -0.02em; }
         .dashboard-container { max-width: 1750px; margin: 0 auto; padding: 2rem; }
 
-        /* Dynamic Category Tabs (Earth-Tone Theme) */
+        /* Dynamic Category Tabs (5-Color Theme) */
         .category-tab { padding: 0.75rem 1.75rem; border-radius: 999px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; transition: all 0.3s; color: #6F6134; border: 1px solid #E1C68F; background: #ffffff; cursor: pointer; display: inline-flex; align-items: center; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
-        .category-tab:hover { border-color: #6F6134; background-color: #FFFCF4; }
-        .category-tab.active { background-color: #6F6134; color: #FAE769; border-color: #6F6134; box-shadow: 0 4px 14px rgba(111, 97, 52, 0.25); }
+        .category-tab:hover { border-color: #FF6115; color: #FF6115; background-color: #FFFCF4; }
+        .category-tab.active { background-color: #FF6115; color: #FFFCF4; border-color: #FF6115; box-shadow: 0 4px 14px rgba(255, 97, 21, 0.25); }
 
         /* Dropbars */
         .detail-bar { background-color: #FFFCF4; padding: 1rem 1.25rem; border-radius: 0.75rem; border: 1px solid #E1C68F; margin-bottom: 0.5rem; cursor: pointer; transition: all 0.3s; display: block; }
-        .detail-bar:hover { background-color: #ffffff; border-color: #6F6134; }
+        .detail-bar:hover { background-color: #ffffff; border-color: #FF6115; }
         .summary-flex { display: flex; justify-content: space-between; align-items: center; width: 100%; }
         .chevron-icon { font-size: 12px; color: #E1C68F; transition: transform 0.3s; }
-        details[open] .chevron-icon { transform: rotate(90deg); color: #6F6134; }
+        details[open] .chevron-icon { transform: rotate(90deg); color: #FF6115; }
         details summary::-webkit-details-marker { display: none; }
         details > summary { list-style: none; outline: none; }
 
@@ -34,7 +34,7 @@
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: #FFFCF4; }
         ::-webkit-scrollbar-thumb { background: #E1C68F; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #6F6134; }
+        ::-webkit-scrollbar-thumb:hover { background: #FF6115; }
 
         /* --- PRINT STYLES --- */
         @media print {
@@ -56,20 +56,20 @@
         <div class="max-w-[1750px] mx-auto flex justify-between items-center">
             <div class="flex items-center gap-4 group">
                 <div class="w-12 h-12 rounded-xl flex items-center justify-center overflow-hidden shadow-sm border border-[#E1C68F] bg-white transition-transform duration-500 group-hover:rotate-6">
-                    <img src="pshs-logo.png" alt="PSHS Logo" class="w-full h-full object-contain p-1" onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\'fas fa-landmark text-[#6F6134] text-xl transition-transform duration-300 group-hover:scale-110\'></i>';">
+                    <img src="pshs-logo.png" alt="PSHS Logo" class="w-full h-full object-contain p-1" onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\'fas fa-bolt text-[#FF6115] text-xl transition-transform duration-300 group-hover:scale-110\'></i>';">
                 </div>
                 <div>
                     <h1 class="text-xl lg:text-2xl font-black tracking-tighter uppercase leading-none text-[#6F6134]">PSHS-WVCIC</h1>
-                    <p class="text-[10px] font-bold text-[#E1C68F] uppercase tracking-[0.3em] mt-1.5">Infrastructure Progress Dashboard</p>
+                    <p class="text-[10px] font-bold text-[#FF6115] uppercase tracking-[0.3em] mt-1.5">Infrastructure Progress Dashboard</p>
                 </div>
             </div>
             
             <div class="flex items-center gap-4">
                 <div class="flex items-center gap-2 bg-[#E1C68F]/20 text-[#6F6134] px-4 py-2 rounded-full border border-[#E1C68F]/50 text-[10px] font-black uppercase tracking-widest shadow-sm">
-                    <span class="w-2 h-2 bg-[#6F6134] rounded-full animate-pulse shadow-[0_0_6px_#6F6134]"></span> Live Node
+                    <span class="w-2 h-2 bg-[#FF6115] rounded-full animate-pulse shadow-[0_0_6px_#FF6115]"></span> Live Node
                 </div>
                 
-                <button onclick="window.print()" class="no-print bg-[#6F6134] hover:bg-[#524726] text-[#FAE769] px-5 py-2 rounded-full font-bold text-xs uppercase tracking-widest shadow-md transition-all flex items-center gap-2 border border-transparent group">
+                <button onclick="window.print()" class="no-print bg-[#6F6134] hover:bg-[#FF6115] text-[#FFFCF4] px-5 py-2 rounded-full font-bold text-xs uppercase tracking-widest shadow-md hover:shadow-[#FF6115]/30 transition-all flex items-center gap-2 border border-transparent group">
                     <i class="fas fa-print transition-transform duration-300 group-hover:-translate-y-1"></i> Generate Report
                 </button>
             </div>
@@ -80,38 +80,43 @@
         
         <!-- KPI SECTION WITH INTERACTIVE ICONS -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-5 mb-8">
+            <!-- Olive Base -->
             <div class="group bg-[#6F6134] p-6 rounded-[1.5rem] shadow-lg flex flex-col justify-between min-h-[150px] relative overflow-hidden transition-transform hover:-translate-y-1 cursor-default">
                 <i class="fas fa-wallet absolute right-4 top-4 text-4xl text-[#E1C68F]/20 transition-transform duration-500 group-hover:scale-125 group-hover:-rotate-12"></i>
                 <span class="text-[10px] font-black text-[#E1C68F] uppercase tracking-widest z-10">Allocation</span>
-                <span id="kpi-budget" class="text-3xl font-black text-[#FAE769] tabular-nums tracking-tighter mt-2 mb-1 z-10">₱0.00</span>
-                <span class="text-[9px] font-bold text-white/80 uppercase tracking-widest z-10 mt-auto" id="kpi-label-budget">Total Segment Budget</span>
+                <span id="kpi-budget" class="text-3xl font-black text-[#FFFCF4] tabular-nums tracking-tighter mt-2 mb-1 z-10">₱0.00</span>
+                <span class="text-[9px] font-bold text-[#FAE769] uppercase tracking-widest z-10 mt-auto" id="kpi-label-budget">Total Segment Budget</span>
             </div>
             
-            <div class="group bg-[#E1C68F] p-6 rounded-[1.5rem] shadow-sm border border-[#E1C68F] flex flex-col justify-between min-h-[150px] relative overflow-hidden transition-transform hover:-translate-y-1 cursor-default">
+            <!-- Champagne Base -->
+            <div class="group bg-[#FAE769] p-6 rounded-[1.5rem] shadow-sm border border-[#E1C68F] flex flex-col justify-between min-h-[150px] relative overflow-hidden transition-transform hover:-translate-y-1 cursor-default">
                 <i class="fas fa-file-invoice-dollar absolute right-4 top-4 text-4xl text-[#6F6134]/10 transition-transform duration-500 group-hover:-translate-y-2 group-hover:scale-110"></i>
                 <span class="text-[10px] font-black text-[#6F6134]/70 uppercase tracking-widest z-10">Expenditure</span>
                 <span id="kpi-actual" class="text-3xl font-black text-[#6F6134] tabular-nums tracking-tighter mt-2 mb-1 z-10">₱0.00</span>
                 <span class="text-[9px] font-bold text-[#6F6134]/60 uppercase tracking-widest z-10 mt-auto">Capital Utilized</span>
             </div>
             
-            <div class="group bg-[#FAE769] p-6 rounded-[1.5rem] shadow-sm border border-[#FAE769] flex flex-col justify-between min-h-[150px] relative overflow-hidden transition-transform hover:-translate-y-1 cursor-default">
+            <!-- Ecru Base -->
+            <div class="group bg-[#E1C68F] p-6 rounded-[1.5rem] shadow-sm border border-[#E1C68F] flex flex-col justify-between min-h-[150px] relative overflow-hidden transition-transform hover:-translate-y-1 cursor-default">
                 <i class="fas fa-chart-pie absolute right-4 top-4 text-4xl text-[#6F6134]/10 transition-transform duration-700 group-hover:rotate-180"></i>
                 <span class="text-[10px] font-black text-[#6F6134]/70 uppercase tracking-widest z-10">Variance</span>
                 <span id="kpi-variance" class="text-3xl font-black text-[#6F6134] tabular-nums tracking-tighter mt-2 mb-1 z-10">₱0.00</span>
                 <span class="text-[9px] font-bold text-[#6F6134]/60 uppercase tracking-widest z-10 mt-auto">Remaining Capital</span>
             </div>
 
-            <div class="group bg-[#6F6134] p-6 rounded-[1.5rem] shadow-lg flex flex-col justify-between min-h-[150px] relative overflow-hidden transition-transform hover:-translate-y-1 cursor-default">
-                <i class="fas fa-tasks absolute right-4 top-4 text-4xl text-[#FAE769]/20 transition-all duration-300 group-hover:animate-bounce"></i>
-                <span class="text-[10px] font-black text-[#E1C68F] uppercase tracking-widest z-10">Execution</span>
-                <span id="kpi-progress" class="text-4xl font-extrabold italic text-[#FAE769] tabular-nums tracking-tighter mt-1 mb-1 z-10">0%</span>
+            <!-- Neon Orange Base -->
+            <div class="group bg-[#FF6115] p-6 rounded-[1.5rem] shadow-lg shadow-[#FF6115]/20 flex flex-col justify-between min-h-[150px] relative overflow-hidden transition-transform hover:-translate-y-1 cursor-default">
+                <i class="fas fa-tasks absolute right-4 top-4 text-4xl text-[#FFFCF4]/20 transition-all duration-300 group-hover:animate-bounce"></i>
+                <span class="text-[10px] font-black text-[#FAE769] uppercase tracking-widest z-10">Execution</span>
+                <span id="kpi-progress" class="text-4xl font-extrabold italic text-[#FFFCF4] tabular-nums tracking-tighter mt-1 mb-1 z-10">0%</span>
                 <span class="text-[9px] font-bold text-white/80 uppercase tracking-widest z-10 mt-auto">Physical Avg</span>
             </div>
 
+            <!-- Porcelain/White Bases for Gauges -->
             <div class="bg-white p-5 rounded-[1.5rem] border border-[#E1C68F] shadow-sm flex flex-col items-center justify-center text-center">
                 <span class="text-[9px] font-black text-[#6F6134] uppercase tracking-widest mb-2">SPI (Schedule)</span>
                 <div class="w-16 h-8 relative mt-1"><canvas id="gaugeSPI"></canvas></div>
-                <span id="spi-text" class="text-xl font-black tabular-nums tracking-tighter text-[#6F6134] mt-2">1.00</span>
+                <span id="spi-text" class="text-xl font-black tabular-nums tracking-tighter text-[#FF6115] mt-2">1.00</span>
             </div>
 
             <div class="bg-white p-5 rounded-[1.5rem] border border-[#E1C68F] shadow-sm flex flex-col items-center justify-center text-center">
@@ -125,7 +130,7 @@
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-5 mb-10">
             <div class="bg-white p-6 rounded-[2rem] border border-[#E1C68F]/50 shadow-sm">
                 <span class="text-[11px] font-black text-[#6F6134] uppercase tracking-widest mb-4 block border-b border-[#E1C68F]/30 pb-3 flex items-center">
-                    <i class="fas fa-circle-notch text-[#E1C68F] mr-2 animate-spin" style="animation-duration: 3s;"></i> Portfolio Health
+                    <i class="fas fa-circle-notch text-[#FF6115] mr-2 animate-spin" style="animation-duration: 3s;"></i> Portfolio Health
                 </span>
                 <div style="position: relative; height: 260px; width: 100%;">
                     <canvas id="statusChart"></canvas>
@@ -153,12 +158,12 @@
         <div class="no-print flex flex-col sm:flex-row gap-4 mb-10 items-center bg-white p-3 rounded-[2rem] shadow-sm border border-[#E1C68F]/50">
             <div class="relative flex-grow w-full">
                 <i class="fas fa-search absolute left-6 top-1/2 -translate-y-1/2 text-[#E1C68F] text-sm"></i>
-                <input type="text" id="searchInput" placeholder="Search by project name, contractor, or location..." class="w-full pl-14 pr-6 py-4 rounded-full border-none bg-[#FFFCF4] text-[#6F6134] font-bold text-sm outline-none focus:ring-2 focus:ring-[#6F6134]/20">
+                <input type="text" id="searchInput" placeholder="Search by project name, contractor, or location..." class="w-full pl-14 pr-6 py-4 rounded-full border-none bg-[#FFFCF4] text-[#6F6134] font-bold text-sm outline-none focus:ring-2 focus:ring-[#FF6115]/20">
             </div>
-            <select id="fyFilter" onchange="renderUI()" class="w-full sm:w-auto min-w-[180px] px-6 py-4 rounded-full border-none bg-[#FFFCF4] text-[#6F6134] font-bold text-sm outline-none cursor-pointer focus:ring-2 focus:ring-[#6F6134]/20"></select>
+            <select id="fyFilter" onchange="renderUI()" class="w-full sm:w-auto min-w-[180px] px-6 py-4 rounded-full border-none bg-[#FFFCF4] text-[#6F6134] font-bold text-sm outline-none cursor-pointer focus:ring-2 focus:ring-[#FF6115]/20"></select>
             <div class="flex gap-2 w-full sm:w-auto bg-[#FFFCF4] p-1 rounded-full border border-[#E1C68F]/30">
-                <button id="btn-all" class="px-6 py-3 rounded-full text-[10px] font-black bg-[#6F6134] text-[#FAE769] shadow-sm transition-all w-1/2 sm:w-auto" onclick="filterStatus('All')">ALL</button>
-                <button id="btn-ongoing" class="px-6 py-3 rounded-full text-[10px] font-black text-[#6F6134]/50 bg-transparent transition-all w-1/2 sm:w-auto hover:text-[#6F6134]" onclick="filterStatus('In Progress')">ONGOING</button>
+                <button id="btn-all" class="px-6 py-3 rounded-full text-[10px] font-black bg-[#6F6134] text-[#FFFCF4] shadow-sm transition-all w-1/2 sm:w-auto" onclick="filterStatus('All')">ALL</button>
+                <button id="btn-ongoing" class="px-6 py-3 rounded-full text-[10px] font-black text-[#6F6134]/50 bg-transparent transition-all w-1/2 sm:w-auto hover:text-[#FF6115]" onclick="filterStatus('In Progress')">ONGOING</button>
             </div>
         </div>
 
@@ -186,7 +191,6 @@
             } catch (e) { console.error("Sync Failure:", e); }
         }
 
-        // GENERATES THE SORTING TABS AUTOMATICALLY
         function buildCategoryTabs() {
             const container = document.getElementById('category-container');
             const cats = [...new Set(allProjects.map(p => p.Category ? p.Category.trim() : '').filter(c => c !== ''))].sort();
@@ -223,8 +227,8 @@
 
         function filterStatus(status) {
             filterActive = status;
-            document.getElementById('btn-all').className = status === 'All' ? 'px-6 py-3 rounded-full text-[10px] font-black bg-[#6F6134] text-[#FAE769] shadow-sm transition-all w-1/2 sm:w-auto' : 'px-6 py-3 rounded-full text-[10px] font-black text-[#6F6134]/50 bg-transparent transition-all w-1/2 sm:w-auto hover:text-[#6F6134]';
-            document.getElementById('btn-ongoing').className = status === 'In Progress' ? 'px-6 py-3 rounded-full text-[10px] font-black bg-[#6F6134] text-[#FAE769] shadow-sm transition-all w-1/2 sm:w-auto' : 'px-6 py-3 rounded-full text-[10px] font-black text-[#6F6134]/50 bg-transparent transition-all w-1/2 sm:w-auto hover:text-[#6F6134]';
+            document.getElementById('btn-all').className = status === 'All' ? 'px-6 py-3 rounded-full text-[10px] font-black bg-[#6F6134] text-[#FFFCF4] shadow-sm transition-all w-1/2 sm:w-auto' : 'px-6 py-3 rounded-full text-[10px] font-black text-[#6F6134]/50 bg-transparent transition-all w-1/2 sm:w-auto hover:text-[#FF6115]';
+            document.getElementById('btn-ongoing').className = status === 'In Progress' ? 'px-6 py-3 rounded-full text-[10px] font-black bg-[#6F6134] text-[#FFFCF4] shadow-sm transition-all w-1/2 sm:w-auto' : 'px-6 py-3 rounded-full text-[10px] font-black text-[#6F6134]/50 bg-transparent transition-all w-1/2 sm:w-auto hover:text-[#FF6115]';
             renderUI();
         }
 
@@ -266,15 +270,16 @@
             grid.innerHTML = projects.length ? '' : '<div class="col-span-full py-20 text-center text-[#E1C68F] font-black uppercase text-xs tracking-widest">No Projects Found</div>';
 
             projects.forEach(p => {
-                const accent = p.Status === 'Completed' ? 'bg-[#6F6134]' : (p.Status === 'In Progress' ? 'bg-[#FAE769]' : 'bg-[#E1C68F]');
-                const badgeStyle = p.Status === 'Completed' ? 'bg-[#6F6134] text-[#FAE769] border-[#6F6134]' : (p.Status === 'In Progress' ? 'bg-[#FAE769] text-[#6F6134] border-[#FAE769]' : 'bg-[#E1C68F] text-[#6F6134] border-[#E1C68F]');
+                // Completed = Olive | In Progress = Neon Orange | Proposed = Ecru
+                const accent = p.Status === 'Completed' ? 'bg-[#6F6134]' : (p.Status === 'In Progress' ? 'bg-[#FF6115]' : 'bg-[#E1C68F]');
+                const badgeStyle = p.Status === 'Completed' ? 'bg-[#6F6134]/10 text-[#6F6134] border-[#6F6134]/30' : (p.Status === 'In Progress' ? 'bg-[#FF6115]/10 text-[#FF6115] border-[#FF6115]/30' : 'bg-[#E1C68F]/20 text-[#6F6134] border-[#E1C68F]');
                 const cost = '₱' + clean(p.Cost).toLocaleString('en-PH', {minimumFractionDigits: 2});
                 const catTag = p.Category ? `<span class="px-2 py-0.5 rounded text-[8px] font-black uppercase tracking-tighter bg-white text-[#6F6134] border border-[#E1C68F] mr-2 mb-3 inline-block">${p.Category}</span>` : '';
                 
                 const listParser = (str) => {
                     if (!str || str === "---") return '<p class="text-[11px] text-[#E1C68F] italic px-2 py-1">No records found</p>';
                     return str.split(/[;\n]/).filter(x => x.trim()).map((item, index) => {
-                        return `<div class="list-row group/item hover:bg-[#FFFCF4] transition-colors rounded-lg px-2"><span class="text-[11px] font-black text-[#E1C68F] min-w-[20px] mt-0.5 transition-transform group-hover/item:translate-x-1">${index + 1}.</span><span class="text-[12px] font-semibold text-[#6F6134] leading-snug">${item.trim()}</span></div>`;
+                        return `<div class="list-row group/item hover:bg-[#FFFCF4] transition-colors rounded-lg px-2"><span class="text-[11px] font-black text-[#FF6115] min-w-[20px] mt-0.5 transition-transform group-hover/item:translate-x-1">${index + 1}.</span><span class="text-[12px] font-semibold text-[#6F6134] leading-snug">${item.trim()}</span></div>`;
                     }).join('');
                 };
 
@@ -292,7 +297,7 @@
                             <details class="group/detail">
                                 <summary class="detail-bar">
                                     <div class="summary-flex group/header">
-                                        <span class="text-[11px] font-black text-[#6F6134] uppercase tracking-widest flex items-center"><i class="fas fa-drafting-compass mr-3 text-[#E1C68F] transition-transform duration-300 group-hover/header:rotate-12"></i> Scope of Works</span>
+                                        <span class="text-[11px] font-black text-[#6F6134] uppercase tracking-widest flex items-center"><i class="fas fa-drafting-compass mr-3 text-[#FF6115] transition-transform duration-300 group-hover/header:rotate-12"></i> Scope of Works</span>
                                         <span class="chevron-icon"><i class="fas fa-chevron-right"></i></span>
                                     </div>
                                 </summary>
@@ -314,10 +319,10 @@
                                     <div><p class="text-[8px] font-black text-[#E1C68F] uppercase mb-1 tracking-widest">Target Finish</p><p class="text-[10px] font-black text-[#6F6134]">${p.TargetDate || '---'}</p></div>
                                     <div class="text-right"><p class="text-[8px] font-black text-[#E1C68F] uppercase mb-1 tracking-widest">Valuation</p><p class="text-[11px] font-black text-[#6F6134] tabular-nums">${cost}</p></div>
                                 </div>
-                                ${p.AttachmentURL ? `<a href="${p.AttachmentURL}" target="_blank" class="w-full py-3 bg-[#FFFCF4] border border-[#E1C68F] text-[#6F6134] rounded-xl text-[9px] font-black uppercase tracking-[0.2em] flex items-center justify-center gap-2 hover:bg-[#6F6134] hover:text-[#FAE769] transition-all shadow-sm no-print group/btn"><i class="fas fa-file-contract transition-transform duration-300 group-hover/btn:scale-110"></i> Record Vault</a>` : `<div class="w-full py-3 bg-[#FFFCF4] text-[#E1C68F] rounded-xl text-[9px] font-black uppercase text-center tracking-widest italic border border-[#E1C68F]/40 no-print">Archives Offline</div>`}
+                                ${p.AttachmentURL ? `<a href="${p.AttachmentURL}" target="_blank" class="w-full py-3 bg-[#FFFCF4] border border-[#E1C68F] text-[#6F6134] rounded-xl text-[9px] font-black uppercase tracking-[0.2em] flex items-center justify-center gap-2 hover:bg-[#FF6115] hover:text-[#FFFCF4] hover:border-[#FF6115] transition-all shadow-sm no-print group/btn"><i class="fas fa-file-contract transition-transform duration-300 group-hover/btn:scale-110"></i> Record Vault</a>` : `<div class="w-full py-3 bg-[#FFFCF4] text-[#E1C68F] rounded-xl text-[9px] font-black uppercase text-center tracking-widest italic border border-[#E1C68F]/40 no-print">Archives Offline</div>`}
                                 <div class="mt-6">
-                                    <div class="flex justify-between items-center text-[9px] font-black text-[#E1C68F] uppercase tracking-widest mb-2"><span>Progress</span><span class="text-[#6F6134] font-black">${p.Progress || 0}%</span></div>
-                                    <div class="w-full bg-[#FFFCF4] h-1.5 rounded-full overflow-hidden shadow-inner border border-[#E1C68F]/30"><div class="bg-[#6F6134] h-full transition-all duration-1000" style="width: ${p.Progress || 0}%"></div></div>
+                                    <div class="flex justify-between items-center text-[9px] font-black text-[#E1C68F] uppercase tracking-widest mb-2"><span>Progress</span><span class="text-[#FF6115] font-black">${p.Progress || 0}%</span></div>
+                                    <div class="w-full bg-[#FFFCF4] h-1.5 rounded-full overflow-hidden shadow-inner border border-[#E1C68F]/30"><div class="bg-[#FF6115] h-full transition-all duration-1000" style="width: ${p.Progress || 0}%"></div></div>
                                 </div>
                             </div>
                         </div>
@@ -330,12 +335,12 @@
             Chart.defaults.font.family = 'Plus Jakarta Sans';
 
             const gaugeOpt = { cutout: '78%', circumfrence: 180, rotation: 270, plugins: { legend: { display: false }, tooltip: { enabled: false } }, responsive: true, maintainAspectRatio: false };
-            charts.spi = new Chart(document.getElementById('gaugeSPI'), { type: 'doughnut', data: { datasets: [{ data: [0.5, 0.5], backgroundColor: ['#6F6134', '#FFFCF4'], borderWidth: 0 }] }, options: gaugeOpt });
-            charts.cpi = new Chart(document.getElementById('gaugeCPI'), { type: 'doughnut', data: { datasets: [{ data: [0.5, 0.5], backgroundColor: ['#E1C68F', '#FFFCF4'], borderWidth: 0 }] }, options: gaugeOpt });
+            charts.spi = new Chart(document.getElementById('gaugeSPI'), { type: 'doughnut', data: { datasets: [{ data: [0.5, 0.5], backgroundColor: ['#FF6115', '#FFFCF4'], borderWidth: 0 }] }, options: gaugeOpt });
+            charts.cpi = new Chart(document.getElementById('gaugeCPI'), { type: 'doughnut', data: { datasets: [{ data: [0.5, 0.5], backgroundColor: ['#6F6134', '#FFFCF4'], borderWidth: 0 }] }, options: gaugeOpt });
 
             charts.status = new Chart(document.getElementById('statusChart'), {
                 type: 'doughnut',
-                data: { labels: [], datasets: [{ data: [], backgroundColor: ['#6F6134', '#FAE769', '#E1C68F'], borderWidth: 0, hoverOffset: 4 }] },
+                data: { labels: [], datasets: [{ data: [], backgroundColor: ['#6F6134', '#FF6115', '#E1C68F'], borderWidth: 0, hoverOffset: 4 }] },
                 options: { responsive: true, maintainAspectRatio: false, cutout: '75%', plugins: { legend: { position: 'bottom', labels: { padding: 15, font: { size: 11, weight: 'bold' }, color: '#6F6134' } }, tooltip: { backgroundColor: '#ffffff', borderColor: '#E1C68F', borderWidth: 1, titleColor: '#6F6134', bodyColor: '#6F6134' } } }
             });
 
@@ -343,7 +348,7 @@
                 type: 'bar',
                 data: { labels: [], datasets: [
                     { label: 'Allocated Budget', data: [], backgroundColor: '#6F6134', borderRadius: 4, barPercentage: 0.75 },
-                    { label: 'Actual Expenditure', data: [], backgroundColor: '#E1C68F', borderRadius: 4, barPercentage: 0.75 }
+                    { label: 'Actual Expenditure', data: [], backgroundColor: '#FF6115', borderRadius: 4, barPercentage: 0.75 }
                 ]},
                 options: {
                     indexAxis: 'y', responsive: true, maintainAspectRatio: false,
