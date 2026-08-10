@@ -9,11 +9,11 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        /* SOFT DARK BACKGROUND: Warm Stone instead of Pitch Black */
+        /* SOFT DARK BACKGROUND: Warm Stone */
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #1c1917; color: #f5f5f4; letter-spacing: -0.02em; }
         .dashboard-container { max-width: 1750px; margin: 0 auto; padding: 2rem; }
 
-        /* Dynamic Category Tabs (Soft Dark Theme) */
+        /* Dynamic Category Tabs */
         .category-tab { padding: 0.75rem 1.75rem; border-radius: 999px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; transition: all 0.3s; color: #E1C68F; border: 1px solid #44403c; background: #292524; cursor: pointer; display: inline-flex; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
         .category-tab:hover { border-color: #FAE769; color: #FAE769; background-color: #3f3f46; }
         .category-tab.active { background-color: #FF6115; color: #ffffff; border-color: #FF6115; box-shadow: 0 4px 14px rgba(255, 97, 21, 0.3); }
@@ -79,9 +79,8 @@
 
     <main class="dashboard-container">
         
-        <!-- REFINED KPI SECTION (High Contrast Dark) -->
+        <!-- REFINED KPI SECTION -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-5 mb-8">
-            <!-- Olive Base -->
             <div class="group bg-[#6F6134] p-6 rounded-[1.5rem] shadow-lg flex flex-col justify-between min-h-[150px] relative overflow-hidden transition-transform hover:-translate-y-1 cursor-default">
                 <i class="fas fa-wallet absolute right-4 top-4 text-4xl text-[#FAE769]/30 transition-transform duration-500 group-hover:scale-125 group-hover:-rotate-12"></i>
                 <span class="text-[10px] font-black text-[#E1C68F] uppercase tracking-widest z-10">Allocation</span>
@@ -89,7 +88,6 @@
                 <span class="text-[9px] font-bold text-white/70 uppercase tracking-widest z-10 mt-auto" id="kpi-label-budget">Total Segment Budget</span>
             </div>
             
-            <!-- Soft Stone Bases -->
             <div class="group bg-[#292524] p-6 rounded-[1.5rem] shadow-sm border border-[#44403c] flex flex-col justify-between min-h-[150px] relative overflow-hidden transition-transform hover:-translate-y-1 cursor-default">
                 <i class="fas fa-file-invoice-dollar absolute right-4 top-4 text-4xl text-[#E1C68F]/10 transition-transform duration-500 group-hover:-translate-y-2 group-hover:scale-110 group-hover:text-[#FF6115]/40"></i>
                 <span class="text-[10px] font-black text-[#a8a29e] uppercase tracking-widest z-10">Expenditure</span>
@@ -104,7 +102,6 @@
                 <span class="text-[9px] font-bold text-[#a8a29e] uppercase tracking-widest z-10 mt-auto">Remaining Capital</span>
             </div>
 
-            <!-- Accent Border -->
             <div class="group bg-[#292524] border-t-4 border-[#FF6115] p-6 rounded-[1.5rem] shadow-md flex flex-col justify-between min-h-[150px] relative overflow-hidden transition-transform hover:-translate-y-1 cursor-default">
                 <i class="fas fa-tasks absolute right-4 top-4 text-4xl text-[#FF6115]/10 transition-all duration-300 group-hover:animate-bounce"></i>
                 <span class="text-[10px] font-black text-[#a8a29e] uppercase tracking-widest z-10">Execution</span>
@@ -171,7 +168,6 @@
     </main>
 
     <script>
-        // PROTECTED URL - ZERO EDIT REQUIRED
         const scriptURL = `https\u003A//script.google.com/macros/s/AKfycbz-9wukcFnCwKNhcmTrTRQaY9fc_vOJA8O6yqNA71XKrJmiAj-b5f6uYzSG07JUjAcR/exec`;
         
         let allProjects = [];
@@ -352,7 +348,19 @@
                     indexAxis: 'y', responsive: true, maintainAspectRatio: false,
                     plugins: { legend: { position: 'top', align: 'end', labels: { boxWidth: 12, font: { size: 11, weight: 'bold' }, color: '#f5f5f4' } }, tooltip: { backgroundColor: '#1c1917', borderColor: '#E1C68F', borderWidth: 1, titleColor: '#f5f5f4', bodyColor: '#f5f5f4', callbacks: { label: function(context) { return context.dataset.label + ': ₱' + context.parsed.x.toLocaleString('en-PH'); } } } },
                     scales: {
-                        x: { grid: { color: '#44403c' }, ticks: { font: { size: 11, weight: 'bold' }, color: '#a8a29e', callback: function(val) { return '₱' + (val/1000000).toFixed(1) + 'M'; } } },
+                        x: { 
+                            grid: { color: '#44403c' }, 
+                            ticks: { 
+                                font: { size: 11, weight: 'bold' }, 
+                                color: '#a8a29e', 
+                                // DYNAMIC AXIS FIX APPLIED HERE
+                                callback: function(val) { 
+                                    if (val >= 1000000) return '₱' + (val / 1000000).toFixed(1) + 'M';
+                                    if (val >= 1000) return '₱' + (val / 1000).toFixed(1) + 'K';
+                                    return '₱' + val.toLocaleString('en-PH');
+                                } 
+                            } 
+                        },
                         y: { grid: { display: false }, ticks: { font: { size: 11, weight: 'bold' }, color: '#f5f5f4' } }
                     }
                 }
