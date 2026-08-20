@@ -9,38 +9,38 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        /* SOFT DARK BACKGROUND: Warm Stone */
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #1c1917; color: #f5f5f4; letter-spacing: -0.02em; }
+        /* CID PORTAL BACKGROUND: Light Gray/Off-White with Subtle Grid feel */
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #F4F6F9; color: #132644; letter-spacing: -0.02em; }
         .dashboard-container { max-width: 1750px; margin: 0 auto; padding: 2rem; }
 
-        /* Dynamic Category Tabs */
-        .category-tab { padding: 0.75rem 1.75rem; border-radius: 999px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; transition: all 0.3s; color: #E1C68F; border: 1px solid #44403c; background: #292524; cursor: pointer; display: inline-flex; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
-        .category-tab:hover { border-color: #FAE769; color: #FAE769; background-color: #3f3f46; }
-        .category-tab.active { background-color: #FF6115; color: #ffffff; border-color: #FF6115; box-shadow: 0 4px 14px rgba(255, 97, 21, 0.3); }
+        /* Dynamic Category Tabs (CID Theme) */
+        .category-tab { padding: 0.75rem 1.75rem; border-radius: 0.75rem; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; transition: all 0.3s; color: #132644; border: 1px solid #d1d5db; background: #ffffff; cursor: pointer; display: inline-flex; align-items: center; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+        .category-tab:hover { border-color: #165CCA; color: #165CCA; background-color: #f8fafc; }
+        .category-tab.active { background-color: #132644; color: #F1C40F; border-color: #132644; box-shadow: 0 4px 12px rgba(19, 38, 68, 0.2); }
 
-        /* Dropbars */
-        .detail-bar { background-color: #1c1917; padding: 1rem 1.25rem; border-radius: 0.75rem; border: 1px solid #44403c; margin-bottom: 0.5rem; cursor: pointer; transition: all 0.3s; display: block; }
-        .detail-bar:hover { background-color: #292524; border-color: #E1C68F; }
+        /* Dropbars inside cards */
+        .detail-bar { background-color: #132644; padding: 1rem 1.25rem; border-radius: 0.75rem; border: 1px solid #132644; margin-bottom: 0.5rem; cursor: pointer; transition: all 0.3s; display: block; color: #ffffff; }
+        .detail-bar:hover { background-color: #1a355e; }
         .summary-flex { display: flex; justify-content: space-between; align-items: center; width: 100%; }
-        .chevron-icon { font-size: 12px; color: #a8a29e; transition: transform 0.3s; }
-        details[open] .chevron-icon { transform: rotate(90deg); color: #FF6115; }
+        .chevron-icon { font-size: 12px; color: #F1C40F; transition: transform 0.3s; }
+        details[open] .chevron-icon { transform: rotate(90deg); color: #ffffff; }
         details summary::-webkit-details-marker { display: none; }
         details > summary { list-style: none; outline: none; }
 
         /* Lists */
-        .list-row { display: flex; gap: 1rem; padding: 0.5rem 0; border-bottom: 1px solid #44403c; align-items: flex-start; }
+        .list-row { display: flex; gap: 1rem; padding: 0.6rem 0; border-bottom: 1px solid #e5e7eb; align-items: flex-start; }
         .list-row:last-child { border-bottom: none; }
         
         /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #1c1917; }
-        ::-webkit-scrollbar-thumb { background: #44403c; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #E1C68F; }
+        ::-webkit-scrollbar-track { background: #F4F6F9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #132644; }
 
         /* --- PRINT STYLES --- */
         @media print {
             @page { size: landscape; margin: 10mm; }
-            body { background-color: #ffffff !important; color: #1c1917 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+            body { background-color: #ffffff !important; color: #132644 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
             .no-print { display: none !important; }
             .dashboard-container { padding: 0 !important; max-width: 100% !important; }
             details { display: block !important; }
@@ -53,25 +53,27 @@
 </head>
 <body>
 
-    <nav class="bg-[#1c1917]/95 backdrop-blur-3xl border-b border-[#292524] px-8 py-5 sticky top-0 z-50">
+    <!-- NAV MATCHING THE CID PORTAL TOP BAR -->
+    <nav class="bg-[#132644] border-b border-[#132644] px-8 py-4 sticky top-0 z-50 shadow-md">
         <div class="max-w-[1750px] mx-auto flex justify-between items-center">
             <div class="flex items-center gap-4 group">
-                <div class="w-12 h-12 rounded-xl flex items-center justify-center overflow-hidden shadow-sm border border-[#44403c] bg-[#292524] transition-transform duration-500 group-hover:rotate-6">
-                    <img src="pshs-logo.png" alt="PSHS Logo" class="w-full h-full object-contain p-1" onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\'fas fa-landmark text-[#FAE769] text-xl transition-transform duration-300 group-hover:scale-110\'></i>';">
+                <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center overflow-hidden shadow-sm transition-transform duration-500 group-hover:scale-105">
+                    <img src="pshs-logo.png" alt="PSHS Logo" class="w-full h-full object-contain p-1" onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\'fas fa-fire text-[#165CCA] text-lg\'></i>';">
                 </div>
                 <div>
-                    <h1 class="text-xl lg:text-2xl font-black tracking-tighter uppercase leading-none text-[#f5f5f4]">PSHS-WVCIC</h1>
-                    <p class="text-[10px] font-bold text-[#E1C68F] uppercase tracking-[0.3em] mt-1.5">Infrastructure Progress Dashboard</p>
+                    <h1 class="text-xl font-black tracking-tight text-white leading-none">PSHS-WVCIC CID Portal</h1>
+                    <p class="text-[10px] font-bold text-[#F1C40F] uppercase tracking-[0.2em] mt-1">Infrastructure Command</p>
                 </div>
             </div>
             
             <div class="flex items-center gap-4">
-                <div class="flex items-center gap-2 bg-[#FF6115]/10 text-[#FF6115] px-4 py-2 rounded-full border border-[#FF6115]/30 text-[10px] font-black uppercase tracking-widest shadow-sm">
-                    <span class="w-2 h-2 bg-[#FF6115] rounded-full animate-pulse shadow-[0_0_8px_#FF6115]"></span> Live Node
+                <div class="flex items-center gap-2 bg-[#1a355e] text-slate-300 px-4 py-2 rounded-full border border-[#2a4b7c] text-[10px] font-semibold tracking-wide shadow-inner">
+                    <span class="w-2 h-2 bg-[#F1C40F] rounded-full animate-pulse shadow-[0_0_6px_#F1C40F]"></span> Live Sync Active
                 </div>
                 
-                <button onclick="window.print()" class="no-print bg-[#6F6134] hover:bg-[#E1C68F] text-[#FAE769] hover:text-[#1c1917] px-5 py-2 rounded-full font-bold text-xs uppercase tracking-widest shadow-md transition-all flex items-center gap-2 border border-transparent group">
-                    <i class="fas fa-print transition-transform duration-300 group-hover:-translate-y-1"></i> Generate Report
+                <!-- Matches the Admin Controls button -->
+                <button onclick="window.print()" class="no-print bg-[#165CCA] hover:bg-[#124b9e] text-white px-5 py-2 rounded-full font-bold text-xs shadow-md transition-all flex items-center gap-2 border border-transparent group">
+                    <i class="fas fa-print transition-transform duration-300 group-hover:-translate-y-0.5"></i> Generate Report
                 </button>
             </div>
         </div>
@@ -79,63 +81,68 @@
 
     <main class="dashboard-container">
         
-        <!-- REFINED KPI SECTION -->
+        <!-- KPI SECTION MATCHING THE PORTAL CARDS -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-5 mb-8">
-            <div class="group bg-[#6F6134] p-6 rounded-[1.5rem] shadow-lg flex flex-col justify-between min-h-[150px] relative overflow-hidden transition-transform hover:-translate-y-1 cursor-default">
-                <i class="fas fa-wallet absolute right-4 top-4 text-4xl text-[#FAE769]/30 transition-transform duration-500 group-hover:scale-125 group-hover:-rotate-12"></i>
-                <span class="text-[10px] font-black text-[#E1C68F] uppercase tracking-widest z-10">Allocation</span>
-                <span id="kpi-budget" class="text-3xl font-black text-[#FAE769] tabular-nums tracking-tighter mt-2 mb-1 z-10">₱0.00</span>
-                <span class="text-[9px] font-bold text-white/70 uppercase tracking-widest z-10 mt-auto" id="kpi-label-budget">Total Segment Budget</span>
+            <!-- Deep Navy Base -->
+            <div class="group bg-[#132644] p-6 rounded-2xl shadow-md flex flex-col justify-between min-h-[140px] relative overflow-hidden transition-transform hover:-translate-y-1 cursor-default">
+                <i class="fas fa-wallet absolute right-4 top-4 text-4xl text-white/10 transition-transform duration-500 group-hover:scale-125 group-hover:-rotate-12"></i>
+                <span class="text-[10px] font-bold text-white/70 uppercase tracking-widest z-10">Allocation</span>
+                <span id="kpi-budget" class="text-3xl font-black text-[#F1C40F] tabular-nums tracking-tighter mt-2 mb-1 z-10">₱0.00</span>
+                <span class="text-[9px] font-bold text-white/50 uppercase tracking-widest z-10 mt-auto" id="kpi-label-budget">Total Segment Budget</span>
             </div>
             
-            <div class="group bg-[#292524] p-6 rounded-[1.5rem] shadow-sm border border-[#44403c] flex flex-col justify-between min-h-[150px] relative overflow-hidden transition-transform hover:-translate-y-1 cursor-default">
-                <i class="fas fa-file-invoice-dollar absolute right-4 top-4 text-4xl text-[#E1C68F]/10 transition-transform duration-500 group-hover:-translate-y-2 group-hover:scale-110 group-hover:text-[#FF6115]/40"></i>
-                <span class="text-[10px] font-black text-[#a8a29e] uppercase tracking-widest z-10">Expenditure</span>
-                <span id="kpi-actual" class="text-3xl font-black text-[#E1C68F] tabular-nums tracking-tighter mt-2 mb-1 z-10">₱0.00</span>
-                <span class="text-[9px] font-bold text-[#a8a29e] uppercase tracking-widest z-10 mt-auto">Capital Utilized</span>
+            <!-- White Card Base -->
+            <div class="group bg-white p-6 rounded-2xl shadow-sm border border-slate-200 flex flex-col justify-between min-h-[140px] relative overflow-hidden transition-all hover:-translate-y-1 hover:border-[#165CCA] cursor-default">
+                <i class="fas fa-file-invoice-dollar absolute right-4 top-4 text-4xl text-slate-100 transition-transform duration-500 group-hover:-translate-y-2 group-hover:scale-110 group-hover:text-[#165CCA]/10"></i>
+                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest z-10">Expenditure</span>
+                <span id="kpi-actual" class="text-3xl font-black text-[#132644] tabular-nums tracking-tighter mt-2 mb-1 z-10">₱0.00</span>
+                <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest z-10 mt-auto">Capital Utilized</span>
             </div>
             
-            <div class="group bg-[#292524] p-6 rounded-[1.5rem] shadow-sm border border-[#44403c] flex flex-col justify-between min-h-[150px] relative overflow-hidden transition-transform hover:-translate-y-1 cursor-default">
-                <i class="fas fa-chart-pie absolute right-4 top-4 text-4xl text-[#E1C68F]/10 transition-transform duration-700 group-hover:rotate-180 group-hover:text-[#FAE769]/40"></i>
-                <span class="text-[10px] font-black text-[#a8a29e] uppercase tracking-widest z-10">Variance</span>
-                <span id="kpi-variance" class="text-3xl font-black text-[#FAE769] tabular-nums tracking-tighter mt-2 mb-1 z-10">₱0.00</span>
-                <span class="text-[9px] font-bold text-[#a8a29e] uppercase tracking-widest z-10 mt-auto">Remaining Capital</span>
+            <!-- White Card Base with Maroon Alert Hover -->
+            <div class="group bg-white p-6 rounded-2xl shadow-sm border border-slate-200 flex flex-col justify-between min-h-[140px] relative overflow-hidden transition-all hover:-translate-y-1 hover:border-[#6E1E24] cursor-default">
+                <i class="fas fa-chart-pie absolute right-4 top-4 text-4xl text-slate-100 transition-transform duration-700 group-hover:rotate-180 group-hover:text-[#6E1E24]/10"></i>
+                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest z-10">Variance</span>
+                <span id="kpi-variance" class="text-3xl font-black text-[#132644] tabular-nums tracking-tighter mt-2 mb-1 z-10">₱0.00</span>
+                <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest z-10 mt-auto">Remaining Capital</span>
             </div>
 
-            <div class="group bg-[#292524] border-t-4 border-[#FF6115] p-6 rounded-[1.5rem] shadow-md flex flex-col justify-between min-h-[150px] relative overflow-hidden transition-transform hover:-translate-y-1 cursor-default">
-                <i class="fas fa-tasks absolute right-4 top-4 text-4xl text-[#FF6115]/10 transition-all duration-300 group-hover:animate-bounce"></i>
-                <span class="text-[10px] font-black text-[#a8a29e] uppercase tracking-widest z-10">Execution</span>
-                <span id="kpi-progress" class="text-4xl font-extrabold italic text-[#FF6115] tabular-nums tracking-tighter mt-1 mb-1 z-10">0%</span>
-                <span class="text-[9px] font-bold text-[#FF6115]/80 uppercase tracking-widest z-10 mt-auto">Physical Avg</span>
+            <!-- Royal Blue Accent Base -->
+            <div class="group bg-[#165CCA] border-b-4 border-[#132644] p-6 rounded-2xl shadow-md flex flex-col justify-between min-h-[140px] relative overflow-hidden transition-transform hover:-translate-y-1 cursor-default">
+                <i class="fas fa-tasks absolute right-4 top-4 text-4xl text-white/20 transition-all duration-300 group-hover:animate-bounce"></i>
+                <span class="text-[10px] font-bold text-blue-200 uppercase tracking-widest z-10">Execution</span>
+                <span id="kpi-progress" class="text-4xl font-extrabold italic text-white tabular-nums tracking-tighter mt-1 mb-1 z-10">0%</span>
+                <span class="text-[9px] font-bold text-blue-200 uppercase tracking-widest z-10 mt-auto">Physical Avg</span>
             </div>
 
-            <div class="bg-[#292524] p-5 rounded-[1.5rem] border border-[#44403c] shadow-sm flex flex-col items-center justify-center text-center">
-                <span class="text-[9px] font-black text-[#a8a29e] uppercase tracking-widest mb-2">SPI (Schedule)</span>
+            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col items-center justify-center text-center">
+                <span class="text-[9px] font-bold text-slate-500 uppercase tracking-widest mb-2">SPI (Schedule)</span>
                 <div class="w-16 h-8 relative mt-1"><canvas id="gaugeSPI"></canvas></div>
-                <span id="spi-text" class="text-xl font-black tabular-nums tracking-tighter text-[#E1C68F] mt-2">1.00</span>
+                <span id="spi-text" class="text-xl font-black tabular-nums tracking-tighter text-[#165CCA] mt-2">1.00</span>
             </div>
 
-            <div class="bg-[#292524] p-5 rounded-[1.5rem] border border-[#44403c] shadow-sm flex flex-col items-center justify-center text-center">
-                <span class="text-[9px] font-black text-[#a8a29e] uppercase tracking-widest mb-2">CPI (Cost)</span>
+            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col items-center justify-center text-center">
+                <span class="text-[9px] font-bold text-slate-500 uppercase tracking-widest mb-2">CPI (Cost)</span>
                 <div class="w-16 h-8 relative mt-1"><canvas id="gaugeCPI"></canvas></div>
-                <span id="cpi-text" class="text-xl font-black tabular-nums tracking-tighter text-[#FAE769] mt-2">1.00</span>
+                <span id="cpi-text" class="text-xl font-black tabular-nums tracking-tighter text-[#132644] mt-2">1.00</span>
             </div>
         </div>
 
         <!-- CHARTS SECTION -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-5 mb-10">
-            <div class="bg-[#292524] p-6 rounded-[2rem] border border-[#44403c] shadow-sm">
-                <span class="text-[11px] font-black text-[#f5f5f4] uppercase tracking-widest mb-4 block border-b border-[#44403c] pb-3 flex items-center">
-                    <i class="fas fa-circle-notch text-[#FF6115] mr-2 animate-spin" style="animation-duration: 3s;"></i> Portfolio Health
+            <!-- Updated heading terminology to Implementation Status -->
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                <span class="text-[11px] font-black text-[#132644] uppercase tracking-widest mb-4 block border-b border-slate-100 pb-3 flex items-center">
+                    <i class="fas fa-circle-notch text-[#165CCA] mr-2 animate-spin" style="animation-duration: 3s;"></i> Implementation Status
                 </span>
                 <div style="position: relative; height: 260px; width: 100%;">
                     <canvas id="statusChart"></canvas>
                 </div>
             </div>
             
-            <div class="bg-[#292524] p-6 rounded-[2rem] border border-[#44403c] shadow-sm lg:col-span-2">
-                <span class="text-[11px] font-black text-[#f5f5f4] uppercase tracking-widest mb-4 block border-b border-[#44403c] pb-3">
-                    <i class="fas fa-chart-bar text-[#E1C68F] mr-2"></i> Top 5 Projects: Allocation vs. Expenditure
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm lg:col-span-2">
+                <span class="text-[11px] font-black text-[#132644] uppercase tracking-widest mb-4 block border-b border-slate-100 pb-3">
+                    <i class="fas fa-chart-bar text-[#165CCA] mr-2"></i> Top 5 Projects: Allocation vs. Expenditure
                 </span>
                 <div style="position: relative; height: 260px; width: 100%;">
                     <canvas id="budgetChart"></canvas>
@@ -143,23 +150,37 @@
             </div>
         </div>
 
-        <!-- SORTING & CATEGORY ENGINE -->
-        <div class="no-print mb-8">
-            <span class="text-[10px] font-black text-[#E1C68F] uppercase tracking-widest mb-3 block">Filter by Category:</span>
-            <div id="category-container" class="flex flex-wrap gap-3 items-center">
-                <!-- Categories inject here automatically -->
+        <!-- CID DOCUMENTS STYLE HEADER -->
+        <div class="bg-[#132644] rounded-t-2xl px-6 py-4 mt-8 flex justify-between items-center shadow-md">
+            <div>
+                <h2 class="text-white font-bold text-lg leading-none">Category Filters</h2>
+                <p class="text-slate-400 text-xs mt-1">Select a segment to filter the tracker</p>
+            </div>
+            <div class="text-slate-400 text-xs font-bold">
+                Live Data
             </div>
         </div>
 
-        <div class="no-print flex flex-col sm:flex-row gap-4 mb-10 items-center bg-[#292524] p-3 rounded-[2rem] shadow-sm border border-[#44403c]">
-            <div class="relative flex-grow w-full">
-                <i class="fas fa-search absolute left-6 top-1/2 -translate-y-1/2 text-[#E1C68F] text-sm"></i>
-                <input type="text" id="searchInput" placeholder="Search by project name, contractor, or location..." class="w-full pl-14 pr-6 py-4 rounded-full border-none bg-[#1c1917] text-[#f5f5f4] font-bold text-sm outline-none focus:ring-2 focus:ring-[#FF6115]/30">
+        <!-- SORTING ENGINE (Sits right below the dark header like the portal search) -->
+        <div class="no-print bg-white p-6 rounded-b-2xl shadow-sm border border-slate-200 border-t-0 mb-10">
+            <div id="category-container" class="flex flex-wrap gap-3 items-center mb-6 border-b border-slate-100 pb-6">
+                <!-- Categories inject here automatically -->
             </div>
-            <select id="fyFilter" onchange="renderUI()" class="w-full sm:w-auto min-w-[220px] pl-6 pr-10 py-4 rounded-full border-none bg-[#1c1917] text-[#E1C68F] font-bold text-sm outline-none cursor-pointer focus:ring-2 focus:ring-[#FF6115]/30"></select>
-            <div class="flex gap-2 w-full sm:w-auto bg-[#1c1917] p-1 rounded-full border border-[#44403c]">
-                <button id="btn-all" class="px-6 py-3 rounded-full text-[10px] font-black bg-[#E1C68F] text-[#1c1917] shadow-sm transition-all w-1/2 sm:w-auto" onclick="filterStatus('All')">ALL</button>
-                <button id="btn-ongoing" class="px-6 py-3 rounded-full text-[10px] font-black text-[#a8a29e] bg-transparent transition-all w-1/2 sm:w-auto hover:text-[#E1C68F]" onclick="filterStatus('In Progress')">ONGOING</button>
+
+            <div class="flex flex-col sm:flex-row gap-4 items-center">
+                <!-- CREAM SEARCH BAR matching the CID portal -->
+                <div class="relative flex-grow w-full">
+                    <i class="fas fa-search absolute left-6 top-1/2 -translate-y-1/2 text-yellow-600/50 text-sm"></i>
+                    <input type="text" id="searchInput" placeholder="Search by project name, contractor, or location..." class="w-full pl-14 pr-6 py-3.5 rounded-full border border-yellow-200 bg-[#FFFBEB] text-[#132644] font-semibold text-sm outline-none focus:ring-2 focus:ring-[#F1C40F]/50 transition-all placeholder-yellow-700/40">
+                </div>
+                
+                <!-- Fixed Padding Dropdown -->
+                <select id="fyFilter" onchange="renderUI()" class="w-full sm:w-auto min-w-[220px] pl-6 pr-10 py-3.5 rounded-full border border-slate-200 bg-white text-[#132644] font-semibold text-sm outline-none cursor-pointer focus:ring-2 focus:ring-[#165CCA]/30 hover:border-[#165CCA]/50 transition-all shadow-sm"></select>
+                
+                <div class="flex gap-2 w-full sm:w-auto bg-slate-100 p-1 rounded-full border border-slate-200">
+                    <button id="btn-all" class="px-6 py-2.5 rounded-full text-[10px] font-black bg-[#132644] text-white shadow-sm transition-all w-1/2 sm:w-auto" onclick="filterStatus('All')">ALL</button>
+                    <button id="btn-ongoing" class="px-6 py-2.5 rounded-full text-[10px] font-black text-slate-500 bg-transparent transition-all w-1/2 sm:w-auto hover:text-[#132644]" onclick="filterStatus('In Progress')">ONGOING</button>
+                </div>
             </div>
         </div>
 
@@ -222,8 +243,8 @@
 
         function filterStatus(status) {
             filterActive = status;
-            document.getElementById('btn-all').className = status === 'All' ? 'px-6 py-3 rounded-full text-[10px] font-black bg-[#E1C68F] text-[#1c1917] shadow-sm transition-all w-1/2 sm:w-auto' : 'px-6 py-3 rounded-full text-[10px] font-black text-[#a8a29e] bg-transparent transition-all w-1/2 sm:w-auto hover:text-[#E1C68F]';
-            document.getElementById('btn-ongoing').className = status === 'In Progress' ? 'px-6 py-3 rounded-full text-[10px] font-black bg-[#FF6115] text-white shadow-sm transition-all w-1/2 sm:w-auto' : 'px-6 py-3 rounded-full text-[10px] font-black text-[#a8a29e] bg-transparent transition-all w-1/2 sm:w-auto hover:text-[#E1C68F]';
+            document.getElementById('btn-all').className = status === 'All' ? 'px-6 py-2.5 rounded-full text-[10px] font-black bg-[#132644] text-white shadow-sm transition-all w-1/2 sm:w-auto' : 'px-6 py-2.5 rounded-full text-[10px] font-black text-slate-500 bg-transparent transition-all w-1/2 sm:w-auto hover:text-[#132644]';
+            document.getElementById('btn-ongoing').className = status === 'In Progress' ? 'px-6 py-2.5 rounded-full text-[10px] font-black bg-[#165CCA] text-white shadow-sm transition-all w-1/2 sm:w-auto' : 'px-6 py-2.5 rounded-full text-[10px] font-black text-slate-500 bg-transparent transition-all w-1/2 sm:w-auto hover:text-[#132644]';
             renderUI();
         }
 
@@ -262,61 +283,63 @@
 
         function renderCards(projects) {
             const grid = document.getElementById('project-grid');
-            grid.innerHTML = projects.length ? '' : '<div class="col-span-full py-20 text-center text-[#a8a29e] font-black uppercase text-xs tracking-widest">No Projects Found</div>';
+            grid.innerHTML = projects.length ? '' : '<div class="col-span-full py-20 text-center text-slate-400 font-black uppercase text-xs tracking-widest">No Projects Found</div>';
 
             projects.forEach(p => {
-                const accent = p.Status === 'Completed' ? 'bg-[#6F6134]' : (p.Status === 'In Progress' ? 'bg-[#FF6115]' : 'bg-[#E1C68F]');
-                const badgeStyle = p.Status === 'Completed' ? 'bg-[#6F6134] text-[#FAE769] border-[#6F6134]' : (p.Status === 'In Progress' ? 'bg-[#FF6115]/20 text-[#FF6115] border-[#FF6115]/50' : 'bg-[#E1C68F]/20 text-[#E1C68F] border-[#E1C68F]/50');
+                // Completed = Deep Navy | In Progress = Royal Blue | Proposed = Maroon
+                const accent = p.Status === 'Completed' ? 'bg-[#132644]' : (p.Status === 'In Progress' ? 'bg-[#165CCA]' : 'bg-[#F1C40F]');
+                const badgeStyle = p.Status === 'Completed' ? 'bg-[#132644]/10 text-[#132644] border-[#132644]/30' : (p.Status === 'In Progress' ? 'bg-[#165CCA]/10 text-[#165CCA] border-[#165CCA]/30' : 'bg-[#F1C40F]/20 text-yellow-700 border-[#F1C40F]');
                 const cost = '₱' + clean(p.Cost).toLocaleString('en-PH', {minimumFractionDigits: 2});
-                const catTag = p.Category ? `<span class="px-2 py-0.5 rounded text-[8px] font-black uppercase tracking-tighter bg-[#1c1917] text-[#E1C68F] border border-[#44403c] mr-2 mb-3 inline-block">${p.Category}</span>` : '';
+                const catTag = p.Category ? `<span class="px-2 py-0.5 rounded text-[8px] font-black uppercase tracking-tighter bg-slate-100 text-slate-500 border border-slate-200 mr-2 mb-3 inline-block">${p.Category}</span>` : '';
                 
                 const listParser = (str) => {
-                    if (!str || str === "---") return '<p class="text-[11px] text-[#a8a29e] italic px-2 py-1">No records found</p>';
+                    if (!str || str === "---") return '<p class="text-[11px] text-slate-300 italic px-2 py-1">No records found</p>';
                     return str.split(/[;\n]/).filter(x => x.trim()).map((item, index) => {
-                        return `<div class="list-row group/item hover:bg-[#3f3f46] transition-colors rounded-lg px-2"><span class="text-[11px] font-black text-[#FAE769] min-w-[20px] mt-0.5 transition-transform group-hover/item:translate-x-1">${index + 1}.</span><span class="text-[12px] font-semibold text-[#f5f5f4] leading-snug">${item.trim()}</span></div>`;
+                        return `<div class="list-row group/item hover:bg-[#1a355e] transition-colors rounded-lg px-2"><span class="text-[11px] font-black text-[#F1C40F] min-w-[20px] mt-0.5 transition-transform group-hover/item:translate-x-1">${index + 1}.</span><span class="text-[12px] font-semibold text-slate-200 leading-snug">${item.trim()}</span></div>`;
                     }).join('');
                 };
 
                 grid.innerHTML += `
-                    <div class="bg-[#292524] border border-[#44403c] rounded-[2rem] overflow-hidden flex flex-col h-full shadow-md hover:shadow-xl hover:shadow-[#000000]/40 hover:-translate-y-1 transition-all duration-300">
+                    <div class="bg-white border border-slate-200 rounded-2xl overflow-hidden flex flex-col h-full shadow-sm hover:shadow-xl hover:border-[#165CCA]/50 hover:-translate-y-1 transition-all duration-300">
                         <div class="h-2.5 w-full ${accent}"></div>
                         <div class="p-6 flex flex-col h-full">
                             <div class="flex justify-between items-center mb-5">
                                 <span class="px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-[0.15em] border ${badgeStyle}">${p.Status}</span>
-                                <span class="text-[9px] font-black text-[#a8a29e] uppercase tracking-widest">${p.FiscalYear || 'FY --'}</span>
+                                <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest">${p.FiscalYear || 'FY --'}</span>
                             </div>
                             <div>${catTag}</div>
-                            <h3 class="text-lg font-black leading-tight uppercase mb-6 min-h-[3.5rem] text-[#f5f5f4] tracking-tight">${p.ProjectName}</h3>
+                            <h3 class="text-lg font-black leading-tight uppercase mb-6 min-h-[3.5rem] text-[#132644] tracking-tight">${p.ProjectName}</h3>
                             
+                            <!-- Internal details use the dark card styling from the portal -->
                             <details class="group/detail">
                                 <summary class="detail-bar">
                                     <div class="summary-flex group/header">
-                                        <span class="text-[11px] font-black text-[#E1C68F] uppercase tracking-widest flex items-center"><i class="fas fa-drafting-compass mr-3 text-[#FAE769] transition-transform duration-300 group-hover/header:rotate-12"></i> Scope of Works</span>
+                                        <span class="text-[11px] font-black text-white uppercase tracking-widest flex items-center"><i class="fas fa-drafting-compass mr-3 text-[#F1C40F] transition-transform duration-300 group-hover/header:rotate-12"></i> Scope of Works</span>
                                         <span class="chevron-icon"><i class="fas fa-chevron-right"></i></span>
                                     </div>
                                 </summary>
-                                <div class="mb-4 px-2">${listParser(p.Scope)}</div>
+                                <div class="mb-4 px-2 bg-[#132644] rounded-b-xl pb-2 -mt-2">${listParser(p.Scope)}</div>
                             </details>
 
                             <details class="group/detail">
                                 <summary class="detail-bar">
                                     <div class="summary-flex group/header">
-                                        <span class="text-[11px] font-black text-[#E1C68F] uppercase tracking-widest flex items-center"><i class="fas fa-pen-nib mr-3 text-[#a8a29e] transition-transform duration-300 group-hover/header:rotate-12"></i> Admin Remarks</span>
+                                        <span class="text-[11px] font-black text-white uppercase tracking-widest flex items-center"><i class="fas fa-pen-nib mr-3 text-slate-400 transition-transform duration-300 group-hover/header:rotate-12"></i> Admin Remarks</span>
                                         <span class="chevron-icon"><i class="fas fa-chevron-right"></i></span>
                                     </div>
                                 </summary>
-                                <div class="mb-4 px-2">${listParser(p.Notes)}</div>
+                                <div class="mb-4 px-2 bg-[#132644] rounded-b-xl pb-2 -mt-2">${listParser(p.Notes)}</div>
                             </details>
 
-                            <div class="mt-auto pt-6 border-t border-[#44403c]">
+                            <div class="mt-auto pt-6 border-t border-slate-100">
                                 <div class="grid grid-cols-2 gap-3 mb-5">
-                                    <div><p class="text-[8px] font-black text-[#a8a29e] uppercase mb-1 tracking-widest">Target Finish</p><p class="text-[10px] font-black text-[#f5f5f4]">${p.TargetDate || '---'}</p></div>
-                                    <div class="text-right"><p class="text-[8px] font-black text-[#a8a29e] uppercase mb-1 tracking-widest">Valuation</p><p class="text-[11px] font-black text-[#E1C68F] tabular-nums">${cost}</p></div>
+                                    <div><p class="text-[8px] font-bold text-slate-400 uppercase mb-1 tracking-widest">Target Finish</p><p class="text-[10px] font-black text-[#132644]">${p.TargetDate || '---'}</p></div>
+                                    <div class="text-right"><p class="text-[8px] font-bold text-slate-400 uppercase mb-1 tracking-widest">Valuation</p><p class="text-[11px] font-black text-[#132644] tabular-nums">${cost}</p></div>
                                 </div>
-                                ${p.AttachmentURL ? `<a href="${p.AttachmentURL}" target="_blank" class="w-full py-3 bg-[#1c1917] border border-[#44403c] text-[#E1C68F] rounded-xl text-[9px] font-black uppercase tracking-[0.2em] flex items-center justify-center gap-2 hover:bg-[#6F6134] hover:text-[#FAE769] transition-all shadow-sm no-print group/btn"><i class="fas fa-file-contract transition-transform duration-300 group-hover/btn:scale-110"></i> Record Vault</a>` : `<div class="w-full py-3 bg-[#1c1917] text-[#a8a29e] rounded-xl text-[9px] font-black uppercase text-center tracking-widest italic border border-[#44403c] no-print">Archives Offline</div>`}
+                                ${p.AttachmentURL ? `<a href="${p.AttachmentURL}" target="_blank" class="w-full py-3 bg-[#FFFBEB] border border-[#F1C40F]/50 text-yellow-700 rounded-xl text-[9px] font-black uppercase tracking-[0.2em] flex items-center justify-center gap-2 hover:bg-[#F1C40F] hover:text-[#132644] transition-all shadow-sm no-print group/btn"><i class="fas fa-file-contract transition-transform duration-300 group-hover/btn:scale-110"></i> Record Vault</a>` : `<div class="w-full py-3 bg-slate-50 text-slate-400 rounded-xl text-[9px] font-black uppercase text-center tracking-widest italic border border-slate-200 no-print">Archives Offline</div>`}
                                 <div class="mt-6">
-                                    <div class="flex justify-between items-center text-[9px] font-black text-[#a8a29e] uppercase tracking-widest mb-2"><span>Progress</span><span class="text-[#FF6115] font-black">${p.Progress || 0}%</span></div>
-                                    <div class="w-full bg-[#1c1917] h-1.5 rounded-full overflow-hidden shadow-inner border border-[#44403c]"><div class="bg-[#FF6115] h-full transition-all duration-1000" style="width: ${p.Progress || 0}%"></div></div>
+                                    <div class="flex justify-between items-center text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-2"><span>Progress</span><span class="text-[#165CCA] font-black">${p.Progress || 0}%</span></div>
+                                    <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden shadow-inner border border-slate-200"><div class="bg-[#165CCA] h-full transition-all duration-1000" style="width: ${p.Progress || 0}%"></div></div>
                                 </div>
                             </div>
                         </div>
@@ -325,35 +348,36 @@
         }
 
         function initCharts() {
-            Chart.defaults.color = '#a8a29e';
+            Chart.defaults.color = '#64748b';
             Chart.defaults.font.family = 'Plus Jakarta Sans';
 
             const gaugeOpt = { cutout: '78%', circumfrence: 180, rotation: 270, plugins: { legend: { display: false }, tooltip: { enabled: false } }, responsive: true, maintainAspectRatio: false };
-            charts.spi = new Chart(document.getElementById('gaugeSPI'), { type: 'doughnut', data: { datasets: [{ data: [0.5, 0.5], backgroundColor: ['#E1C68F', '#1c1917'], borderWidth: 0 }] }, options: gaugeOpt });
-            charts.cpi = new Chart(document.getElementById('gaugeCPI'), { type: 'doughnut', data: { datasets: [{ data: [0.5, 0.5], backgroundColor: ['#FAE769', '#1c1917'], borderWidth: 0 }] }, options: gaugeOpt });
+            charts.spi = new Chart(document.getElementById('gaugeSPI'), { type: 'doughnut', data: { datasets: [{ data: [0.5, 0.5], backgroundColor: ['#165CCA', '#f1f5f9'], borderWidth: 0 }] }, options: gaugeOpt });
+            charts.cpi = new Chart(document.getElementById('gaugeCPI'), { type: 'doughnut', data: { datasets: [{ data: [0.5, 0.5], backgroundColor: ['#132644', '#f1f5f9'], borderWidth: 0 }] }, options: gaugeOpt });
 
             charts.status = new Chart(document.getElementById('statusChart'), {
                 type: 'doughnut',
-                data: { labels: [], datasets: [{ data: [], backgroundColor: ['#6F6134', '#FF6115', '#E1C68F'], borderWidth: 0, hoverOffset: 4 }] },
-                options: { responsive: true, maintainAspectRatio: false, cutout: '75%', plugins: { legend: { position: 'bottom', labels: { padding: 15, font: { size: 11, weight: 'bold' }, color: '#f5f5f4' } }, tooltip: { backgroundColor: '#1c1917', borderColor: '#E1C68F', borderWidth: 1, titleColor: '#f5f5f4', bodyColor: '#f5f5f4' } } }
+                // Theme mapped: Navy, Royal Blue, Gold
+                data: { labels: [], datasets: [{ data: [], backgroundColor: ['#132644', '#165CCA', '#F1C40F'], borderWidth: 0, hoverOffset: 4 }] },
+                options: { responsive: true, maintainAspectRatio: false, cutout: '75%', plugins: { legend: { position: 'bottom', labels: { padding: 15, font: { size: 11, weight: 'bold' }, color: '#132644' } }, tooltip: { backgroundColor: '#132644', borderColor: '#165CCA', borderWidth: 1, titleColor: '#ffffff', bodyColor: '#ffffff' } } }
             });
 
             charts.budget = new Chart(document.getElementById('budgetChart'), {
                 type: 'bar',
                 data: { labels: [], datasets: [
-                    { label: 'Allocated Budget', data: [], backgroundColor: '#6F6134', borderRadius: 4, barPercentage: 0.75 },
-                    { label: 'Actual Expenditure', data: [], backgroundColor: '#E1C68F', borderRadius: 4, barPercentage: 0.75 }
+                    { label: 'Allocated Budget', data: [], backgroundColor: '#132644', borderRadius: 4, barPercentage: 0.75 },
+                    { label: 'Actual Expenditure', data: [], backgroundColor: '#165CCA', borderRadius: 4, barPercentage: 0.75 }
                 ]},
                 options: {
                     indexAxis: 'y', responsive: true, maintainAspectRatio: false,
-                    plugins: { legend: { position: 'top', align: 'end', labels: { boxWidth: 12, font: { size: 11, weight: 'bold' }, color: '#f5f5f4' } }, tooltip: { backgroundColor: '#1c1917', borderColor: '#E1C68F', borderWidth: 1, titleColor: '#f5f5f4', bodyColor: '#f5f5f4', callbacks: { label: function(context) { return context.dataset.label + ': ₱' + context.parsed.x.toLocaleString('en-PH'); } } } },
+                    plugins: { legend: { position: 'top', align: 'end', labels: { boxWidth: 12, font: { size: 11, weight: 'bold' }, color: '#132644' } }, tooltip: { backgroundColor: '#132644', borderColor: '#165CCA', borderWidth: 1, titleColor: '#ffffff', bodyColor: '#ffffff', callbacks: { label: function(context) { return context.dataset.label + ': ₱' + context.parsed.x.toLocaleString('en-PH'); } } } },
                     scales: {
                         x: { 
-                            grid: { color: '#44403c' }, 
+                            grid: { color: '#f1f5f9' }, 
                             ticks: { 
                                 font: { size: 11, weight: 'bold' }, 
-                                color: '#a8a29e', 
-                                // DYNAMIC AXIS FIX APPLIED HERE
+                                color: '#64748b', 
+                                // DYNAMIC AXIS FIX
                                 callback: function(val) { 
                                     if (val >= 1000000) return '₱' + (val / 1000000).toFixed(1) + 'M';
                                     if (val >= 1000) return '₱' + (val / 1000).toFixed(1) + 'K';
@@ -361,7 +385,7 @@
                                 } 
                             } 
                         },
-                        y: { grid: { display: false }, ticks: { font: { size: 11, weight: 'bold' }, color: '#f5f5f4' } }
+                        y: { grid: { display: false }, ticks: { font: { size: 11, weight: 'bold' }, color: '#132644' } }
                     }
                 }
             });
