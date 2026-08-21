@@ -79,7 +79,6 @@
             </div>
             
             <div class="flex items-center gap-4">
-                <!-- NEW: OPEN PRIORITIZATION BOARD BUTTON -->
                 <button onclick="togglePanel()" class="no-print bg-[#1a355e] hover:bg-[#2a4b7c] text-white px-5 py-2 rounded-full font-bold text-xs shadow-md transition-all flex items-center gap-2 border border-[#2a4b7c]">
                     <i class="fas fa-list-check text-[#F1C40F]"></i> Priorities
                 </button>
@@ -162,6 +161,7 @@
             </div>
             <div class="text-slate-400 text-xs font-bold">Live Data</div>
         </div>
+        
         <div class="no-print bg-white p-6 rounded-b-2xl shadow-sm border border-slate-200 border-t-0 mb-10">
             <div id="category-container" class="flex flex-wrap gap-3 items-center mb-6 border-b border-slate-100 pb-6"></div>
             <div class="flex flex-col sm:flex-row gap-4 items-center">
@@ -180,9 +180,8 @@
         <div id="project-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-24"></div>
     </main>
 
-    <!-- NEW: SLIDE-OVER PANEL FOR INVENTORY VOTING -->
+    <!-- SLIDE-OVER PANEL FOR INVENTORY VOTING -->
     <div id="slide-panel" class="fixed top-0 right-0 h-full w-full max-w-lg bg-[#F4F6F9] shadow-2xl z-[2000] flex flex-col border-l border-slate-200">
-        <!-- Panel Header -->
         <div class="bg-[#132644] px-8 py-6 flex justify-between items-start text-white">
             <div>
                 <span class="px-2 py-0.5 rounded text-[8px] font-black uppercase tracking-widest bg-[#165CCA] text-white border border-[#2a4b7c] mb-2 inline-block">Engineering Division</span>
@@ -193,15 +192,12 @@
             </button>
         </div>
         
-        <!-- Panel Body (Scrollable) -->
         <div class="flex-grow overflow-y-auto p-8">
             <p class="text-xs text-slate-500 mb-6 font-medium leading-relaxed">
                 The following structural and systemic deficiencies were identified during the latest campus physical inventory. ManCom members are requested to upvote critical areas to inform the upcoming procurement and budget alignment phases.
             </p>
 
             <div class="space-y-4" id="priority-list">
-                <!-- Static Mock Data representing campus layout -->
-                
                 <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm hover:border-[#165CCA]/30 transition-colors flex gap-4">
                     <div class="flex flex-col items-center gap-1 min-w-[50px]">
                         <button onclick="castVote(this, 12)" class="vote-btn w-10 h-10 rounded-full border border-slate-300 text-slate-400 hover:border-[#165CCA] hover:text-[#165CCA] flex flex-col items-center justify-center bg-slate-50">
@@ -243,18 +239,16 @@
                         <p class="text-xs text-slate-500">Current ramp slope is non-compliant, hindering efficient transfer of bulk recyclables.</p>
                     </div>
                 </div>
-
             </div>
         </div>
         
-        <!-- Panel Footer -->
         <div class="bg-white border-t border-slate-200 px-8 py-5 flex justify-between items-center">
             <span class="text-xs text-slate-400 font-medium">Votes reset on refresh for demo.</span>
             <button onclick="togglePanel()" class="px-6 py-2.5 bg-[#132644] hover:bg-[#1a355e] text-white rounded-full text-[10px] font-black uppercase tracking-widest transition-all shadow-sm">Close Board</button>
         </div>
     </div>
 
-
+    <!-- FLOATING ACTION BAR FOR REPORT BUILDER -->
     <div id="report-action-bar" class="fixed bottom-0 left-0 w-full bg-[#132644] text-white px-8 py-5 transform translate-y-full transition-transform duration-500 flex justify-between items-center shadow-[0_-10px_30px_rgba(0,0,0,0.2)] z-[1000]">
         <div>
             <span id="selected-count" class="text-2xl font-black text-[#F1C40F] tabular-nums">0</span>
@@ -269,6 +263,7 @@
         </div>
     </div>
 
+    <!-- TEMPORARY PRINT CANVAS -->
     <div id="custom-print-container"></div>
 
     <script>
@@ -282,7 +277,6 @@
         let isReportMode = false;
         let selectedProjects = new Set();
 
-        // --- NEW SLIDE PANEL LOGIC ---
         function togglePanel() {
             const panel = document.getElementById('slide-panel');
             const isOpen = panel.classList.contains('open');
@@ -301,38 +295,65 @@
             
             if (isVoted) {
                 btnElement.classList.remove('voted');
-                countSpan.textContent = currentVotes; // Reset
+                countSpan.textContent = currentVotes; 
             } else {
                 btnElement.classList.add('voted');
-                countSpan.textContent = currentVotes + 1; // Increment
+                countSpan.textContent = currentVotes + 1; 
             }
         }
-        // -----------------------------
 
         async function init() {
             try {
+                // Initialize empty charts immediately so the layout doesn't break if fetch is slow
+                initCharts();
+                
                 const response = await fetch(scriptURL);
+                if (!response.ok) {
+                    throw new Error("Network response was not OK");
+                }
+                
                 const data = await response.json();
+                
+                // Safety check to ensure Google Script actually returned an array of data
+                if (!Array.isArray(data)) {
+                    throw new Error("Invalid data format received from API");
+                }
+
                 allProjects = data.map((p, index) => ({ ...p, _id: index }));
+                
                 buildCategoryTabs();
                 populateFYFilter();
-                initCharts();
                 renderUI();
-            } catch (e) { console.error("Sync Failure:", e); }
+                
+            } catch (e) { 
+                console.error("Dashboard Sync Failure:", e); 
+                
+                // NEW: Visual Error Feedback instead of an empty screen
+                document.getElementById('project-grid').innerHTML = `
+                    <div class="col-span-full py-20 flex flex-col items-center justify-center text-center border-2 border-dashed border-red-200 rounded-2xl bg-red-50">
+                        <i class="fas fa-plug-circle-xmark text-4xl text-red-400 mb-4"></i>
+                        <h3 class="text-lg font-black text-red-900 uppercase tracking-widest mb-2">Connection Failed</h3>
+                        <p class="text-sm text-red-700 max-w-md">The dashboard could not pull live data from the Google Apps Script database. Please check your internet connection or verify the macro is deployed.</p>
+                    </div>`;
+            }
         }
 
         function toggleReportMode() {
             isReportMode = !isReportMode;
-            if(!isReportMode) selectedProjects.clear();
-            
+            if(!isReportMode) {
+                selectedProjects.clear();
+            }
             document.getElementById('report-action-bar').classList.toggle('translate-y-full');
             document.getElementById('selected-count').textContent = selectedProjects.size;
             renderUI();
         }
 
         function toggleSelection(id) {
-            if(selectedProjects.has(id)) selectedProjects.delete(id);
-            else selectedProjects.add(id);
+            if(selectedProjects.has(id)) {
+                selectedProjects.delete(id);
+            } else {
+                selectedProjects.add(id);
+            }
             document.getElementById('selected-count').textContent = selectedProjects.size;
             renderUI();
         }
@@ -380,6 +401,7 @@
 
             html += `</table></div>`;
             container.innerHTML = html;
+            
             document.body.classList.add('printing-report');
             window.print();
             document.body.classList.remove('printing-report');
@@ -389,13 +411,24 @@
         function buildCategoryTabs() {
             const container = document.getElementById('category-container');
             const cats = [...new Set(allProjects.map(p => p.Category ? p.Category.trim() : '').filter(c => c !== ''))].sort();
+            
             let html = `<button id="tab-All" class="category-tab active group" onclick="filterCategory('All')"><i class="fas fa-layer-group mr-2 transition-transform duration-300 group-hover:scale-110"></i> All Projects</button>`;
-            const iconMap = { 'repair works': 'fa-hammer', 'consultancy': 'fa-user-tie', 'preventive maintenance': 'fa-shield-halved', 'vehicle': 'fa-van-shuttle', 'equipment': 'fa-cogs', 'infrastructure': 'fa-city' };
+            
+            const iconMap = { 
+                'repair works': 'fa-hammer', 
+                'consultancy': 'fa-user-tie', 
+                'preventive maintenance': 'fa-shield-halved', 
+                'vehicle': 'fa-van-shuttle', 
+                'equipment': 'fa-cogs', 
+                'infrastructure': 'fa-city' 
+            };
+            
             cats.forEach(c => {
                 const safeId = c.replace(/[^a-zA-Z0-9]/g, '-');
                 const icon = iconMap[c.toLowerCase()] || 'fa-folder-open';
                 html += `<button id="tab-${safeId}" class="category-tab group" onclick="filterCategory('${c.replace(/'/g, "\\'")}')"><i class="fas ${icon} mr-2 transition-transform duration-300 group-hover:-rotate-12 group-hover:scale-110"></i> ${c}</button>`;
             });
+            
             container.innerHTML = html;
         }
 
@@ -404,7 +437,9 @@
             document.querySelectorAll('.category-tab').forEach(btn => btn.classList.remove('active'));
             const safeId = cat.replace(/[^a-zA-Z0-9]/g, '-');
             const activeBtn = document.getElementById('tab-' + safeId);
-            if(activeBtn) activeBtn.classList.add('active');
+            if(activeBtn) {
+                activeBtn.classList.add('active');
+            }
             document.getElementById('kpi-label-budget').textContent = cat === 'All' ? 'Total Segment Budget' : `${cat} Budget`;
             renderUI();
         }
@@ -431,7 +466,9 @@
 
         function renderUI() {
             const term = document.getElementById('searchInput').value.toLowerCase();
-            const fy = document.getElementById('fyFilter').value;
+            const fyFilterEl = document.getElementById('fyFilter');
+            const fy = fyFilterEl ? fyFilterEl.value : 'All';
+            
             currentFilteredProjects = allProjects.filter(p => {
                 const pool = `${p.ProjectName} ${p.Contractor} ${p.Location}`.toLowerCase();
                 const matchesSearch = pool.includes(term);
@@ -449,7 +486,13 @@
 
         function renderCards(projects) {
             const grid = document.getElementById('project-grid');
-            grid.innerHTML = projects.length ? '' : '<div class="col-span-full py-20 text-center text-slate-400 font-black uppercase text-xs tracking-widest">No Projects Found</div>';
+            
+            if (!projects || projects.length === 0) {
+                grid.innerHTML = '<div class="col-span-full py-20 text-center text-slate-400 font-black uppercase text-xs tracking-widest">No Projects Found</div>';
+                return;
+            }
+            
+            let gridHTML = '';
 
             projects.forEach(p => {
                 const accent = p.Status === 'Completed' ? 'bg-[#132644]' : (p.Status === 'In Progress' ? 'bg-[#F1C40F]' : 'bg-[#165CCA]');
@@ -469,8 +512,9 @@
                     }).join('');
                 };
 
-                grid.innerHTML += `
+                gridHTML += `
                     <div class="relative bg-white border border-slate-200 rounded-2xl overflow-hidden flex flex-col h-full shadow-sm transition-all duration-300 ${cardBaseStyle}">
+                        
                         ${isReportMode ? `<div class="absolute inset-0 z-30 cursor-pointer" onclick="toggleSelection(${p._id})"></div>` : ''}
                         
                         <div class="absolute top-5 right-5 z-20 transition-all duration-300 ${isReportMode ? 'opacity-100 scale-100' : 'opacity-0 scale-50 pointer-events-none'}">
@@ -489,12 +533,22 @@
                             <h3 class="text-lg font-black leading-tight uppercase mb-6 min-h-[3.5rem] text-[#132644] tracking-tight pr-4">${p.ProjectName}</h3>
                             
                             <details class="group/detail">
-                                <summary class="detail-bar"><div class="summary-flex group/header"><span class="text-[11px] font-black text-white uppercase tracking-widest flex items-center"><i class="fas fa-drafting-compass mr-3 text-[#F1C40F]"></i> Scope of Works</span><span class="chevron-icon"><i class="fas fa-chevron-right"></i></span></div></summary>
+                                <summary class="detail-bar">
+                                    <div class="summary-flex group/header">
+                                        <span class="text-[11px] font-black text-white uppercase tracking-widest flex items-center"><i class="fas fa-drafting-compass mr-3 text-[#F1C40F]"></i> Scope of Works</span>
+                                        <span class="chevron-icon"><i class="fas fa-chevron-right"></i></span>
+                                    </div>
+                                </summary>
                                 <div class="mb-4 px-2 bg-[#132644] rounded-b-xl pb-2 -mt-2">${listParser(p.Scope)}</div>
                             </details>
 
                             <details class="group/detail">
-                                <summary class="detail-bar"><div class="summary-flex group/header"><span class="text-[11px] font-black text-white uppercase tracking-widest flex items-center"><i class="fas fa-pen-nib mr-3 text-slate-400"></i> Admin Remarks</span><span class="chevron-icon"><i class="fas fa-chevron-right"></i></span></div></summary>
+                                <summary class="detail-bar">
+                                    <div class="summary-flex group/header">
+                                        <span class="text-[11px] font-black text-white uppercase tracking-widest flex items-center"><i class="fas fa-pen-nib mr-3 text-slate-400"></i> Admin Remarks</span>
+                                        <span class="chevron-icon"><i class="fas fa-chevron-right"></i></span>
+                                    </div>
+                                </summary>
                                 <div class="mb-4 px-2 bg-[#132644] rounded-b-xl pb-2 -mt-2">${listParser(p.Notes)}</div>
                             </details>
 
@@ -512,36 +566,174 @@
                         </div>
                     </div>`;
             });
+            
+            grid.innerHTML = gridHTML;
         }
 
         function initCharts() {
-            Chart.defaults.color = '#64748b'; Chart.defaults.font.family = 'Plus Jakarta Sans';
-            const gaugeOpt = { cutout: '78%', circumfrence: 180, rotation: 270, plugins: { legend: { display: false }, tooltip: { enabled: false } }, responsive: true, maintainAspectRatio: false };
-            charts.spi = new Chart(document.getElementById('gaugeSPI'), { type: 'doughnut', data: { datasets: [{ data: [0.5, 0.5], backgroundColor: ['#165CCA', '#f1f5f9'], borderWidth: 0 }] }, options: gaugeOpt });
-            charts.cpi = new Chart(document.getElementById('gaugeCPI'), { type: 'doughnut', data: { datasets: [{ data: [0.5, 0.5], backgroundColor: ['#132644', '#f1f5f9'], borderWidth: 0 }] }, options: gaugeOpt });
-            charts.status = new Chart(document.getElementById('statusChart'), { type: 'doughnut', data: { labels: [], datasets: [{ data: [], backgroundColor: ['#132644', '#F1C40F', '#165CCA'], borderWidth: 0, hoverOffset: 4 }] }, options: { responsive: true, maintainAspectRatio: false, cutout: '75%', plugins: { legend: { position: 'bottom', labels: { padding: 15, font: { size: 11, weight: 'bold' }, color: '#132644' } }, tooltip: { backgroundColor: '#132644', borderColor: '#165CCA', borderWidth: 1, titleColor: '#ffffff', bodyColor: '#ffffff' } } } });
-            charts.budget = new Chart(document.getElementById('budgetChart'), { type: 'bar', data: { labels: [], datasets: [ { label: 'Allocated Budget', data: [], backgroundColor: '#132644', borderRadius: 4, barPercentage: 0.75 }, { label: 'Actual Expenditure', data: [], backgroundColor: '#165CCA', borderRadius: 4, barPercentage: 0.75 } ]}, options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top', align: 'end', labels: { boxWidth: 12, font: { size: 11, weight: 'bold' }, color: '#132644' } }, tooltip: { backgroundColor: '#132644', borderColor: '#165CCA', borderWidth: 1, titleColor: '#ffffff', bodyColor: '#ffffff', callbacks: { label: function(context) { return context.dataset.label + ': ₱' + context.parsed.x.toLocaleString('en-PH'); } } } }, scales: { x: { grid: { color: '#f1f5f9' }, ticks: { font: { size: 11, weight: 'bold' }, color: '#64748b', callback: function(val) { if (val >= 1000000) return '₱' + (val / 1000000).toFixed(1) + 'M'; if (val >= 1000) return '₱' + (val / 1000).toFixed(1) + 'K'; return '₱' + val.toLocaleString('en-PH'); } } }, y: { grid: { display: false }, ticks: { font: { size: 11, weight: 'bold' }, color: '#132644' } } } });
+            Chart.defaults.color = '#64748b'; 
+            Chart.defaults.font.family = 'Plus Jakarta Sans';
+            
+            const gaugeOpt = { 
+                cutout: '78%', 
+                circumference: 180, 
+                rotation: 270, 
+                plugins: { legend: { display: false }, tooltip: { enabled: false } }, 
+                responsive: true, 
+                maintainAspectRatio: false 
+            };
+            
+            if(!charts.spi) {
+                charts.spi = new Chart(document.getElementById('gaugeSPI'), { 
+                    type: 'doughnut', 
+                    data: { datasets: [{ data: [0.5, 0.5], backgroundColor: ['#165CCA', '#f1f5f9'], borderWidth: 0 }] }, 
+                    options: gaugeOpt 
+                });
+            }
+            
+            if(!charts.cpi) {
+                charts.cpi = new Chart(document.getElementById('gaugeCPI'), { 
+                    type: 'doughnut', 
+                    data: { datasets: [{ data: [0.5, 0.5], backgroundColor: ['#132644', '#f1f5f9'], borderWidth: 0 }] }, 
+                    options: gaugeOpt 
+                });
+            }
+            
+            if(!charts.status) {
+                charts.status = new Chart(document.getElementById('statusChart'), { 
+                    type: 'doughnut', 
+                    data: { 
+                        labels: [], 
+                        datasets: [{ data: [], backgroundColor: ['#132644', '#F1C40F', '#165CCA'], borderWidth: 0, hoverOffset: 4 }] 
+                    }, 
+                    options: { 
+                        responsive: true, 
+                        maintainAspectRatio: false, 
+                        cutout: '75%', 
+                        plugins: { 
+                            legend: { position: 'bottom', labels: { padding: 15, font: { size: 11, weight: 'bold' }, color: '#132644' } }, 
+                            tooltip: { backgroundColor: '#132644', borderColor: '#165CCA', borderWidth: 1, titleColor: '#ffffff', bodyColor: '#ffffff' } 
+                        } 
+                    } 
+                });
+            }
+            
+            if(!charts.budget) {
+                charts.budget = new Chart(document.getElementById('budgetChart'), { 
+                    type: 'bar', 
+                    data: { 
+                        labels: [], 
+                        datasets: [ 
+                            { label: 'Allocated Budget', data: [], backgroundColor: '#132644', borderRadius: 4, barPercentage: 0.75 }, 
+                            { label: 'Actual Expenditure', data: [], backgroundColor: '#165CCA', borderRadius: 4, barPercentage: 0.75 } 
+                        ]
+                    }, 
+                    options: { 
+                        indexAxis: 'y', 
+                        responsive: true, 
+                        maintainAspectRatio: false, 
+                        plugins: { 
+                            legend: { position: 'top', align: 'end', labels: { boxWidth: 12, font: { size: 11, weight: 'bold' }, color: '#132644' } }, 
+                            tooltip: { 
+                                backgroundColor: '#132644', 
+                                borderColor: '#165CCA', 
+                                borderWidth: 1, 
+                                titleColor: '#ffffff', 
+                                bodyColor: '#ffffff', 
+                                callbacks: { 
+                                    label: function(context) { return context.dataset.label + ': ₱' + context.parsed.x.toLocaleString('en-PH'); } 
+                                } 
+                            } 
+                        }, 
+                        scales: { 
+                            x: { 
+                                grid: { color: '#f1f5f9' }, 
+                                ticks: { 
+                                    font: { size: 11, weight: 'bold' }, 
+                                    color: '#64748b', 
+                                    callback: function(val) { 
+                                        if (val >= 1000000) return '₱' + (val / 1000000).toFixed(1) + 'M'; 
+                                        if (val >= 1000) return '₱' + (val / 1000).toFixed(1) + 'K'; 
+                                        return '₱' + val.toLocaleString('en-PH'); 
+                                    } 
+                                } 
+                            }, 
+                            y: { 
+                                grid: { display: false }, 
+                                ticks: { font: { size: 11, weight: 'bold' }, color: '#132644' } 
+                            } 
+                        } 
+                    } 
+                });
+            }
         }
 
         function updateAnalytics(data) {
-            if(!data || data.length === 0) { charts.status.data.datasets[0].data = [0,0,0]; charts.status.update(); charts.budget.data.labels = []; charts.budget.data.datasets[0].data = []; charts.budget.data.datasets[1].data = []; charts.budget.update(); return; }
+            if(!data || data.length === 0) { 
+                charts.status.data.datasets[0].data = [0,0,0]; 
+                charts.status.update(); 
+                charts.budget.data.labels = []; 
+                charts.budget.data.datasets[0].data = []; 
+                charts.budget.data.datasets[1].data = []; 
+                charts.budget.update(); 
+                return; 
+            }
+            
             let counts = { 'Completed': 0, 'In Progress': 0, 'Proposed': 0 };
-            data.forEach(p => { let s = p.Status ? p.Status.toString().toLowerCase() : ''; if(s.includes('complete')) counts['Completed']++; else if(s.includes('progress') || s.includes('ongoing')) counts['In Progress']++; else counts['Proposed']++; });
-            charts.status.data.labels = ['Completed', 'In Progress', 'Proposed']; charts.status.data.datasets[0].data = [counts['Completed'], counts['In Progress'], counts['Proposed']]; charts.status.update();
+            
+            data.forEach(p => { 
+                let s = p.Status ? p.Status.toString().toLowerCase() : ''; 
+                if(s.includes('complete')) {
+                    counts['Completed']++; 
+                } else if(s.includes('progress') || s.includes('ongoing')) {
+                    counts['In Progress']++; 
+                } else {
+                    counts['Proposed']++; 
+                }
+            });
+            
+            charts.status.data.labels = ['Completed', 'In Progress', 'Proposed']; 
+            charts.status.data.datasets[0].data = [counts['Completed'], counts['In Progress'], counts['Proposed']]; 
+            charts.status.update();
+            
             let sortedByCost = [...data].sort((a, b) => clean(b.Cost) - clean(a.Cost)).slice(0, 5);
-            charts.budget.data.labels = sortedByCost.map(p => { let name = p.ProjectName || 'Unknown'; return name.length > 25 ? name.substring(0, 25) + '...' : name; });
-            charts.budget.data.datasets[0].data = sortedByCost.map(p => clean(p.Cost)); charts.budget.data.datasets[1].data = sortedByCost.map(p => clean(p.ActualCost)); charts.budget.update();
+            
+            charts.budget.data.labels = sortedByCost.map(p => { 
+                let name = p.ProjectName || 'Unknown'; 
+                return name.length > 25 ? name.substring(0, 25) + '...' : name; 
+            });
+            charts.budget.data.datasets[0].data = sortedByCost.map(p => clean(p.Cost)); 
+            charts.budget.data.datasets[1].data = sortedByCost.map(p => clean(p.ActualCost)); 
+            charts.budget.update();
         }
 
         function updateKPIs(data) {
-            const total = data.reduce((sum, p) => sum + clean(p.Cost), 0); const actual = data.reduce((sum, p) => sum + clean(p.ActualCost), 0); const planned = data.reduce((sum, p) => sum + clean(p.PlannedValue || p['Planned Value']), 0); const avg = data.length ? data.reduce((sum, p) => sum + clean(p.Progress), 0) / data.length : 0;
-            document.getElementById('kpi-budget').textContent = '₱' + total.toLocaleString('en-PH'); document.getElementById('kpi-actual').textContent = '₱' + actual.toLocaleString('en-PH'); document.getElementById('kpi-variance').textContent = '₱' + (total - actual).toLocaleString('en-PH'); document.getElementById('kpi-progress').textContent = Math.round(avg) + '%';
-            const ev = total * (avg / 100); const spi = planned > 0 ? ev / planned : 1; const cpi = actual > 0 ? ev / actual : 1;
-            document.getElementById('spi-text').textContent = spi.toFixed(2); document.getElementById('cpi-text').textContent = cpi.toFixed(2);
-            charts.spi.data.datasets[0].data = [spi > 1 ? 1 : spi, spi > 1 ? 0 : 1 - spi]; charts.cpi.data.datasets[0].data = [cpi > 1 ? 1 : cpi, cpi > 1 ? 0 : 1 - cpi]; charts.spi.update(); charts.cpi.update();
+            const total = data.reduce((sum, p) => sum + clean(p.Cost), 0); 
+            const actual = data.reduce((sum, p) => sum + clean(p.ActualCost), 0); 
+            const planned = data.reduce((sum, p) => sum + clean(p.PlannedValue || p['Planned Value']), 0); 
+            const avg = data.length ? data.reduce((sum, p) => sum + clean(p.Progress), 0) / data.length : 0;
+            
+            document.getElementById('kpi-budget').textContent = '₱' + total.toLocaleString('en-PH'); 
+            document.getElementById('kpi-actual').textContent = '₱' + actual.toLocaleString('en-PH'); 
+            document.getElementById('kpi-variance').textContent = '₱' + (total - actual).toLocaleString('en-PH'); 
+            document.getElementById('kpi-progress').textContent = Math.round(avg) + '%';
+            
+            const ev = total * (avg / 100); 
+            const spi = planned > 0 ? ev / planned : 1; 
+            const cpi = actual > 0 ? ev / actual : 1;
+            
+            document.getElementById('spi-text').textContent = spi.toFixed(2); 
+            document.getElementById('cpi-text').textContent = cpi.toFixed(2);
+            
+            charts.spi.data.datasets[0].data = [spi > 1 ? 1 : spi, spi > 1 ? 0 : 1 - spi]; 
+            charts.cpi.data.datasets[0].data = [cpi > 1 ? 1 : cpi, cpi > 1 ? 0 : 1 - cpi]; 
+            charts.spi.update(); 
+            charts.cpi.update();
         }
 
         document.getElementById('searchInput').addEventListener('input', renderUI);
+        
+        // Boot up the system
         init();
     </script>
 </body>
