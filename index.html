@@ -182,7 +182,7 @@
 
     <!-- SLIDE-OVER PANEL FOR INVENTORY VOTING -->
     <div id="slide-panel" class="fixed top-0 right-0 h-full w-full max-w-lg bg-[#F4F6F9] shadow-2xl z-[2000] flex flex-col border-l border-slate-200">
-        <div class="bg-[#132644] px-8 py-6 flex justify-between items-start text-white">
+        <div class="bg-[#132644] px-8 py-6 flex justify-between items-start text-white shadow-md z-10">
             <div>
                 <span class="px-2 py-0.5 rounded text-[8px] font-black uppercase tracking-widest bg-[#165CCA] text-white border border-[#2a4b7c] mb-2 inline-block">Engineering Division</span>
                 <h2 class="text-xl font-black leading-tight tracking-tight">Needs Assessment &<br>Prioritization Board</h2>
@@ -193,57 +193,86 @@
         </div>
         
         <div class="flex-grow overflow-y-auto p-8">
-            <p class="text-xs text-slate-500 mb-6 font-medium leading-relaxed">
-                The following structural and systemic deficiencies were identified during the latest campus physical inventory. ManCom members are requested to upvote critical areas to inform the upcoming procurement and budget alignment phases.
+            <p class="text-xs text-slate-500 mb-5 font-medium leading-relaxed">
+                The following structural and systemic deficiencies were identified during the March 2026 campus physical inventory. ManCom members are requested to upvote critical areas to inform the upcoming FY 2027 Budget Proposal.
             </p>
 
+            <!-- EXECUTIVE DIRECTIVES CALLOUT -->
+            <details class="group bg-white border border-[#165CCA]/30 rounded-xl mb-6 shadow-sm overflow-hidden">
+                <summary class="px-5 py-4 cursor-pointer bg-[#f8fafc] hover:bg-[#eff6ff] transition-colors flex justify-between items-center outline-none">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-full bg-[#165CCA]/10 text-[#165CCA] flex items-center justify-center">
+                            <i class="fas fa-file-signature"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-[11px] font-black text-[#132644] uppercase tracking-widest">Executive Directives</h3>
+                            <p class="text-[10px] text-slate-500 font-bold">View System Recommendations</p>
+                        </div>
+                    </div>
+                    <i class="fas fa-chevron-down text-slate-400 text-xs transition-transform duration-300 group-open:rotate-180"></i>
+                </summary>
+                <div class="p-5 border-t border-slate-100 bg-white">
+                    <h4 class="text-[9px] font-black text-[#165CCA] uppercase tracking-widest mb-3">Critical Actions Required</h4>
+                    <ul class="space-y-3 mb-5">
+                        <li class="text-[11px] text-slate-600 leading-snug"><strong class="text-[#132644]">Water Restoration:</strong> Immediate action needed to restore campus-wide distribution, including laboratories and pumping systems.</li>
+                        <li class="text-[11px] text-slate-600 leading-snug"><strong class="text-[#132644]">Roofing & Waterproofing:</strong> Prioritize RC roof slabs and concrete gutters to stop active moisture ingress.</li>
+                        <li class="text-[11px] text-slate-600 leading-snug"><strong class="text-[#132644]">Fire Safety:</strong> Rehabilitate fire exit stairs and modernize FDAS for life-safety compliance.</li>
+                        <li class="text-[11px] text-slate-600 leading-snug"><strong class="text-[#132644]">Sanitary Deficiencies:</strong> Repair non-functional floor drains and piping in Residence Halls.</li>
+                        <li class="text-[11px] text-slate-600 leading-snug"><strong class="text-[#132644]">Electrical Grid:</strong> Replace non-functional outlets and upgrade wiring for modern AV/AC loads.</li>
+                    </ul>
+                    
+                    <h4 class="text-[9px] font-black text-[#F1C40F] uppercase tracking-widest mb-3">Opportunities for Improvement</h4>
+                    <ul class="space-y-3">
+                        <li class="text-[11px] text-slate-600 leading-snug"><strong class="text-[#132644]">Sustainable Energy:</strong> Install a Solar Power System to offset high electricity costs (~40,786 kWh avg) and provide backup power.</li>
+                        <li class="text-[11px] text-slate-600 leading-snug"><strong class="text-[#132644]">Utility Resilience:</strong> Rehabilitate the rainwater collection network for non-potable uses.</li>
+                    </ul>
+                </div>
+            </details>
+
+            <div class="flex items-center justify-between mb-4 mt-2">
+                <span class="text-[10px] font-black text-[#132644] uppercase tracking-widest border-b-2 border-[#F1C40F] pb-1">Identified Deficiencies</span>
+            </div>
+
+            <!-- MOCK DATA (Waiting for Apps Script connection) -->
             <div class="space-y-4" id="priority-list">
-                <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm hover:border-[#165CCA]/30 transition-colors flex gap-4">
-                    <div class="flex flex-col items-center gap-1 min-w-[50px]">
-                        <button onclick="castVote(this, 12)" class="vote-btn w-10 h-10 rounded-full border border-slate-300 text-slate-400 hover:border-[#165CCA] hover:text-[#165CCA] flex flex-col items-center justify-center bg-slate-50">
+                
+                <!-- Dynamic Item 1 Example -->
+                <div class="bg-white border border-red-200 rounded-xl p-5 shadow-sm hover:border-red-400 transition-colors flex gap-4 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 bg-red-100 text-red-700 px-3 py-1 rounded-bl-lg text-[8px] font-black uppercase tracking-widest border-l border-b border-red-200">Critical Priority</div>
+                    <div class="flex flex-col items-center gap-1 min-w-[50px] mt-2">
+                        <button onclick="castVote(this, 1)" class="vote-btn w-10 h-10 rounded-full border border-slate-300 text-slate-400 hover:border-[#165CCA] hover:text-[#165CCA] flex flex-col items-center justify-center bg-slate-50">
                             <i class="fas fa-caret-up text-lg -mb-1"></i>
                         </button>
-                        <span class="text-lg font-black text-[#132644] tabular-nums vote-count">12</span>
+                        <span class="text-lg font-black text-[#132644] tabular-nums vote-count">1</span>
                     </div>
-                    <div>
-                        <h4 class="font-bold text-[#132644] leading-snug mb-1">Waterproofing & Ceiling Rehabilitation</h4>
-                        <p class="text-[10px] font-bold text-[#165CCA] uppercase tracking-widest mb-2"><i class="fas fa-map-marker-alt mr-1"></i> SSD Office, New Academic Building</p>
-                        <p class="text-xs text-slate-500">Severe water intrusion affecting office equipment and archival documents during heavy downpours.</p>
+                    <div class="mt-2 pr-4">
+                        <h4 class="font-bold text-[#132644] leading-snug mb-1">Water Supply System</h4>
+                        <p class="text-[10px] font-bold text-[#165CCA] uppercase tracking-widest mb-2"><i class="fas fa-map-marker-alt mr-1"></i> Campus-wide</p>
+                        <p class="text-[11px] text-slate-500 leading-relaxed">Chronic failure across the campus distribution grid; supply is completely unavailable in multiple laboratories; water pressure is inadequate.</p>
                     </div>
                 </div>
 
-                <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm hover:border-[#165CCA]/30 transition-colors flex gap-4">
-                    <div class="flex flex-col items-center gap-1 min-w-[50px]">
-                        <button onclick="castVote(this, 8)" class="vote-btn w-10 h-10 rounded-full border border-slate-300 text-slate-400 hover:border-[#165CCA] hover:text-[#165CCA] flex flex-col items-center justify-center bg-slate-50">
+                <!-- Dynamic Item 2 Example -->
+                <div class="bg-white border border-orange-200 rounded-xl p-5 shadow-sm hover:border-orange-400 transition-colors flex gap-4 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 bg-orange-100 text-orange-700 px-3 py-1 rounded-bl-lg text-[8px] font-black uppercase tracking-widest border-l border-b border-orange-200">Needs Repair</div>
+                    <div class="flex flex-col items-center gap-1 min-w-[50px] mt-2">
+                        <button onclick="castVote(this, 2)" class="vote-btn w-10 h-10 rounded-full border border-slate-300 text-slate-400 hover:border-[#165CCA] hover:text-[#165CCA] flex flex-col items-center justify-center bg-slate-50">
                             <i class="fas fa-caret-up text-lg -mb-1"></i>
                         </button>
-                        <span class="text-lg font-black text-[#132644] tabular-nums vote-count">8</span>
+                        <span class="text-lg font-black text-[#132644] tabular-nums vote-count">2</span>
                     </div>
-                    <div>
-                        <h4 class="font-bold text-[#132644] leading-snug mb-1">Electrical System Overhaul</h4>
-                        <p class="text-[10px] font-bold text-[#165CCA] uppercase tracking-widest mb-2"><i class="fas fa-map-marker-alt mr-1"></i> Old Academic Building</p>
-                        <p class="text-xs text-slate-500">Sub-panels frequently tripping due to increased load from new laboratory equipment.</p>
+                    <div class="mt-2 pr-4">
+                        <h4 class="font-bold text-[#132644] leading-snug mb-1">Water Tightness</h4>
+                        <p class="text-[10px] font-bold text-[#165CCA] uppercase tracking-widest mb-2"><i class="fas fa-map-marker-alt mr-1"></i> Dormitories</p>
+                        <p class="text-[11px] text-slate-500 leading-relaxed">Deficient elastomeric waterproofing on reinforced concrete; active water leaks identified dormitory rooms.</p>
                     </div>
                 </div>
 
-                <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm hover:border-[#165CCA]/30 transition-colors flex gap-4">
-                    <div class="flex flex-col items-center gap-1 min-w-[50px]">
-                        <button onclick="castVote(this, 4)" class="vote-btn w-10 h-10 rounded-full border border-slate-300 text-slate-400 hover:border-[#165CCA] hover:text-[#165CCA] flex flex-col items-center justify-center bg-slate-50">
-                            <i class="fas fa-caret-up text-lg -mb-1"></i>
-                        </button>
-                        <span class="text-lg font-black text-[#132644] tabular-nums vote-count">4</span>
-                    </div>
-                    <div>
-                        <h4 class="font-bold text-[#132644] leading-snug mb-1">Sorting Bins & Access Ramp Upgrade</h4>
-                        <p class="text-[10px] font-bold text-[#165CCA] uppercase tracking-widest mb-2"><i class="fas fa-map-marker-alt mr-1"></i> Material Recovery Facility</p>
-                        <p class="text-xs text-slate-500">Current ramp slope is non-compliant, hindering efficient transfer of bulk recyclables.</p>
-                    </div>
-                </div>
             </div>
         </div>
         
-        <div class="bg-white border-t border-slate-200 px-8 py-5 flex justify-between items-center">
-            <span class="text-xs text-slate-400 font-medium">Votes reset on refresh for demo.</span>
+        <div class="bg-white border-t border-slate-200 px-8 py-5 flex justify-between items-center z-10 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+            <span class="text-xs text-slate-400 font-medium"><i class="fas fa-cloud-arrow-up mr-1 text-[#165CCA]"></i> Live Sync Active</span>
             <button onclick="togglePanel()" class="px-6 py-2.5 bg-[#132644] hover:bg-[#1a355e] text-white rounded-full text-[10px] font-black uppercase tracking-widest transition-all shadow-sm">Close Board</button>
         </div>
     </div>
@@ -267,6 +296,7 @@
     <div id="custom-print-container"></div>
 
     <script>
+        // NOTE: This URL will need to point to your UPDATED Google Apps Script deployment in Phase 3
         const scriptURL = `https\u003A//script.google.com/macros/s/AKfycbz-9wukcFnCwKNhcmTrTRQaY9fc_vOJA8O6yqNA71XKrJmiAj-b5f6uYzSG07JUjAcR/exec`;
         
         let allProjects = [];
@@ -289,6 +319,7 @@
             }
         }
 
+        // Simulates the UI vote feedback (Will connect to database in Phase 3)
         function castVote(btnElement, currentVotes) {
             const countSpan = btnElement.nextElementSibling;
             const isVoted = btnElement.classList.contains('voted');
@@ -304,31 +335,19 @@
 
         async function init() {
             try {
-                // Initialize empty charts immediately so the layout doesn't break if fetch is slow
-                initCharts();
-                
                 const response = await fetch(scriptURL);
-                if (!response.ok) {
-                    throw new Error("Network response was not OK");
-                }
-                
                 const data = await response.json();
                 
-                // Safety check to ensure Google Script actually returned an array of data
-                if (!Array.isArray(data)) {
-                    throw new Error("Invalid data format received from API");
-                }
-
                 allProjects = data.map((p, index) => ({ ...p, _id: index }));
                 
                 buildCategoryTabs();
                 populateFYFilter();
+                initCharts(); 
                 renderUI();
                 
             } catch (e) { 
                 console.error("Dashboard Sync Failure:", e); 
                 
-                // NEW: Visual Error Feedback instead of an empty screen
                 document.getElementById('project-grid').innerHTML = `
                     <div class="col-span-full py-20 flex flex-col items-center justify-center text-center border-2 border-dashed border-red-200 rounded-2xl bg-red-50">
                         <i class="fas fa-plug-circle-xmark text-4xl text-red-400 mb-4"></i>
@@ -733,7 +752,6 @@
 
         document.getElementById('searchInput').addEventListener('input', renderUI);
         
-        // Boot up the system
         init();
     </script>
 </body>
