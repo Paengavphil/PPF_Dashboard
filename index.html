@@ -233,7 +233,7 @@
                 <span class="text-[10px] font-black text-[#132644] uppercase tracking-widest border-b-2 border-[#F1C40F] pb-1">Identified Deficiencies</span>
             </div>
 
-            <!-- THIS WILL NOW BE POPULATED DYNAMICALLY BY JAVASCRIPT -->
+            <!-- POPULATED BY JAVASCRIPT -->
             <div class="space-y-4" id="priority-list"></div>
 
         </div>
@@ -263,7 +263,6 @@
     <div id="custom-print-container"></div>
 
     <script>
-        // LIVE WEB APP URL
         const scriptURL = 'https://script.google.com/macros/s/AKfycbz-9wukcFnCwKNhcmTrTRQaY9fc_vOJA8O6yqNA71XKrJmiAj-b5f6uYzSG07JUjAcR/exec';
         
         let allProjects = [];
@@ -281,16 +280,13 @@
             document.body.classList.toggle('panel-open');
         }
 
-        // Live Voting Engine
         async function castVote(btnElement, itemId, currentVotes) {
             if (btnElement.classList.contains('voted')) return;
             
-            // 1. Instant UI update
             btnElement.classList.add('voted');
             const countSpan = btnElement.nextElementSibling;
             countSpan.textContent = parseInt(currentVotes) + 1; 
 
-            // 2. Fire vote to Google Sheet silently
             try {
                 await fetch(scriptURL, {
                     method: 'POST',
@@ -306,38 +302,43 @@
                 const response = await fetch(scriptURL);
                 const data = await response.json();
                 
-                // Unpack dual-payload
-                allProjects = data.projects.map((p, index) => ({ ...p, _id: index }));
-                prioritiesData = data.priorities; 
-                
+                // Bulletproof parser that supports both old and new formats
+                if (Array.isArray(data)) {
+                    allProjects = data.map((p, index) => ({ ...p, _id: index }));
+                    prioritiesData = [];
+                } else if (data && data.projects) {
+                    allProjects = data.projects.map((p, index) => ({ ...p, _id: index }));
+                    prioritiesData = data.priorities || [];
+                } else {
+                    throw new Error("Received empty or unrecognized data structure from Google Script.");
+                }
+
                 buildCategoryTabs();
                 populateFYFilter();
                 initCharts(); 
                 renderUI();
-                renderPriorities(); // Build the live voting board
+                renderPriorities(); 
                 
             } catch (e) { 
                 console.error("Dashboard Sync Failure:", e); 
                 document.getElementById('project-grid').innerHTML = `
                     <div class="col-span-full py-20 flex flex-col items-center justify-center text-center border-2 border-dashed border-red-200 rounded-2xl bg-red-50">
-                        <i class="fas fa-plug-circle-xmark text-4xl text-red-400 mb-4"></i>
-                        <h3 class="text-lg font-black text-red-900 uppercase tracking-widest mb-2">Connection Failed</h3>
-                        <p class="text-sm text-red-700 max-w-md">Failed to pull data. Ensure your Web App is deployed correctly and the database structure is intact.</p>
+                        <i class="fas fa-triangle-exclamation text-4xl text-red-400 mb-4"></i>
+                        <h3 class="text-lg font-black text-red-900 uppercase tracking-widest mb-2">System Diagnostics</h3>
+                        <p class="text-sm text-red-700 max-w-md font-bold">${e.message}</p>
+                        <p class="text-xs text-red-500 mt-4">Check browser console (F12) for detailed logs.</p>
                     </div>`;
             }
         }
 
-        // Dynamic Priorities Renderer
         function renderPriorities() {
             const listContainer = document.getElementById('priority-list');
             if(!prioritiesData || prioritiesData.length === 0) {
-                listContainer.innerHTML = '<p class="text-xs text-slate-400 italic text-center py-5">No priorities found. Check database connection.</p>';
+                listContainer.innerHTML = '<p class="text-xs text-slate-400 italic text-center py-5">No priorities found. Ensure your Apps Script is deployed as a "New Version".</p>';
                 return;
             }
 
             let html = '';
-
-            // Sort so Critical (Rating 1) shows at the top
             const sortedData = [...prioritiesData].sort((a, b) => {
                 const valA = isNaN(parseInt(a.InventorySystemRating)) ? 99 : parseInt(a.InventorySystemRating);
                 const valB = isNaN(parseInt(b.InventorySystemRating)) ? 99 : parseInt(b.InventorySystemRating);
@@ -386,7 +387,6 @@
             listContainer.innerHTML = html;
         }
 
-        // --- RENDER FUNCTIONS FOR MAIN DASHBOARD ---
         function toggleReportMode() {
             isReportMode = !isReportMode;
             if(!isReportMode) { selectedProjects.clear(); }
