@@ -302,7 +302,6 @@
                 const response = await fetch(scriptURL);
                 const data = await response.json();
                 
-                // Bulletproof parser that supports both old and new formats
                 if (Array.isArray(data)) {
                     allProjects = data.map((p, index) => ({ ...p, _id: index }));
                     prioritiesData = [];
@@ -326,7 +325,6 @@
                         <i class="fas fa-triangle-exclamation text-4xl text-red-400 mb-4"></i>
                         <h3 class="text-lg font-black text-red-900 uppercase tracking-widest mb-2">System Diagnostics</h3>
                         <p class="text-sm text-red-700 max-w-md font-bold">${e.message}</p>
-                        <p class="text-xs text-red-500 mt-4">Check browser console (F12) for detailed logs.</p>
                     </div>`;
             }
         }
@@ -334,7 +332,7 @@
         function renderPriorities() {
             const listContainer = document.getElementById('priority-list');
             if(!prioritiesData || prioritiesData.length === 0) {
-                listContainer.innerHTML = '<p class="text-xs text-slate-400 italic text-center py-5">No priorities found. Ensure your Apps Script is deployed as a "New Version".</p>';
+                listContainer.innerHTML = '<p class="text-xs text-slate-400 italic text-center py-5">No priorities found.</p>';
                 return;
             }
 
