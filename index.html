@@ -54,7 +54,6 @@
             body.printing-report > #custom-print-container { display: block !important; width: 100%; padding: 0; }
         }
 
-        /* --- SLIDE-OVER PANEL STYLES --- */
         #slide-panel { transform: translateX(100%); transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); }
         #slide-panel.open { transform: translateX(0); box-shadow: -10px 0 40px rgba(19, 38, 68, 0.15); }
         body.panel-open .dashboard-container { filter: blur(3px) brightness(0.9); pointer-events: none; }
@@ -169,7 +168,7 @@
                     <i class="fas fa-search absolute left-6 top-1/2 -translate-y-1/2 text-yellow-600/50 text-sm"></i>
                     <input type="text" id="searchInput" placeholder="Search by project name, contractor, or location..." class="w-full pl-14 pr-6 py-3.5 rounded-full border border-yellow-200 bg-[#FFFBEB] text-[#132644] font-semibold text-sm outline-none focus:ring-2 focus:ring-[#F1C40F]/50 transition-all placeholder-yellow-700/40">
                 </div>
-                <select id="fyFilter" onchange="renderUI()" class="w-full sm:w-auto min-w-[220px] pl-6 pr-10 py-3.5 rounded-full border border-slate-200 bg-white text-[#132644] font-semibold text-sm outline-none cursor-pointer focus:ring-2 focus:ring-[#165CCA]/30 hover:border-[#165CCA]/50 transition-all shadow-sm"></select>
+                <select id="fyFilter" class="w-full sm:w-auto min-w-[220px] pl-6 pr-10 py-3.5 rounded-full border border-slate-200 bg-white text-[#132644] font-semibold text-sm outline-none cursor-pointer focus:ring-2 focus:ring-[#165CCA]/30 hover:border-[#165CCA]/50 transition-all shadow-sm"></select>
                 <div class="flex gap-2 w-full sm:w-auto bg-slate-100 p-1 rounded-full border border-slate-200">
                     <button id="btn-all" class="px-6 py-2.5 rounded-full text-[10px] font-black bg-[#132644] text-white shadow-sm transition-all w-1/2 sm:w-auto" onclick="filterStatus('All')">ALL</button>
                     <button id="btn-ongoing" class="px-6 py-2.5 rounded-full text-[10px] font-black text-slate-500 bg-transparent transition-all w-1/2 sm:w-auto hover:text-[#132644]" onclick="filterStatus('In Progress')">ONGOING</button>
@@ -197,7 +196,6 @@
                 The following structural and systemic deficiencies were identified during the March 2026 campus physical inventory. ManCom members are requested to upvote critical areas to inform the upcoming FY 2027 Budget Proposal.
             </p>
 
-            <!-- EXECUTIVE DIRECTIVES CALLOUT -->
             <details class="group bg-white border border-[#165CCA]/30 rounded-xl mb-6 shadow-sm overflow-hidden">
                 <summary class="px-5 py-4 cursor-pointer bg-[#f8fafc] hover:bg-[#eff6ff] transition-colors flex justify-between items-center outline-none">
                     <div class="flex items-center gap-3">
@@ -274,13 +272,40 @@
         let isReportMode = false;
         let selectedProjects = new Set();
 
+        // 1. EVENT DELEGATION
+        // This is a bulletproof way to handle clicks without inline parsing errors
+        document.addEventListener('click', function(e) {
+            const toggleDiv = e.target.closest('.action-toggle-project');
+            if (toggleDiv) {
+                const projectId = parseInt(toggleDiv.getAttribute('data-project-id'));
+                toggleSelection(projectId);
+                return;
+            }
+
+            const catBtn = e.target.closest('.action-filter-cat');
+            if (catBtn) {
+                const categoryName = catBtn.getAttribute('data-category-name');
+                filterCategory(categoryName);
+                return;
+            }
+
+            const voteBtn = e.target.closest('.action-cast-vote');
+            if (voteBtn) {
+                handleVote(voteBtn);
+                return;
+            }
+        });
+
+        document.getElementById('fyFilter').addEventListener('change', function() {
+            renderUI();
+        });
+
         function togglePanel() {
             const panel = document.getElementById('slide-panel');
             panel.classList.toggle('open');
             document.body.classList.toggle('panel-open');
         }
 
-        // Syntax-safe voting function using data attributes
         async function handleVote(btnElement) {
             if (btnElement.classList.contains('voted')) return;
             
@@ -369,7 +394,7 @@
                     <div class="absolute top-0 right-0 px-3 py-1 rounded-bl-lg text-[8px] font-black uppercase tracking-widest border-l border-b ${badgeClass}">${badgeText}</div>
                     
                     <div class="flex flex-col items-center gap-1 min-w-[50px] mt-2">
-                        <button data-item-id="${item.ItemID || ''}" onclick="handleVote(this)" class="vote-btn w-10 h-10 rounded-full border border-slate-300 text-slate-400 hover:border-[#165CCA] hover:text-[#165CCA] flex flex-col items-center justify-center bg-slate-50 transition-all">
+                        <button data-item-id="${item.ItemID || ''}" class="action-cast-vote vote-btn w-10 h-10 rounded-full border border-slate-300 text-slate-400 hover:border-[#165CCA] hover:text-[#165CCA] flex flex-col items-center justify-center bg-slate-50 transition-all">
                             <i class="fas fa-caret-up text-lg -mb-1"></i>
                         </button>
                         <span class="text-lg font-black text-[#132644] tabular-nums vote-count">${currentVotes}</span>
@@ -444,13 +469,18 @@
         function buildCategoryTabs() {
             const container = document.getElementById('category-container');
             const cats = [...new Set(allProjects.map(p => p.Category ? p.Category.trim() : '').filter(c => c !== ''))].sort();
-            let html = `<button id="tab-All" class="category-tab active group" onclick="filterCategory('All')"><i class="fas fa-layer-group mr-2 transition-transform duration-300 group-hover:scale-110"></i> All Projects</button>`;
+            
+            let html = `<button id="tab-All" data-category-name="All" class="category-tab active group action-filter-cat"><i class="fas fa-layer-group mr-2 transition-transform duration-300 group-hover:scale-110"></i> All Projects</button>`;
+            
             const iconMap = { 'repair works': 'fa-hammer', 'consultancy': 'fa-user-tie', 'preventive maintenance': 'fa-shield-halved', 'vehicle': 'fa-van-shuttle', 'equipment': 'fa-cogs', 'infrastructure': 'fa-city' };
+            
             cats.forEach(c => {
                 const safeId = c.replace(/[^a-zA-Z0-9]/g, '-');
+                const safeCatText = c.replace(/"/g, '&quot;');
                 const icon = iconMap[c.toLowerCase()] || 'fa-folder-open';
-                html += `<button id="tab-${safeId}" class="category-tab group" onclick="filterCategory('${c.replace(/'/g, "\\'")}')"><i class="fas ${icon} mr-2 transition-transform duration-300 group-hover:-rotate-12 group-hover:scale-110"></i> ${c}</button>`;
+                html += `<button id="tab-${safeId}" data-category-name="${safeCatText}" class="category-tab group action-filter-cat"><i class="fas ${icon} mr-2 transition-transform duration-300 group-hover:-rotate-12 group-hover:scale-110"></i> ${c}</button>`;
             });
+            
             container.innerHTML = html;
         }
 
@@ -531,13 +561,17 @@
 
                 gridHTML += `
                     <div class="relative bg-white border border-slate-200 rounded-2xl overflow-hidden flex flex-col h-full shadow-sm transition-all duration-300 ${cardBaseStyle}">
-                        ${isReportMode ? `<div class="absolute inset-0 z-30 cursor-pointer" onclick="toggleSelection(${p._id})"></div>` : ''}
+                        
+                        ${isReportMode ? `<div class="absolute inset-0 z-30 cursor-pointer action-toggle-project" data-project-id="${p._id}"></div>` : ''}
+                        
                         <div class="absolute top-5 right-5 z-20 transition-all duration-300 ${isReportMode ? 'opacity-100 scale-100' : 'opacity-0 scale-50 pointer-events-none'}">
                             <div class="w-7 h-7 rounded-full border-2 flex items-center justify-center shadow-sm ${isSelected ? 'bg-[#165CCA] border-[#165CCA]' : 'bg-white border-slate-300'}">
                                 <i class="fas fa-check text-white text-xs transition-opacity duration-300 ${isSelected ? 'opacity-100' : 'opacity-0'}"></i>
                             </div>
                         </div>
+                        
                         <div class="h-2.5 w-full ${accent}"></div>
+                        
                         <div class="p-6 flex flex-col h-full ${isReportMode && !isSelected ? 'pointer-events-none' : ''}">
                             <div class="flex justify-between items-center mb-5 pr-8">
                                 <span class="px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-[0.15em] border ${badgeStyle}">${p.Status}</span>
@@ -545,17 +579,53 @@
                             </div>
                             <div>${catTag}</div>
                             <h3 class="text-lg font-black leading-tight uppercase mb-6 min-h-[3.5rem] text-[#132644] tracking-tight pr-4">${p.ProjectName}</h3>
-                            <details class="group/detail"><summary class="detail-bar"><div class="summary-flex group/header"><span class="text-[11px] font-black text-white uppercase tracking-widest flex items-center"><i class="fas fa-drafting-compass mr-3 text-[#F1C40F]"></i> Scope of Works</span><span class="chevron-icon"><i class="fas fa-chevron-right"></i></span></div></summary><div class="mb-4 px-2 bg-[#132644] rounded-b-xl pb-2 -mt-2">${listParser(p.Scope)}</div></details>
-                            <details class="group/detail"><summary class="detail-bar"><div class="summary-flex group/header"><span class="text-[11px] font-black text-white uppercase tracking-widest flex items-center"><i class="fas fa-pen-nib mr-3 text-slate-400"></i> Admin Remarks</span><span class="chevron-icon"><i class="fas fa-chevron-right"></i></span></div></summary><div class="mb-4 px-2 bg-[#132644] rounded-b-xl pb-2 -mt-2">${listParser(p.Notes)}</div></details>
+                            
+                            <details class="group/detail">
+                                <summary class="detail-bar">
+                                    <div class="summary-flex group/header">
+                                        <span class="text-[11px] font-black text-white uppercase tracking-widest flex items-center">
+                                            <i class="fas fa-drafting-compass mr-3 text-[#F1C40F]"></i> Scope of Works
+                                        </span>
+                                        <span class="chevron-icon"><i class="fas fa-chevron-right"></i></span>
+                                    </div>
+                                </summary>
+                                <div class="mb-4 px-2 bg-[#132644] rounded-b-xl pb-2 -mt-2">${listParser(p.Scope)}</div>
+                            </details>
+                            
+                            <details class="group/detail">
+                                <summary class="detail-bar">
+                                    <div class="summary-flex group/header">
+                                        <span class="text-[11px] font-black text-white uppercase tracking-widest flex items-center">
+                                            <i class="fas fa-pen-nib mr-3 text-slate-400"></i> Admin Remarks
+                                        </span>
+                                        <span class="chevron-icon"><i class="fas fa-chevron-right"></i></span>
+                                    </div>
+                                </summary>
+                                <div class="mb-4 px-2 bg-[#132644] rounded-b-xl pb-2 -mt-2">${listParser(p.Notes)}</div>
+                            </details>
+                            
                             <div class="mt-auto pt-6 border-t border-slate-100">
                                 <div class="grid grid-cols-2 gap-3 mb-5">
-                                    <div><p class="text-[8px] font-bold text-slate-400 uppercase mb-1 tracking-widest">Target Finish</p><p class="text-[10px] font-black text-[#132644]">${p.TargetDate || '---'}</p></div>
-                                    <div class="text-right"><p class="text-[8px] font-bold text-slate-400 uppercase mb-1 tracking-widest">Valuation</p><p class="text-[11px] font-black text-[#132644] tabular-nums">${cost}</p></div>
+                                    <div>
+                                        <p class="text-[8px] font-bold text-slate-400 uppercase mb-1 tracking-widest">Target Finish</p>
+                                        <p class="text-[10px] font-black text-[#132644]">${p.TargetDate || '---'}</p>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="text-[8px] font-bold text-slate-400 uppercase mb-1 tracking-widest">Valuation</p>
+                                        <p class="text-[11px] font-black text-[#132644] tabular-nums">${cost}</p>
+                                    </div>
                                 </div>
+                                
                                 ${p.AttachmentURL ? `<a href="${p.AttachmentURL}" target="_blank" class="w-full py-3 bg-[#FFFBEB] border border-[#F1C40F]/50 text-yellow-700 rounded-xl text-[9px] font-black uppercase tracking-[0.2em] flex items-center justify-center gap-2 hover:bg-[#F1C40F] hover:text-[#132644] transition-all shadow-sm no-print group/btn"><i class="fas fa-file-contract"></i> Record Vault</a>` : `<div class="w-full py-3 bg-slate-50 text-slate-400 rounded-xl text-[9px] font-black uppercase text-center tracking-widest italic border border-slate-200 no-print">Archives Offline</div>`}
+                                
                                 <div class="mt-6">
-                                    <div class="flex justify-between items-center text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-2"><span>Progress</span><span class="text-[#165CCA] font-black">${p.Progress || 0}%</span></div>
-                                    <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden shadow-inner border border-slate-200"><div class="bg-[#165CCA] h-full transition-all duration-1000" style="width: ${p.Progress || 0}%"></div></div>
+                                    <div class="flex justify-between items-center text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-2">
+                                        <span>Progress</span>
+                                        <span class="text-[#165CCA] font-black">${p.Progress || 0}%</span>
+                                    </div>
+                                    <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden shadow-inner border border-slate-200">
+                                        <div class="bg-[#165CCA] h-full transition-all duration-1000" style="width: ${p.Progress || 0}%"></div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -565,30 +635,149 @@
         }
 
         function initCharts() {
-            Chart.defaults.color = '#64748b'; Chart.defaults.font.family = 'Plus Jakarta Sans';
-            const gaugeOpt = { cutout: '78%', circumference: 180, rotation: 270, plugins: { legend: { display: false }, tooltip: { enabled: false } }, responsive: true, maintainAspectRatio: false };
-            if(!charts.spi) { charts.spi = new Chart(document.getElementById('gaugeSPI'), { type: 'doughnut', data: { datasets: [{ data: [0.5, 0.5], backgroundColor: ['#165CCA', '#f1f5f9'], borderWidth: 0 }] }, options: gaugeOpt }); }
-            if(!charts.cpi) { charts.cpi = new Chart(document.getElementById('gaugeCPI'), { type: 'doughnut', data: { datasets: [{ data: [0.5, 0.5], backgroundColor: ['#132644', '#f1f5f9'], borderWidth: 0 }] }, options: gaugeOpt }); }
-            if(!charts.status) { charts.status = new Chart(document.getElementById('statusChart'), { type: 'doughnut', data: { labels: [], datasets: [{ data: [], backgroundColor: ['#132644', '#F1C40F', '#165CCA'], borderWidth: 0, hoverOffset: 4 }] }, options: { responsive: true, maintainAspectRatio: false, cutout: '75%', plugins: { legend: { position: 'bottom', labels: { padding: 15, font: { size: 11, weight: 'bold' }, color: '#132644' } }, tooltip: { backgroundColor: '#132644', borderColor: '#165CCA', borderWidth: 1, titleColor: '#ffffff', bodyColor: '#ffffff' } } } }); }
-            if(!charts.budget) { charts.budget = new Chart(document.getElementById('budgetChart'), { type: 'bar', data: { labels: [], datasets: [ { label: 'Allocated Budget', data: [], backgroundColor: '#132644', borderRadius: 4, barPercentage: 0.75 }, { label: 'Actual Expenditure', data: [], backgroundColor: '#165CCA', borderRadius: 4, barPercentage: 0.75 } ]}, options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top', align: 'end', labels: { boxWidth: 12, font: { size: 11, weight: 'bold' }, color: '#132644' } }, tooltip: { backgroundColor: '#132644', borderColor: '#165CCA', borderWidth: 1, titleColor: '#ffffff', bodyColor: '#ffffff', callbacks: { label: function(context) { return context.dataset.label + ': ₱' + context.parsed.x.toLocaleString('en-PH'); } } } }, scales: { x: { grid: { color: '#f1f5f9' }, ticks: { font: { size: 11, weight: 'bold' }, color: '#64748b', callback: function(val) { if (val >= 1000000) return '₱' + (val / 1000000).toFixed(1) + 'M'; if (val >= 1000) return '₱' + (val / 1000).toFixed(1) + 'K'; return '₱' + val.toLocaleString('en-PH'); } } }, y: { grid: { display: false }, ticks: { font: { size: 11, weight: 'bold' }, color: '#132644' } } } }); }
+            Chart.defaults.color = '#64748b'; 
+            Chart.defaults.font.family = 'Plus Jakarta Sans';
+            
+            const gaugeOpt = { 
+                cutout: '78%', 
+                circumference: 180, 
+                rotation: 270, 
+                plugins: { legend: { display: false }, tooltip: { enabled: false } }, 
+                responsive: true, 
+                maintainAspectRatio: false 
+            };
+            
+            if(!charts.spi) { 
+                charts.spi = new Chart(document.getElementById('gaugeSPI'), { 
+                    type: 'doughnut', 
+                    data: { datasets: [{ data: [0.5, 0.5], backgroundColor: ['#165CCA', '#f1f5f9'], borderWidth: 0 }] }, 
+                    options: gaugeOpt 
+                }); 
+            }
+            
+            if(!charts.cpi) { 
+                charts.cpi = new Chart(document.getElementById('gaugeCPI'), { 
+                    type: 'doughnut', 
+                    data: { datasets: [{ data: [0.5, 0.5], backgroundColor: ['#132644', '#f1f5f9'], borderWidth: 0 }] }, 
+                    options: gaugeOpt 
+                }); 
+            }
+            
+            if(!charts.status) { 
+                charts.status = new Chart(document.getElementById('statusChart'), { 
+                    type: 'doughnut', 
+                    data: { 
+                        labels: [], 
+                        datasets: [{ data: [], backgroundColor: ['#132644', '#F1C40F', '#165CCA'], borderWidth: 0, hoverOffset: 4 }] 
+                    }, 
+                    options: { 
+                        responsive: true, maintainAspectRatio: false, cutout: '75%', 
+                        plugins: { 
+                            legend: { position: 'bottom', labels: { padding: 15, font: { size: 11, weight: 'bold' }, color: '#132644' } }, 
+                            tooltip: { backgroundColor: '#132644', borderColor: '#165CCA', borderWidth: 1, titleColor: '#ffffff', bodyColor: '#ffffff' } 
+                        } 
+                    } 
+                }); 
+            }
+            
+            if(!charts.budget) { 
+                charts.budget = new Chart(document.getElementById('budgetChart'), { 
+                    type: 'bar', 
+                    data: { 
+                        labels: [], 
+                        datasets: [ 
+                            { label: 'Allocated Budget', data: [], backgroundColor: '#132644', borderRadius: 4, barPercentage: 0.75 }, 
+                            { label: 'Actual Expenditure', data: [], backgroundColor: '#165CCA', borderRadius: 4, barPercentage: 0.75 } 
+                        ]
+                    }, 
+                    options: { 
+                        indexAxis: 'y', responsive: true, maintainAspectRatio: false, 
+                        plugins: { 
+                            legend: { position: 'top', align: 'end', labels: { boxWidth: 12, font: { size: 11, weight: 'bold' }, color: '#132644' } }, 
+                            tooltip: { 
+                                backgroundColor: '#132644', borderColor: '#165CCA', borderWidth: 1, titleColor: '#ffffff', bodyColor: '#ffffff', 
+                                callbacks: { 
+                                    label: function(context) { return context.dataset.label + ': ₱' + context.parsed.x.toLocaleString('en-PH'); } 
+                                } 
+                            } 
+                        }, 
+                        scales: { 
+                            x: { 
+                                grid: { color: '#f1f5f9' }, 
+                                ticks: { 
+                                    font: { size: 11, weight: 'bold' }, color: '#64748b', 
+                                    callback: function(val) { 
+                                        if (val >= 1000000) return '₱' + (val / 1000000).toFixed(1) + 'M'; 
+                                        if (val >= 1000) return '₱' + (val / 1000).toFixed(1) + 'K'; 
+                                        return '₱' + val.toLocaleString('en-PH'); 
+                                    } 
+                                } 
+                            }, 
+                            y: { grid: { display: false }, ticks: { font: { size: 11, weight: 'bold' }, color: '#132644' } } 
+                        } 
+                    } 
+                }); 
+            }
         }
 
         function updateAnalytics(data) {
-            if(!data || data.length === 0) { charts.status.data.datasets[0].data = [0,0,0]; charts.status.update(); charts.budget.data.labels = []; charts.budget.data.datasets[0].data = []; charts.budget.data.datasets[1].data = []; charts.budget.update(); return; }
+            if(!data || data.length === 0) { 
+                charts.status.data.datasets[0].data = [0,0,0]; 
+                charts.status.update(); 
+                charts.budget.data.labels = []; 
+                charts.budget.data.datasets[0].data = []; 
+                charts.budget.data.datasets[1].data = []; 
+                charts.budget.update(); 
+                return; 
+            }
+            
             let counts = { 'Completed': 0, 'In Progress': 0, 'Proposed': 0 };
-            data.forEach(p => { let s = p.Status ? p.Status.toString().toLowerCase() : ''; if(s.includes('complete')) { counts['Completed']++; } else if(s.includes('progress') || s.includes('ongoing')) { counts['In Progress']++; } else { counts['Proposed']++; } });
-            charts.status.data.labels = ['Completed', 'In Progress', 'Proposed']; charts.status.data.datasets[0].data = [counts['Completed'], counts['In Progress'], counts['Proposed']]; charts.status.update();
+            
+            data.forEach(p => { 
+                let s = p.Status ? p.Status.toString().toLowerCase() : ''; 
+                if(s.includes('complete')) { counts['Completed']++; } 
+                else if(s.includes('progress') || s.includes('ongoing')) { counts['In Progress']++; } 
+                else { counts['Proposed']++; } 
+            });
+            
+            charts.status.data.labels = ['Completed', 'In Progress', 'Proposed']; 
+            charts.status.data.datasets[0].data = [counts['Completed'], counts['In Progress'], counts['Proposed']]; 
+            charts.status.update();
+            
             let sortedByCost = [...data].sort((a, b) => clean(b.Cost) - clean(a.Cost)).slice(0, 5);
-            charts.budget.data.labels = sortedByCost.map(p => { let name = p.ProjectName || 'Unknown'; return name.length > 25 ? name.substring(0, 25) + '...' : name; });
-            charts.budget.data.datasets[0].data = sortedByCost.map(p => clean(p.Cost)); charts.budget.data.datasets[1].data = sortedByCost.map(p => clean(p.ActualCost)); charts.budget.update();
+            
+            charts.budget.data.labels = sortedByCost.map(p => { 
+                let name = p.ProjectName || 'Unknown'; 
+                return name.length > 25 ? name.substring(0, 25) + '...' : name; 
+            });
+            charts.budget.data.datasets[0].data = sortedByCost.map(p => clean(p.Cost)); 
+            charts.budget.data.datasets[1].data = sortedByCost.map(p => clean(p.ActualCost)); 
+            charts.budget.update();
         }
 
         function updateKPIs(data) {
-            const total = data.reduce((sum, p) => sum + clean(p.Cost), 0); const actual = data.reduce((sum, p) => sum + clean(p.ActualCost), 0); const planned = data.reduce((sum, p) => sum + clean(p.PlannedValue || p['Planned Value']), 0); const avg = data.length ? data.reduce((sum, p) => sum + clean(p.Progress), 0) / data.length : 0;
-            document.getElementById('kpi-budget').textContent = '₱' + total.toLocaleString('en-PH'); document.getElementById('kpi-actual').textContent = '₱' + actual.toLocaleString('en-PH'); document.getElementById('kpi-variance').textContent = '₱' + (total - actual).toLocaleString('en-PH'); document.getElementById('kpi-progress').textContent = Math.round(avg) + '%';
-            const ev = total * (avg / 100); const spi = planned > 0 ? ev / planned : 1; const cpi = actual > 0 ? ev / actual : 1;
-            document.getElementById('spi-text').textContent = spi.toFixed(2); document.getElementById('cpi-text').textContent = cpi.toFixed(2);
-            charts.spi.data.datasets[0].data = [spi > 1 ? 1 : spi, spi > 1 ? 0 : 1 - spi]; charts.cpi.data.datasets[0].data = [cpi > 1 ? 1 : cpi, cpi > 1 ? 0 : 1 - cpi]; charts.spi.update(); charts.cpi.update();
+            const total = data.reduce((sum, p) => sum + clean(p.Cost), 0); 
+            const actual = data.reduce((sum, p) => sum + clean(p.ActualCost), 0); 
+            const planned = data.reduce((sum, p) => sum + clean(p.PlannedValue || p['Planned Value']), 0); 
+            const avg = data.length ? data.reduce((sum, p) => sum + clean(p.Progress), 0) / data.length : 0;
+            
+            document.getElementById('kpi-budget').textContent = '₱' + total.toLocaleString('en-PH'); 
+            document.getElementById('kpi-actual').textContent = '₱' + actual.toLocaleString('en-PH'); 
+            document.getElementById('kpi-variance').textContent = '₱' + (total - actual).toLocaleString('en-PH'); 
+            document.getElementById('kpi-progress').textContent = Math.round(avg) + '%';
+            
+            const ev = total * (avg / 100); 
+            const spi = planned > 0 ? ev / planned : 1; 
+            const cpi = actual > 0 ? ev / actual : 1;
+            
+            document.getElementById('spi-text').textContent = spi.toFixed(2); 
+            document.getElementById('cpi-text').textContent = cpi.toFixed(2);
+            
+            charts.spi.data.datasets[0].data = [spi > 1 ? 1 : spi, spi > 1 ? 0 : 1 - spi]; 
+            charts.cpi.data.datasets[0].data = [cpi > 1 ? 1 : cpi, cpi > 1 ? 0 : 1 - cpi]; 
+            
+            charts.spi.update(); 
+            charts.cpi.update();
         }
 
         document.getElementById('searchInput').addEventListener('input', renderUI);
