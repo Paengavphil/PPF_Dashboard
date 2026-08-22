@@ -280,12 +280,16 @@
             document.body.classList.toggle('panel-open');
         }
 
-        async function castVote(btnElement, itemId, currentVotes) {
+        // Syntax-safe voting function using data attributes
+        async function handleVote(btnElement) {
             if (btnElement.classList.contains('voted')) return;
             
-            btnElement.classList.add('voted');
+            const itemId = btnElement.getAttribute('data-item-id');
             const countSpan = btnElement.nextElementSibling;
-            countSpan.textContent = parseInt(currentVotes) + 1; 
+            const currentVotes = parseInt(countSpan.textContent) || 0;
+            
+            btnElement.classList.add('voted');
+            countSpan.textContent = currentVotes + 1; 
 
             try {
                 await fetch(scriptURL, {
@@ -365,7 +369,7 @@
                     <div class="absolute top-0 right-0 px-3 py-1 rounded-bl-lg text-[8px] font-black uppercase tracking-widest border-l border-b ${badgeClass}">${badgeText}</div>
                     
                     <div class="flex flex-col items-center gap-1 min-w-[50px] mt-2">
-                        <button onclick="castVote(this, ${item.ItemID}, ${currentVotes})" class="vote-btn w-10 h-10 rounded-full border border-slate-300 text-slate-400 hover:border-[#165CCA] hover:text-[#165CCA] flex flex-col items-center justify-center bg-slate-50 transition-all">
+                        <button data-item-id="${item.ItemID || ''}" onclick="handleVote(this)" class="vote-btn w-10 h-10 rounded-full border border-slate-300 text-slate-400 hover:border-[#165CCA] hover:text-[#165CCA] flex flex-col items-center justify-center bg-slate-50 transition-all">
                             <i class="fas fa-caret-up text-lg -mb-1"></i>
                         </button>
                         <span class="text-lg font-black text-[#132644] tabular-nums vote-count">${currentVotes}</span>
