@@ -432,36 +432,176 @@
             renderUI();
         }
 
-        function executeReport() {
-            if(selectedProjects.size === 0) { alert("Please select at least one project."); return; }
+function executeReport() {
+            if(selectedProjects.size === 0) { 
+                alert("Please select at least one project to generate a report."); 
+                return; 
+            }
+            
             const dataToPrint = allProjects.filter(p => selectedProjects.has(p._id));
             const container = document.getElementById('custom-print-container');
             
+            // Build the Master Print Layout
             let html = `
-                <div style="font-family: Arial, sans-serif; padding: 40px; color: #132644;">
-                    <div style="border-bottom: 2px solid #132644; padding-bottom: 15px; margin-bottom: 30px;">
-                        <h1 style="font-size: 24pt; margin: 0;">PSHS-WVCIC Infrastructure Report</h1>
-                        <p style="color: #64748b; margin-top: 5px; font-size: 11pt;">Generated on: ${new Date().toLocaleDateString()}</p>
-                    </div>
-                    <h2 style="font-size: 14pt; margin-bottom: 20px;">Selected Projects (${dataToPrint.length})</h2>
-                    <table style="width: 100%; border-collapse: collapse; margin-bottom: 40px;">
-                        <tr style="background-color: #132644; color: white; text-align: left;">
-                            <th style="padding: 10px; border: 1px solid #cbd5e1;">Project Name</th>
-                            <th style="padding: 10px; border: 1px solid #cbd5e1;">Category</th>
-                            <th style="padding: 10px; border: 1px solid #cbd5e1;">Status</th>
-                            <th style="padding: 10px; border: 1px solid #cbd5e1;">Cost</th>
-                        </tr>`;
+                <div style="font-family: Arial, sans-serif; padding: 0; color: #000000; max-width: 100%;">
+                    <table style="width: 100%; border: none;">
+                        
+                        <!-- HEADER (Repeats on every page) -->
+                        <thead>
+                            <tr>
+                                <td style="padding-bottom: 20px;">
+                                    <img src="header.png" style="width: 100%; height: auto; max-height: 160px; object-fit: contain;" alt="Official Header">
+                                </td>
+                            </tr>
+                        </thead>
+
+                        <!-- MAIN REPORT CONTENT -->
+                        <tbody>
+                            <tr>
+                                <td>`;
             
-            dataToPrint.forEach(p => {
-                html += `<tr><td style="padding: 10px; border: 1px solid #cbd5e1;"><strong>${p.ProjectName}</strong></td><td style="padding: 10px; border: 1px solid #cbd5e1;">${p.Category || 'N/A'}</td><td style="padding: 10px; border: 1px solid #cbd5e1;">${p.Status}</td><td style="padding: 10px; border: 1px solid #cbd5e1;">₱${clean(p.Cost).toLocaleString('en-PH')}</td></tr>`;
+            // Generate an individual report form for EACH selected project
+            dataToPrint.forEach((p, idx) => {
+                
+                // Format missing fields safely
+                const scopeText = p.Scope && p.Scope !== '---' ? p.Scope.replace(/[;\n]/g, '<br>• ') : 'No scope provided.';
+                const notesText = p.Notes && p.Notes !== '---' ? p.Notes.replace(/[;\n]/g, '<br>• ') : 'No remarks.';
+                const attachmentLink = p.AttachmentURL ? `<a href="${p.AttachmentURL}" target="_blank" style="color: #165CCA; text-decoration: none;">View Document</a>` : '---';
+                
+                html += `
+                                    <table style="width: 100%; border-collapse: collapse; margin-bottom: 50px; font-size: 10pt; border: 2px solid #000; page-break-inside: avoid;">
+                                        <thead>
+                                            <tr>
+                                                <th colspan="2" style="background-color: #132644; color: white; padding: 12px; font-size: 13pt; text-align: center; border: 2px solid #000; letter-spacing: 1px;">
+                                                    PHYSICAL PLANT FACILITIES REPORT
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td style="padding: 8px 12px; border: 1px solid #000; font-weight: bold; width: 25%; background-color: #f8fafc;">Project Name:</td>
+                                                <td style="padding: 8px 12px; border: 1px solid #000; width: 75%; font-weight: bold;">${p.ProjectName || '---'}</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding: 8px 12px; border: 1px solid #000; font-weight: bold; background-color: #f8fafc;">PO Number:</td>
+                                                <td style="padding: 8px 12px; border: 1px solid #000;">${p.PONumber || '---'}</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding: 8px 12px; border: 1px solid #000; font-weight: bold; background-color: #f8fafc;">Contractor:</td>
+                                                <td style="padding: 8px 12px; border: 1px solid #000;">${p.Contractor || '---'}</td>
+                                            </tr>
+                                            
+                                            <!-- Split Row: Dates -->
+                                            <tr>
+                                                <td colspan="2" style="padding: 0; border: 1px solid #000;">
+                                                    <table style="width: 100%; border-collapse: collapse;">
+                                                        <tr>
+                                                            <td style="padding: 8px 12px; border-right: 1px solid #000; font-weight: bold; width: 25%; background-color: #f8fafc;">Start Date:</td>
+                                                            <td style="padding: 8px 12px; border-right: 1px solid #000; width: 25%;">${p.StartDate || '---'}</td>
+                                                            <td style="padding: 8px 12px; border-right: 1px solid #000; font-weight: bold; width: 25%; background-color: #f8fafc;">Target Date:</td>
+                                                            <td style="padding: 8px 12px; width: 25%;">${p.TargetDate || '---'}</td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+
+                                            <!-- Split Row: Costs -->
+                                            <tr>
+                                                <td colspan="2" style="padding: 0; border: 1px solid #000;">
+                                                    <table style="width: 100%; border-collapse: collapse;">
+                                                        <tr>
+                                                            <td style="padding: 8px 12px; border-right: 1px solid #000; font-weight: bold; width: 25%; background-color: #f8fafc;">Approved Budget<br>for the Contract:</td>
+                                                            <td style="padding: 8px 12px; border-right: 1px solid #000; width: 25%; font-weight: bold;">₱${clean(p.Cost).toLocaleString('en-PH', {minimumFractionDigits: 2})}</td>
+                                                            <td style="padding: 8px 12px; border-right: 1px solid #000; font-weight: bold; width: 25%; background-color: #f8fafc;">Actual Cost:</td>
+                                                            <td style="padding: 8px 12px; width: 25%; font-weight: bold;">₱${clean(p.ActualCost).toLocaleString('en-PH', {minimumFractionDigits: 2})}</td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                <td style="padding: 8px 12px; border: 1px solid #000; font-weight: bold; background-color: #f8fafc; vertical-align: top;">Project Scope:</td>
+                                                <td style="padding: 8px 12px; border: 1px solid #000; line-height: 1.5;">• ${scopeText}</td>
+                                            </tr>
+                                            
+                                            <!-- Split Row: Details -->
+                                            <tr>
+                                                <td colspan="2" style="padding: 0; border: 1px solid #000;">
+                                                    <table style="width: 100%; border-collapse: collapse;">
+                                                        <tr>
+                                                            <td style="padding: 8px 12px; border-right: 1px solid #000; font-weight: bold; width: 25%; background-color: #f8fafc;">Project Category:</td>
+                                                            <td style="padding: 8px 12px; border-right: 1px solid #000; width: 25%;">${p.Category || '---'}</td>
+                                                            <td style="padding: 8px 12px; border-right: 1px solid #000; font-weight: bold; width: 25%; background-color: #f8fafc;">Project Status:</td>
+                                                            <td style="padding: 8px 12px; width: 25%; font-weight: bold; text-transform: uppercase;">${p.Status || '---'}</td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                <td style="padding: 8px 12px; border: 1px solid #000; font-weight: bold; background-color: #f8fafc; vertical-align: top;">Remarks:</td>
+                                                <td style="padding: 8px 12px; border: 1px solid #000; line-height: 1.5;">• ${notesText}</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding: 8px 12px; border: 1px solid #000; font-weight: bold; background-color: #f8fafc;">Attachment File:</td>
+                                                <td style="padding: 8px 12px; border: 1px solid #000;">${attachmentLink}</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding: 8px 12px; border: 1px solid #000; font-weight: bold; background-color: #f8fafc;">Attachment Type:</td>
+                                                <td style="padding: 8px 12px; border: 1px solid #000;">${p.AttachmentType || '---'}</td>
+                                            </tr>
+                                            
+                                            <!-- Signature Block Built Directly Into The Form -->
+                                            <tr>
+                                                <td colspan="2" style="padding: 20px 12px 15px 12px; border: 1px solid #000;">
+                                                    <p style="margin: 0 0 40px 0; font-weight: bold; color: #475569;">Prepared by:</p>
+                                                    <div style="display: flex; justify-content: space-around; text-align: center;">
+                                                        <div style="width: 40%;">
+                                                            <div style="border-bottom: 1px solid #000; padding-bottom: 4px;">
+                                                                <strong style="font-size: 11pt;">Engr. Raphael Eric C. Yturralde</strong>
+                                                            </div>
+                                                            <div style="font-size: 9pt; margin-top: 4px; color: #334155;">Physical Plant Facilities Head</div>
+                                                        </div>
+                                                        <div style="width: 40%;">
+                                                            <div style="border-bottom: 1px solid #000; padding-bottom: 4px;">
+                                                                <strong style="font-size: 11pt;">Ar. Jafaith M. Cordero</strong>
+                                                            </div>
+                                                            <div style="font-size: 9pt; margin-top: 4px; color: #334155;">Physical Plant Facilities Asst. Head</div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>`;
             });
-            html += `</table></div>`;
+
+            html += `           </td>
+                            </tr>
+                        </tbody>
+
+                        <!-- FOOTER (Repeats on every page) -->
+                        <tfoot>
+                            <tr>
+                                <td style="padding-top: 20px;">
+                                    <img src="footer.png" style="width: 100%; height: auto; max-height: 120px; object-fit: contain;" alt="Official Footer">
+                                </td>
+                            </tr>
+                        </tfoot>
+                        
+                    </table>
+                </div>`;
+
             container.innerHTML = html;
             
+            // Add printing state to hide the main dashboard
             document.body.classList.add('printing-report');
-            window.print();
-            document.body.classList.remove('printing-report');
-            toggleReportMode();
+            
+            // Small timeout to allow images (header/footer) to load before print dialogue triggers
+            setTimeout(() => {
+                window.print();
+                document.body.classList.remove('printing-report');
+                toggleReportMode();
+            }, 400); 
         }
 
         function buildCategoryTabs() {
