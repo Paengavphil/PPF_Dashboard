@@ -32,20 +32,12 @@
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: #132644; }
 
-        @media print {
-            @page { size: landscape; margin: 10mm; }
-            body { background-color: #ffffff !important; color: #132644 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-            .no-print { display: none !important; }
-            .dashboard-container { padding: 0 !important; max-width: 100% !important; filter: none !important; }
-            details { display: block !important; }
-            details[open] summary ~ * { display: block !important; }
-            details summary ~ * { display: block !important; }
-            .chevron-icon { display: none !important; } 
-            .grid > div { break-inside: avoid; page-break-inside: avoid; margin-bottom: 1rem; }
-        }
-
         #custom-print-container { display: none; }
+
         @media print {
+            /* CHANGED FROM LANDSCAPE TO PORTRAIT */
+            @page { size: portrait; margin: 12mm; }
+            body { background-color: #ffffff !important; color: #000000 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
             body.printing-report > nav, 
             body.printing-report > main,
             body.printing-report > #report-action-bar,
@@ -179,7 +171,7 @@
         <div id="project-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-24"></div>
     </main>
 
-    <!-- SLIDE-OVER PANEL FOR INVENTORY VOTING - WIDER & LARGER FONT -->
+    <!-- SLIDE-OVER PANEL FOR INVENTORY VOTING -->
     <div id="slide-panel" class="fixed top-0 right-0 h-full w-full max-w-3xl bg-[#F4F6F9] shadow-2xl z-[2000] flex flex-col border-l border-slate-200">
         <div class="bg-[#132644] px-10 py-8 flex justify-between items-start text-white shadow-md z-10">
             <div>
@@ -231,7 +223,6 @@
                 <span class="text-sm font-black text-[#132644] uppercase tracking-widest border-b-2 border-[#F1C40F] pb-1">Identified Deficiencies</span>
             </div>
 
-            <!-- POPULATED BY JAVASCRIPT -->
             <div class="space-y-5" id="priority-list"></div>
 
         </div>
@@ -242,22 +233,43 @@
         </div>
     </div>
 
-    <!-- FLOATING ACTION BAR FOR REPORT BUILDER -->
-    <div id="report-action-bar" class="fixed bottom-0 left-0 w-full bg-[#132644] text-white px-8 py-5 transform translate-y-full transition-transform duration-500 flex justify-between items-center shadow-[0_-10px_30px_rgba(0,0,0,0.2)] z-[1000]">
-        <div>
-            <span id="selected-count" class="text-2xl font-black text-[#F1C40F] tabular-nums">0</span>
-            <span class="text-[11px] font-bold text-slate-300 uppercase tracking-[0.2em] ml-2">Projects Selected</span>
+    <!-- ENHANCED OPTIMIZED REPORT BUILDER ACTION BAR -->
+    <div id="report-action-bar" class="fixed bottom-0 left-0 w-full bg-[#132644] text-white px-8 py-5 transform translate-y-full transition-transform duration-500 flex flex-wrap gap-4 justify-between items-center shadow-[0_-10px_30px_rgba(0,0,0,0.25)] z-[1000] border-t border-[#1a355e]">
+        <div class="flex items-center gap-3">
+            <span id="selected-count" class="text-3xl font-black text-[#F1C40F] tabular-nums">0</span>
+            <div>
+                <span class="text-[11px] font-extrabold text-white uppercase tracking-[0.2em] block leading-none">Projects Selected</span>
+                <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-1 block">Custom Executive Package</span>
+            </div>
         </div>
-        <div class="flex gap-4">
-            <button onclick="selectAllVisible()" class="px-5 py-2.5 bg-slate-700 hover:bg-slate-600 rounded-full text-[10px] font-black uppercase tracking-widest transition-colors shadow-sm">Select Visible</button>
-            <button onclick="toggleReportMode()" class="px-5 py-2.5 bg-transparent border border-slate-500 hover:border-white text-slate-300 hover:text-white rounded-full text-[10px] font-black uppercase tracking-widest transition-colors">Cancel</button>
-            <button onclick="executeReport()" class="px-8 py-2.5 bg-[#165CCA] hover:bg-[#124b9e] text-white rounded-full text-[11px] font-black uppercase tracking-widest transition-all shadow-md flex items-center gap-2">
-                <i class="fas fa-print"></i> Generate Selected
+        
+        <div class="flex flex-wrap gap-2.5 items-center">
+            <button onclick="selectAllVisible()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-full text-[10px] font-black uppercase tracking-widest transition-colors border border-slate-700 shadow-sm flex items-center gap-1.5">
+                <i class="fas fa-check-double text-[#F1C40F]"></i> All Visible
+            </button>
+            <button onclick="selectOngoingOnly()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-full text-[10px] font-black uppercase tracking-widest transition-colors border border-slate-700 shadow-sm flex items-center gap-1.5">
+                <i class="fas fa-spinner text-[#165CCA]"></i> Ongoing Only
+            </button>
+            <button onclick="clearSelection()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white rounded-full text-[10px] font-black uppercase tracking-widest transition-colors border border-slate-700 shadow-sm">
+                Clear
+            </button>
+            
+            <div class="h-6 w-px bg-slate-700 mx-1"></div>
+
+            <button onclick="exportToCSV()" class="px-5 py-2.5 bg-emerald-700 hover:bg-emerald-600 text-white rounded-full text-[10px] font-black uppercase tracking-widest transition-all shadow-md flex items-center gap-2">
+                <i class="fas fa-file-excel"></i> Export CSV
+            </button>
+            <button onclick="executeReport()" class="px-7 py-2.5 bg-[#165CCA] hover:bg-[#124b9e] text-white rounded-full text-[10px] font-black uppercase tracking-widest transition-all shadow-md flex items-center gap-2">
+                <i class="fas fa-print"></i> Print / PDF Package
+            </button>
+            
+            <button onclick="toggleReportMode()" class="px-4 py-2.5 bg-transparent text-slate-400 hover:text-white rounded-full text-[10px] font-black uppercase tracking-widest transition-colors ml-2">
+                Cancel
             </button>
         </div>
     </div>
 
-    <!-- TEMPORARY PRINT CANVAS -->
+    <!-- PRINT CANVAS CONTAINER -->
     <div id="custom-print-container"></div>
 
     <script>
@@ -432,7 +444,64 @@
             renderUI();
         }
 
-function executeReport() {
+        function selectOngoingOnly() {
+            selectedProjects.clear();
+            currentFilteredProjects.forEach(p => {
+                const statusStr = p.Status ? p.Status.toString().toLowerCase() : '';
+                if(statusStr.includes('progress') || statusStr.includes('ongoing')) {
+                    selectedProjects.add(p._id);
+                }
+            });
+            document.getElementById('selected-count').textContent = selectedProjects.size;
+            renderUI();
+        }
+
+        function clearSelection() {
+            selectedProjects.clear();
+            document.getElementById('selected-count').textContent = selectedProjects.size;
+            renderUI();
+        }
+
+        function exportToCSV() {
+            if(selectedProjects.size === 0) { 
+                alert("Please select at least one project to export."); 
+                return; 
+            }
+            
+            const dataToExport = allProjects.filter(p => selectedProjects.has(p._id));
+            const headers = ["Project Name", "Category", "Status", "Fiscal Year", "Target Date", "Cost (PHP)", "Actual Cost (PHP)", "Progress (%)", "Contractor", "Scope of Works", "Admin Remarks"];
+            
+            let csvRows = [headers.join(",")];
+            
+            dataToExport.forEach(p => {
+                const row = [
+                    `"${(p.ProjectName || '').replace(/"/g, '""')}"`,
+                    `"${(p.Category || '').replace(/"/g, '""')}"`,
+                    `"${(p.Status || '').replace(/"/g, '""')}"`,
+                    `"${(p.FiscalYear || '').replace(/"/g, '""')}"`,
+                    `"${(p.TargetDate || '').replace(/"/g, '""')}"`,
+                    clean(p.Cost),
+                    clean(p.ActualCost),
+                    clean(p.Progress),
+                    `"${(p.Contractor || '').replace(/"/g, '""')}"`,
+                    `"${(p.Scope || '').replace(/"/g, '""')}"`,
+                    `"${(p.Notes || '').replace(/"/g, '""')}"`
+                ];
+                csvRows.push(row.join(","));
+            });
+            
+            const csvString = csvRows.join("\n");
+            const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.setAttribute("href", url);
+            link.setAttribute("download", `PSHS-WVCIC_Infrastructure_Report_${new Date().toISOString().slice(0,10)}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function executeReport() {
             if(selectedProjects.size === 0) { 
                 alert("Please select at least one project to generate a report."); 
                 return; 
@@ -441,6 +510,18 @@ function executeReport() {
             const dataToPrint = allProjects.filter(p => selectedProjects.has(p._id));
             const container = document.getElementById('custom-print-container');
             
+            // Helper function to format ugly timestamps into clean dates
+            const formatReportDate = (dateStr) => {
+                if (!dateStr || dateStr === '---') return '---';
+                try {
+                    const d = new Date(dateStr);
+                    if (isNaN(d.getTime())) return dateStr; 
+                    return d.toLocaleDateString('en-PH', { year: 'numeric', month: 'long', day: 'numeric' });
+                } catch(e) {
+                    return dateStr;
+                }
+            };
+
             // Build the Master Print Layout
             let html = `
                 <div style="font-family: Arial, sans-serif; padding: 0; color: #000000; max-width: 100%;">
@@ -463,10 +544,13 @@ function executeReport() {
             // Generate an individual report form for EACH selected project
             dataToPrint.forEach((p, idx) => {
                 
-                // Format missing fields safely
+                // Format fields cleanly
                 const scopeText = p.Scope && p.Scope !== '---' ? p.Scope.replace(/[;\n]/g, '<br>• ') : 'No scope provided.';
                 const notesText = p.Notes && p.Notes !== '---' ? p.Notes.replace(/[;\n]/g, '<br>• ') : 'No remarks.';
                 const attachmentLink = p.AttachmentURL ? `<a href="${p.AttachmentURL}" target="_blank" style="color: #165CCA; text-decoration: none;">View Document</a>` : '---';
+                
+                const formattedStart = formatReportDate(p.StartDate);
+                const formattedTarget = formatReportDate(p.TargetDate);
                 
                 html += `
                                     <table style="width: 100%; border-collapse: collapse; margin-bottom: 50px; font-size: 10pt; border: 2px solid #000; page-break-inside: avoid;">
@@ -497,9 +581,9 @@ function executeReport() {
                                                     <table style="width: 100%; border-collapse: collapse;">
                                                         <tr>
                                                             <td style="padding: 8px 12px; border-right: 1px solid #000; font-weight: bold; width: 25%; background-color: #f8fafc;">Start Date:</td>
-                                                            <td style="padding: 8px 12px; border-right: 1px solid #000; width: 25%;">${p.StartDate || '---'}</td>
+                                                            <td style="padding: 8px 12px; border-right: 1px solid #000; width: 25%;">${formattedStart}</td>
                                                             <td style="padding: 8px 12px; border-right: 1px solid #000; font-weight: bold; width: 25%; background-color: #f8fafc;">Target Date:</td>
-                                                            <td style="padding: 8px 12px; width: 25%;">${p.TargetDate || '---'}</td>
+                                                            <td style="padding: 8px 12px; width: 25%;">${formattedTarget}</td>
                                                         </tr>
                                                     </table>
                                                 </td>
