@@ -35,8 +35,8 @@
         #custom-print-container { display: none; }
 
         @media print {
-            /* CHANGED FROM LANDSCAPE TO PORTRAIT */
-            @page { size: portrait; margin: 12mm; }
+            /* PORTRAIT MODE WITH 0 MARGINS TO REMOVE BROWSER URLS/DATES */
+            @page { size: portrait; margin: 0; }
             body { background-color: #ffffff !important; color: #000000 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
             body.printing-report > nav, 
             body.printing-report > main,
@@ -501,7 +501,7 @@
             document.body.removeChild(link);
         }
 
-function executeReport() {
+        function executeReport() {
             if(selectedProjects.size === 0) { 
                 alert("Please select at least one project to generate a report."); 
                 return; 
@@ -522,24 +522,34 @@ function executeReport() {
                 }
             };
 
-            // Build the Master Print Layout
+            // Build the Master Print Layout with PINNED elements
             let html = `
-                <div style="font-family: Arial, sans-serif; padding: 0; color: #000000; max-width: 100%;">
-                    <table style="width: 100%; border: none;">
+                <div style="font-family: Arial, sans-serif; color: #000000; width: 100%; padding: 0;">
+                    
+                    <!-- ABSOLUTE PINNED HEADER -->
+                    <div style="position: fixed; top: 0; left: 0; width: 100%; text-align: center; padding-top: 15mm; background-color: white; z-index: 9999;">
+                        <img src="header.png" style="width: 100%; max-width: 750px; height: auto; max-height: 120px; object-fit: contain;" alt="Official Header">
+                    </div>
+
+                    <!-- ABSOLUTE PINNED FOOTER -->
+                    <div style="position: fixed; bottom: 0; left: 0; width: 100%; text-align: center; padding-bottom: 15mm; background-color: white; z-index: 9999;">
+                        <img src="footer.png" style="width: 100%; max-width: 750px; height: auto; max-height: 100px; object-fit: contain;" alt="Official Footer">
+                    </div>
+
+                    <!-- MASTER TABLE (Handles Page Breaks & Pinned Image Spacing) -->
+                    <table style="width: 88%; margin: 0 auto; border: none;">
                         
-                        <!-- HEADER (Repeats on every page) -->
+                        <!-- Invisible Top Spacer (Pushes text down so it doesn't hide behind the header) -->
                         <thead>
                             <tr>
-                                <td style="padding-bottom: 20px;">
-                                    <img src="header.png" style="width: 100%; height: auto; max-height: 160px; object-fit: contain;" alt="Official Header">
-                                </td>
+                                <td style="height: 180px; border: none;"></td>
                             </tr>
                         </thead>
 
-                        <!-- MAIN REPORT CONTENT -->
+                        <!-- Content Body -->
                         <tbody>
                             <tr>
-                                <td>`;
+                                <td style="padding: 0; border: none;">`;
             
             // Generate an individual report form for EACH selected project
             dataToPrint.forEach((p, idx) => {
@@ -548,7 +558,7 @@ function executeReport() {
                 const scopeText = p.Scope && p.Scope !== '---' ? p.Scope.replace(/[;\n]/g, '<br>• ') : 'No scope provided.';
                 const notesText = p.Notes && p.Notes !== '---' ? p.Notes.replace(/[;\n]/g, '<br>• ') : 'No remarks.';
                 
-                // Updated Attachment logic to show the raw URL and pull from DocLabel
+                // Attachment logic
                 const attachmentLink = p.AttachmentURL ? `<a href="${p.AttachmentURL}" target="_blank" style="color: #165CCA; text-decoration: none; word-break: break-all;">${p.AttachmentURL}</a>` : '---';
                 const docLabelText = p.DocLabel || '---';
                 
@@ -638,7 +648,7 @@ function executeReport() {
                                                 <td style="padding: 8px 12px; border: 1px solid #000;">${docLabelText}</td>
                                             </tr>
                                             
-                                            <!-- Signature Block Built Directly Into The Form -->
+                                            <!-- Signature Block -->
                                             <tr>
                                                 <td colspan="2" style="padding: 20px 12px 15px 12px; border: 1px solid #000;">
                                                     <p style="margin: 0 0 40px 0; font-weight: bold; color: #475569;">Prepared by:</p>
@@ -662,16 +672,14 @@ function executeReport() {
                                     </table>`;
             });
 
-            html += `           </td>
+            html += `                   </td>
                             </tr>
                         </tbody>
 
-                        <!-- FOOTER (Repeats on every page) -->
+                        <!-- Invisible Bottom Spacer (Pushes text up so it doesn't hide behind the footer) -->
                         <tfoot>
                             <tr>
-                                <td style="padding-top: 20px;">
-                                    <img src="footer.png" style="width: 100%; height: auto; max-height: 120px; object-fit: contain;" alt="Official Footer">
-                                </td>
+                                <td style="height: 150px; border: none;"></td>
                             </tr>
                         </tfoot>
                         
@@ -680,10 +688,8 @@ function executeReport() {
 
             container.innerHTML = html;
             
-            // Add printing state to hide the main dashboard
             document.body.classList.add('printing-report');
             
-            // Small timeout to allow images (header/footer) to load before print dialogue triggers
             setTimeout(() => {
                 window.print();
                 document.body.classList.remove('printing-report');
