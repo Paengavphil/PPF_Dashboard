@@ -501,7 +501,7 @@
             document.body.removeChild(link);
         }
 
-        function executeReport() {
+function executeReport() {
             if(selectedProjects.size === 0) { 
                 alert("Please select at least one project to generate a report."); 
                 return; 
@@ -547,7 +547,10 @@
                 // Format fields cleanly
                 const scopeText = p.Scope && p.Scope !== '---' ? p.Scope.replace(/[;\n]/g, '<br>• ') : 'No scope provided.';
                 const notesText = p.Notes && p.Notes !== '---' ? p.Notes.replace(/[;\n]/g, '<br>• ') : 'No remarks.';
-                const attachmentLink = p.AttachmentURL ? `<a href="${p.AttachmentURL}" target="_blank" style="color: #165CCA; text-decoration: none;">View Document</a>` : '---';
+                
+                // Updated Attachment logic to show the raw URL and pull from DocLabel
+                const attachmentLink = p.AttachmentURL ? `<a href="${p.AttachmentURL}" target="_blank" style="color: #165CCA; text-decoration: none; word-break: break-all;">${p.AttachmentURL}</a>` : '---';
+                const docLabelText = p.DocLabel || '---';
                 
                 const formattedStart = formatReportDate(p.StartDate);
                 const formattedTarget = formatReportDate(p.TargetDate);
@@ -632,7 +635,7 @@
                                             </tr>
                                             <tr>
                                                 <td style="padding: 8px 12px; border: 1px solid #000; font-weight: bold; background-color: #f8fafc;">Attachment Type:</td>
-                                                <td style="padding: 8px 12px; border: 1px solid #000;">${p.AttachmentType || '---'}</td>
+                                                <td style="padding: 8px 12px; border: 1px solid #000;">${docLabelText}</td>
                                             </tr>
                                             
                                             <!-- Signature Block Built Directly Into The Form -->
