@@ -522,18 +522,18 @@
                 }
             };
 
-            // Build the Master Print Layout with PINNED elements
+            // Build the Master Print Layout with PINNED and CENTERED elements
             let html = `
                 <div style="font-family: Arial, sans-serif; color: #000000; width: 100%; padding: 0;">
                     
                     <!-- ABSOLUTE PINNED HEADER -->
-                    <div style="position: fixed; top: 0; left: 0; width: 100%; text-align: center; padding-top: 15mm; background-color: white; z-index: 9999;">
-                        <img src="header.png" style="width: 100%; max-width: 750px; height: auto; max-height: 120px; object-fit: contain;" alt="Official Header">
+                    <div style="position: fixed; top: 0; left: 0; width: 100%; padding-top: 12mm; background-color: white; z-index: 9999;">
+                        <img src="header.png" style="display: block; margin: 0 auto; width: 88%; max-width: 850px; height: auto; max-height: 120px; object-fit: contain;" alt="Official Header">
                     </div>
 
                     <!-- ABSOLUTE PINNED FOOTER -->
-                    <div style="position: fixed; bottom: 0; left: 0; width: 100%; text-align: center; padding-bottom: 15mm; background-color: white; z-index: 9999;">
-                        <img src="footer.png" style="width: 100%; max-width: 750px; height: auto; max-height: 100px; object-fit: contain;" alt="Official Footer">
+                    <div style="position: fixed; bottom: 0; left: 0; width: 100%; padding-bottom: 12mm; background-color: white; z-index: 9999;">
+                        <img src="footer.png" style="display: block; margin: 0 auto; width: 88%; max-width: 850px; height: auto; max-height: 100px; object-fit: contain;" alt="Official Footer">
                     </div>
 
                     <!-- MASTER TABLE (Handles Page Breaks & Pinned Image Spacing) -->
